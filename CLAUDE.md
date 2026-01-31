@@ -2,7 +2,7 @@
 
 Local observability stack for tracking Claude Code usage, cost, and ROI via OpenTelemetry.
 
-**Philosophy:** This is about growth, not surveillance. See [HUMAN-AI-COLLABORATION.md](HUMAN-AI-COLLABORATION.md) for the co-intelligence framework.
+**Philosophy:** This is about growth, not surveillance. See [GUIDE.md](GUIDE.md) for the co-intelligence framework.
 
 ## Quick Start
 
@@ -54,7 +54,8 @@ claude-metrics/
 │   ├── loki/                    # Log storage
 │   └── grafana/                 # Grafana DB
 ├── CLAUDE.md                    # This file
-└── HUMAN-AI-COLLABORATION.md    # Co-intelligence philosophy
+├── GUIDE.md                     # Co-intelligence philosophy & optimization guide
+└── README.md                    # Project overview
 ```
 
 ## Enabling Telemetry
@@ -137,7 +138,7 @@ Or use [claude-switch](https://github.com/your-org/claude-switcher) which config
 | **Session Size** | Whether you're working efficiently or going in circles |
 | **Cost/PR** | Value delivered per dollar spent |
 
-See [HUMAN-AI-COLLABORATION.md](HUMAN-AI-COLLABORATION.md) for the philosophy behind these metrics.
+See [GUIDE.md](GUIDE.md) for the philosophy behind these metrics.
 
 ## Generate ROI Report
 
