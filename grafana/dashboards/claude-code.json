@@ -410,7 +410,7 @@
   "time": { "from": "now-24h", "to": "now" },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Claude Code Metrics",
+  "title": "Claude Observability - Personal",
   "uid": "claude-code-metrics",
   "version": 5
 }

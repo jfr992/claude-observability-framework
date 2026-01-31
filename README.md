@@ -1,6 +1,6 @@
-# Claude Code Metrics
+# Claude Observability Framework
 
-A local observability framework for tracking Claude Code usage, cost, and ROI via OpenTelemetry.
+A team/org productivity framework for tracking Claude Code usage, cost, and ROI via OpenTelemetry.
 
 **Philosophy:** Metrics are mirrors, not judges. This framework measures growth, not compliance.
 
@@ -130,8 +130,8 @@ A skill file is included for Claude Code users:
 
 ```bash
 # Install the skill
-cp claude-metrics.skill ~/.claude/skills/
-unzip -d ~/.claude/skills/claude-metrics ~/.claude/skills/claude-metrics.skill
+cp claude-observability.skill ~/.claude/skills/
+unzip -d ~/.claude/skills/claude-observability ~/.claude/skills/claude-observability.skill
 ```
 
 This enables Claude to help with metrics interpretation and troubleshooting.

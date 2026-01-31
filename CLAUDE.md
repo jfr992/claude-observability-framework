@@ -1,6 +1,6 @@
-# Claude Code Metrics
+# Claude Observability Framework
 
-Local observability stack for tracking Claude Code usage, cost, and ROI via OpenTelemetry.
+Team/org productivity framework for tracking Claude Code usage, cost, and ROI via OpenTelemetry.
 
 **Philosophy:** This is about growth, not surveillance. See [GUIDE.md](GUIDE.md) for the co-intelligence framework.
 

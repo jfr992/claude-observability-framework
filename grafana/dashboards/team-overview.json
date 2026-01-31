@@ -499,7 +499,7 @@
   "time": { "from": "now-7d", "to": "now" },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Claude Code - Team Overview",
+  "title": "Claude Observability - Team Productivity",
   "uid": "claude-code-team",
   "version": 4
 }
