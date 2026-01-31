@@ -203,11 +203,6 @@ podman compose down && podman compose up -d
 2. Check OTEL collector: `podman logs claude-otel-collector`
 3. Check Prometheus targets: http://localhost:9090/targets
 
-### Tool usage not showing
-1. Verify logs are enabled: `echo $OTEL_LOGS_EXPORTER` (should be `otlp`)
-2. Check Loki is running: `curl http://localhost:3100/ready`
-3. Query Loki directly: `curl -G http://localhost:3100/loki/api/v1/query --data-urlencode 'query={job="claude-code"}'`
-
 ### Dashboard looks wrong
 ```bash
 podman compose restart grafana
