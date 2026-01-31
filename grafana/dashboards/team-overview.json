@@ -14,7 +14,7 @@
       "collapsed": false
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 1 },
+      "gridPos": { "h": 4, "w": 3, "x": 0, "y": 1 },
       "id": 1,
       "type": "stat",
       "title": "Total Cost",
@@ -23,7 +23,7 @@
       "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 100 }, { "color": "red", "value": 500 }] } } }
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 1 },
+      "gridPos": { "h": 4, "w": 3, "x": 3, "y": 1 },
       "id": 2,
       "type": "stat",
       "title": "Active Users",
@@ -32,7 +32,7 @@
       "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } } }
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 1 },
+      "gridPos": { "h": 4, "w": 3, "x": 6, "y": 1 },
       "id": 3,
       "type": "stat",
       "title": "Cost / User",
@@ -41,7 +41,7 @@
       "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 20 }, { "color": "red", "value": 50 }] } } }
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 1 },
+      "gridPos": { "h": 4, "w": 3, "x": 9, "y": 1 },
       "id": 4,
       "type": "stat",
       "title": "Total PRs",
@@ -50,7 +50,7 @@
       "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 1 },
+      "gridPos": { "h": 4, "w": 3, "x": 12, "y": 1 },
       "id": 5,
       "type": "stat",
       "title": "Total Commits",
@@ -59,34 +59,56 @@
       "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } } }
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 1 },
+      "gridPos": { "h": 4, "w": 3, "x": 15, "y": 1 },
       "id": 6,
-      "type": "stat",
-      "title": "Org Accept %",
-      "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "type": "gauge",
+      "title": "Accept Rate",
+      "description": "75-85% = optimal (critical review). >95% = rubber stamping. <60% = poor config.",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "showThresholdLabels": false, "showThresholdMarkers": true },
       "targets": [{ "expr": "100 * sum(max_over_time(claude_code_code_edit_tool_decision_total{decision=\"accept\"}[$__range])) / (sum(max_over_time(claude_code_code_edit_tool_decision_total[$__range])) > 0 or vector(1))", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "percent", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 60 }, { "color": "green", "value": 80 }] } } }
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "orange", "value": 60 }, { "color": "green", "value": 75 }, { "color": "orange", "value": 90 }, { "color": "red", "value": 96 }] } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 3, "x": 18, "y": 1 },
+      "id": 7,
+      "type": "gauge",
+      "title": "Cache Ratio",
+      "description": "Higher = better CLAUDE.md/skills. <5 = bad config. >20 = excellent.",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "showThresholdLabels": false, "showThresholdMarkers": true },
+      "targets": [{ "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / (sum(increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[$__range])) > 0 or vector(1))", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "min": 0, "max": 50, "decimals": 1, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "orange", "value": 5 }, { "color": "yellow", "value": 10 }, { "color": "green", "value": 20 }] } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 3, "x": 21, "y": 1 },
+      "id": 8,
+      "type": "stat",
+      "title": "Config Score",
+      "description": "Combined quality score. Accept(75-85%) + Cache(>20) = 100",
+      "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "clamp_max(50 - abs(80 - (100 * sum(max_over_time(claude_code_code_edit_tool_decision_total{decision=\"accept\"}[$__range])) / (sum(max_over_time(claude_code_code_edit_tool_decision_total[$__range])) > 0 or vector(1)))) + clamp_max((sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / (sum(increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[$__range])) > 0 or vector(1))) * 2.5, 50), 100)", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "orange", "value": 40 }, { "color": "yellow", "value": 60 }, { "color": "green", "value": 80 }] } } }
     },
     {
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
       "id": 101,
       "type": "row",
-      "title": "Developer Leaderboard",
+      "title": "Developer Leaderboard (sorted by Config Quality)",
       "collapsed": false
     },
     {
-      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 6 },
+      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 6 },
       "id": 10,
       "type": "table",
       "title": "Developer Metrics",
-      "options": { "showHeader": true, "sortBy": [{ "displayName": "Cost", "desc": true }] },
+      "description": "Accept Rate: 75-85% optimal. Cache Ratio: higher = better CLAUDE.md",
+      "options": { "showHeader": true, "sortBy": [{ "displayName": "Cache Ratio", "desc": true }] },
       "targets": [
         { "expr": "sum by (user_email) (increase(claude_code_cost_usage_USD_total[$__range]))", "refId": "cost", "format": "table", "instant": true },
         { "expr": "sum by (user_email) (increase(claude_code_token_usage_tokens_total[$__range]))", "refId": "tokens", "format": "table", "instant": true },
         { "expr": "count by (user_email) (count by (user_email, session_id) (claude_code_cost_usage_USD_total))", "refId": "sessions", "format": "table", "instant": true },
         { "expr": "sum by (user_email) (increase(claude_code_pull_request_count_total[$__range]))", "refId": "prs", "format": "table", "instant": true },
-        { "expr": "sum by (user_email) (increase(claude_code_commit_count_total[$__range]))", "refId": "commits", "format": "table", "instant": true },
-        { "expr": "sum by (user_email) (increase(claude_code_lines_of_code_count_total{type=\"added\"}[$__range]))", "refId": "lines", "format": "table", "instant": true }
+        { "expr": "100 * sum by (user_email) (max_over_time(claude_code_code_edit_tool_decision_total{decision=\"accept\"}[$__range])) / (sum by (user_email) (max_over_time(claude_code_code_edit_tool_decision_total[$__range])) > 0 or vector(1))", "refId": "accept", "format": "table", "instant": true },
+        { "expr": "sum by (user_email) (increase(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / (sum by (user_email) (increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[$__range])) > 0 or vector(1))", "refId": "cache", "format": "table", "instant": true }
       ],
       "transformations": [
         { "id": "merge", "options": {} },
@@ -98,8 +120,17 @@
             "Value #tokens": "Tokens",
             "Value #sessions": "Sessions",
             "Value #prs": "PRs",
-            "Value #commits": "Commits",
-            "Value #lines": "Lines Added"
+            "Value #accept": "Accept %",
+            "Value #cache": "Cache Ratio"
+          },
+          "indexByName": {
+            "Developer": 0,
+            "Accept %": 1,
+            "Cache Ratio": 2,
+            "Cost": 3,
+            "Tokens": 4,
+            "Sessions": 5,
+            "PRs": 6
           }
         }}
       ],
@@ -108,29 +139,78 @@
         "overrides": [
           { "matcher": { "id": "byName", "options": "Cost" }, "properties": [{ "id": "unit", "value": "currencyUSD" }] },
           { "matcher": { "id": "byName", "options": "Tokens" }, "properties": [{ "id": "unit", "value": "short" }] },
-          { "matcher": { "id": "byName", "options": "Developer" }, "properties": [{ "id": "custom.width", "value": 250 }] }
+          { "matcher": { "id": "byName", "options": "Developer" }, "properties": [{ "id": "custom.width", "value": 250 }] },
+          { "matcher": { "id": "byName", "options": "Accept %" }, "properties": [
+            { "id": "unit", "value": "percent" },
+            { "id": "custom.cellOptions", "value": { "type": "color-background" } },
+            { "id": "thresholds", "value": { "mode": "absolute", "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 60 },
+              { "color": "green", "value": 75 },
+              { "color": "orange", "value": 90 },
+              { "color": "red", "value": 96 }
+            ]}}
+          ]},
+          { "matcher": { "id": "byName", "options": "Cache Ratio" }, "properties": [
+            { "id": "unit", "value": "short" },
+            { "id": "decimals", "value": 1 },
+            { "id": "custom.cellOptions", "value": { "type": "color-background" } },
+            { "id": "thresholds", "value": { "mode": "absolute", "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 5 },
+              { "color": "yellow", "value": 10 },
+              { "color": "green", "value": 20 }
+            ]}}
+          ]}
         ]
       }
     },
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 16 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 18 },
       "id": 102,
+      "type": "row",
+      "title": "Config Quality Trends",
+      "collapsed": false
+    },
+    {
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 19 },
+      "id": 20,
+      "type": "timeseries",
+      "title": "Accept Rate by Developer",
+      "description": "Track who's reviewing critically vs rubber-stamping",
+      "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["mean"] }, "tooltip": { "mode": "multi" } },
+      "targets": [{ "expr": "100 * sum by (user_email) (rate(claude_code_code_edit_tool_decision_total{decision=\"accept\"}[1h])) / (sum by (user_email) (rate(claude_code_code_edit_tool_decision_total[1h])) > 0 or vector(0.001))", "legendFormat": "{{user_email}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "custom": { "lineWidth": 2, "fillOpacity": 10 }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 75 }, { "color": "red", "value": 95 }] } } }
+    },
+    {
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 19 },
+      "id": 21,
+      "type": "timeseries",
+      "title": "Cache Ratio by Developer",
+      "description": "Higher = better CLAUDE.md/context setup",
+      "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["mean"] }, "tooltip": { "mode": "multi" } },
+      "targets": [{ "expr": "sum by (user_email) (rate(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[1h])) / (sum by (user_email) (rate(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[1h])) > 0 or vector(0.001))", "legendFormat": "{{user_email}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "min": 0, "custom": { "lineWidth": 2, "fillOpacity": 10 }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 10 }, { "color": "green", "value": 20 }] } } }
+    },
+    {
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 27 },
+      "id": 103,
       "type": "row",
       "title": "Cost Analysis",
       "collapsed": false
     },
     {
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 17 },
-      "id": 20,
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 28 },
+      "id": 30,
       "type": "timeseries",
-      "title": "Cost by Developer (over time)",
+      "title": "Cost by Developer",
       "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["sum"] }, "tooltip": { "mode": "multi" } },
       "targets": [{ "expr": "sum by (user_email) (rate(claude_code_cost_usage_USD_total[1h])) * 3600", "legendFormat": "{{user_email}}", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "currencyUSD", "custom": { "lineWidth": 2, "fillOpacity": 20, "stacking": { "mode": "normal" } } } }
     },
     {
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 17 },
-      "id": 21,
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 28 },
+      "id": 31,
       "type": "piechart",
       "title": "Cost Distribution",
       "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
@@ -138,15 +218,15 @@
       "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
     },
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 25 },
-      "id": 103,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 36 },
+      "id": 104,
       "type": "row",
       "title": "Usage Patterns",
       "collapsed": false
     },
     {
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 26 },
-      "id": 30,
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 37 },
+      "id": 40,
       "type": "piechart",
       "title": "By Model",
       "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
@@ -154,8 +234,8 @@
       "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
     },
     {
-      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 26 },
-      "id": 31,
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 37 },
+      "id": 41,
       "type": "piechart",
       "title": "By Terminal/IDE",
       "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
@@ -163,8 +243,8 @@
       "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
     },
     {
-      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 26 },
-      "id": 32,
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 37 },
+      "id": 42,
       "type": "piechart",
       "title": "Token Distribution",
       "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
@@ -172,64 +252,54 @@
       "fieldConfig": { "defaults": { "unit": "short" } }
     },
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 34 },
-      "id": 104,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 45 },
+      "id": 105,
       "type": "row",
       "title": "Individual Developer (use variable filter)",
-      "collapsed": false
-    },
-    {
-      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 35 },
-      "id": 40,
-      "type": "stat",
-      "title": "Selected User Cost",
-      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(increase(claude_code_cost_usage_USD_total{user_email=~\"$user\"}[$__range]))", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
-    },
-    {
-      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 35 },
-      "id": 41,
-      "type": "stat",
-      "title": "Selected User Sessions",
-      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "count(count by (session_id) (claude_code_cost_usage_USD_total{user_email=~\"$user\"}))", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } } }
-    },
-    {
-      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 35 },
-      "id": 42,
-      "type": "stat",
-      "title": "Selected User PRs",
-      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(increase(claude_code_pull_request_count_total{user_email=~\"$user\"}[$__range])) or vector(0)", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
-    },
-    {
-      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 35 },
-      "id": 43,
-      "type": "stat",
-      "title": "Selected User Commits",
-      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(increase(claude_code_commit_count_total{user_email=~\"$user\"}[$__range])) or vector(0)", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } } }
-    },
-    {
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 41 },
-      "id": 44,
-      "type": "timeseries",
-      "title": "Selected User Activity",
-      "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["sum"] }, "tooltip": { "mode": "multi" } },
-      "targets": [
-        { "expr": "sum(rate(claude_code_cost_usage_USD_total{user_email=~\"$user\"}[1h])) * 3600", "legendFormat": "Cost/hr", "refId": "A" },
-        { "expr": "sum(rate(claude_code_token_usage_tokens_total{user_email=~\"$user\"}[1h]))", "legendFormat": "Tokens/hr", "refId": "B" }
-      ],
-      "fieldConfig": { "defaults": { "custom": { "lineWidth": 2, "fillOpacity": 20 } } }
+      "collapsed": true,
+      "panels": [
+        {
+          "gridPos": { "h": 6, "w": 6, "x": 0, "y": 46 },
+          "id": 50,
+          "type": "stat",
+          "title": "Selected User Cost",
+          "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "targets": [{ "expr": "sum(increase(claude_code_cost_usage_USD_total{user_email=~\"$user\"}[$__range]))", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
+        },
+        {
+          "gridPos": { "h": 6, "w": 6, "x": 6, "y": 46 },
+          "id": 51,
+          "type": "gauge",
+          "title": "Selected User Accept %",
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "targets": [{ "expr": "100 * sum(max_over_time(claude_code_code_edit_tool_decision_total{decision=\"accept\", user_email=~\"$user\"}[$__range])) / (sum(max_over_time(claude_code_code_edit_tool_decision_total{user_email=~\"$user\"}[$__range])) > 0 or vector(1))", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 75 }, { "color": "red", "value": 95 }] } } }
+        },
+        {
+          "gridPos": { "h": 6, "w": 6, "x": 12, "y": 46 },
+          "id": 52,
+          "type": "gauge",
+          "title": "Selected User Cache Ratio",
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "targets": [{ "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\", user_email=~\"$user\"}[$__range])) / (sum(increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\", user_email=~\"$user\"}[$__range])) > 0 or vector(1))", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "short", "min": 0, "max": 50, "decimals": 1, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 10 }, { "color": "green", "value": 20 }] } } }
+        },
+        {
+          "gridPos": { "h": 6, "w": 6, "x": 18, "y": 46 },
+          "id": 53,
+          "type": "stat",
+          "title": "Selected User PRs",
+          "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "targets": [{ "expr": "sum(increase(claude_code_pull_request_count_total{user_email=~\"$user\"}[$__range])) or vector(0)", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
+        }
+      ]
     }
   ],
   "refresh": "30s",
   "schemaVersion": 39,
-  "tags": ["claude-code", "team", "multi-user"],
+  "tags": ["claude-code", "team", "multi-user", "config-quality"],
   "templating": {
     "list": [
       {
@@ -249,5 +319,5 @@
   "timezone": "browser",
   "title": "Claude Code - Team Overview",
   "uid": "claude-code-team",
-  "version": 1
+  "version": 2
 }
