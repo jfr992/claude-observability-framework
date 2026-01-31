@@ -89,13 +89,60 @@
     },
     {
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+      "id": 106,
+      "type": "row",
+      "title": "Your Growth (Am I Still Thinking?)",
+      "collapsed": false
+    },
+    {
+      "gridPos": { "h": 5, "w": 6, "x": 0, "y": 6 },
+      "id": 70,
+      "type": "gauge",
+      "title": "Critical Thinking",
+      "description": "Your Accept Rate measures engagement.\n\n• <60% = Claude doesn't understand your context\n• 75-85% = OPTIMAL - you're reviewing critically\n• >95% = DANGER - you've stopped thinking\n\nAsk yourself: Did I actually read that diff?",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "showThresholdLabels": false, "showThresholdMarkers": true, "orientation": "auto" },
+      "targets": [{ "expr": "100 * sum(max_over_time(claude_code_code_edit_tool_decision_total{decision=\"accept\"}[$__range])) / (sum(max_over_time(claude_code_code_edit_tool_decision_total[$__range])) > 0 or vector(1))", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "orange", "value": 60 }, { "color": "green", "value": 75 }, { "color": "orange", "value": 90 }, { "color": "red", "value": 96 }] } } }
+    },
+    {
+      "gridPos": { "h": 5, "w": 6, "x": 6, "y": 6 },
+      "id": 71,
+      "type": "gauge",
+      "title": "Prompt Quality",
+      "description": "Cache Ratio measures how well you set context.\n\n• <5:1 = Poor CLAUDE.md/skills\n• 10-20:1 = Good context setup\n• >20:1 = Excellent - Claude understands you\n\nBetter prompts = better cache = lower cost.",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "showThresholdLabels": false, "showThresholdMarkers": true },
+      "targets": [{ "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / (sum(increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[$__range])) > 0 or vector(1))", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "min": 0, "max": 50, "decimals": 1, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "orange", "value": 5 }, { "color": "yellow", "value": 10 }, { "color": "green", "value": 20 }] } } }
+    },
+    {
+      "gridPos": { "h": 5, "w": 6, "x": 12, "y": 6 },
+      "id": 72,
+      "type": "gauge",
+      "title": "Clarity Score",
+      "description": "Tokens/Session measures instruction clarity.\n\n• <100k = Clear prompts, efficient sessions\n• 100-200k = Getting verbose\n• >300k = Compaction happening - context lost\n\nIf high: Are you explaining clearly upfront?",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "showThresholdLabels": false, "showThresholdMarkers": true },
+      "targets": [{ "expr": "sum(increase(claude_code_token_usage_tokens_total[$__range])) / (count(count by (session_id) (claude_code_cost_usage_USD_total)) > 0 or vector(1))", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "min": 0, "max": 500000, "decimals": 0, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 100000 }, { "color": "orange", "value": 200000 }, { "color": "red", "value": 300000 }] } } }
+    },
+    {
+      "gridPos": { "h": 5, "w": 6, "x": 18, "y": 6 },
+      "id": 73,
+      "type": "stat",
+      "title": "Human Score",
+      "description": "Combined metric: Are you growing WITH Claude?\n\n• 80-100 = Healthy co-intelligence\n• 50-80 = Room to improve\n• <50 = Check your engagement\n\nGoal: Claude amplifies your mind, not replaces it.",
+      "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "clamp_max(clamp_min(50 - abs(80 - (100 * sum(max_over_time(claude_code_code_edit_tool_decision_total{decision=\"accept\"}[$__range])) / (sum(max_over_time(claude_code_code_edit_tool_decision_total[$__range])) > 0 or vector(1)))), 0) + clamp_max((sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / (sum(increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[$__range])) > 0 or vector(1))) * 2, 40) + clamp_max((300000 - (sum(increase(claude_code_token_usage_tokens_total[$__range])) / (count(count by (session_id) (claude_code_cost_usage_USD_total)) > 0 or vector(1)))) / 30000, 10), 100)", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "orange", "value": 50 }, { "color": "yellow", "value": 70 }, { "color": "green", "value": 85 }] } } }
+    },
+    {
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 11 },
       "id": 105,
       "type": "row",
       "title": "ROI Metrics",
       "collapsed": false
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 6 },
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 12 },
       "id": 60,
       "type": "stat",
       "title": "PRs Created",
@@ -104,7 +151,7 @@
       "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 6 },
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 12 },
       "id": 61,
       "type": "stat",
       "title": "Commits",
@@ -113,7 +160,7 @@
       "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } } }
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 6 },
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 12 },
       "id": 62,
       "type": "stat",
       "title": "Cost/PR",
@@ -122,7 +169,7 @@
       "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 15 }] } } }
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 6 },
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 12 },
       "id": 63,
       "type": "stat",
       "title": "Edits",
@@ -131,7 +178,7 @@
       "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 6 },
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 12 },
       "id": 64,
       "type": "stat",
       "title": "Accept %",
@@ -140,7 +187,7 @@
       "fieldConfig": { "defaults": { "unit": "percent", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 60 }, { "color": "green", "value": 80 }] } } }
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 6 },
+      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 12 },
       "id": 65,
       "type": "stat",
       "title": "Cache Ratio",
@@ -150,14 +197,14 @@
       "fieldConfig": { "defaults": { "unit": "short", "decimals": 1, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 5 }, { "color": "green", "value": 20 }] } } }
     },
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 10 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 16 },
       "id": 101,
       "type": "row",
       "title": "Provider Comparison",
       "collapsed": false
     },
     {
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 11 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 17 },
       "id": 30,
       "type": "timeseries",
       "title": "Cost by Model",
@@ -166,7 +213,7 @@
       "fieldConfig": { "defaults": { "unit": "currencyUSD", "custom": { "lineWidth": 2, "fillOpacity": 30, "stacking": { "mode": "normal" } } } }
     },
     {
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 11 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 17 },
       "id": 31,
       "type": "timeseries",
       "title": "Tokens by Type",
@@ -175,7 +222,7 @@
       "fieldConfig": { "defaults": { "unit": "short", "custom": { "lineWidth": 2, "fillOpacity": 30, "stacking": { "mode": "normal" } } } }
     },
     {
-      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 19 },
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 25 },
       "id": 32,
       "type": "piechart",
       "title": "Cost by User",
@@ -184,7 +231,7 @@
       "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
     },
     {
-      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 19 },
+      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 25 },
       "id": 33,
       "type": "piechart",
       "title": "Tokens by Type",
@@ -193,7 +240,7 @@
       "fieldConfig": { "defaults": { "unit": "short" } }
     },
     {
-      "gridPos": { "h": 8, "w": 6, "x": 12, "y": 19 },
+      "gridPos": { "h": 8, "w": 6, "x": 12, "y": 25 },
       "id": 12,
       "type": "piechart",
       "title": "Cost by Model",
@@ -202,7 +249,7 @@
       "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
     },
     {
-      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 19 },
+      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 25 },
       "id": 14,
       "type": "piechart",
       "title": "By Terminal",
@@ -211,14 +258,14 @@
       "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
     },
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 27 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 33 },
       "id": 104,
       "type": "row",
       "title": "Bedrock Breakdown (requires OTEL_RESOURCE_ATTRIBUTES)",
       "collapsed": true
     },
     {
-      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 28 },
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 34 },
       "id": 50,
       "type": "piechart",
       "title": "Inference Profile vs Direct",
@@ -227,7 +274,7 @@
       "fieldConfig": { "defaults": { "unit": "currencyUSD" }, "overrides": [{ "matcher": { "id": "byName", "options": "inference-profile" }, "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }] }, { "matcher": { "id": "byName", "options": "direct" }, "properties": [{ "id": "color", "value": { "fixedColor": "yellow", "mode": "fixed" } }] }] }
     },
     {
-      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 28 },
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 34 },
       "id": 51,
       "type": "piechart",
       "title": "By AWS Profile",
@@ -236,7 +283,7 @@
       "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
     },
     {
-      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 28 },
+      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 34 },
       "id": 52,
       "type": "stat",
       "title": "Bedrock Summary",
@@ -248,14 +295,14 @@
       "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "palette-classic" } } }
     },
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 34 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 40 },
       "id": 102,
       "type": "row",
       "title": "Session Details",
       "collapsed": false
     },
     {
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 35 },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 41 },
       "id": 40,
       "type": "table",
       "title": "Sessions",
@@ -271,14 +318,14 @@
       "fieldConfig": { "defaults": {}, "overrides": [{ "matcher": { "id": "byName", "options": "Cost" }, "properties": [{ "id": "unit", "value": "currencyUSD" }] }, { "matcher": { "id": "byName", "options": "Tokens" }, "properties": [{ "id": "unit", "value": "short" }] }, { "matcher": { "id": "byName", "options": "Session" }, "properties": [{ "id": "custom.width", "value": 300 }] }] }
     },
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 43 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 49 },
       "id": 103,
       "type": "row",
       "title": "Model Breakdown",
       "collapsed": false
     },
     {
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 44 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 50 },
       "id": 10,
       "type": "timeseries",
       "title": "Cost by Model",
@@ -287,7 +334,7 @@
       "fieldConfig": { "defaults": { "unit": "currencyUSD", "custom": { "lineWidth": 2, "fillOpacity": 30, "stacking": { "mode": "normal" } } } }
     },
     {
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 44 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 50 },
       "id": 11,
       "type": "timeseries",
       "title": "Tokens by Model",
@@ -296,7 +343,7 @@
       "fieldConfig": { "defaults": { "unit": "short", "custom": { "lineWidth": 2, "fillOpacity": 30, "stacking": { "mode": "normal" } } } }
     },
     {
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 52 },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 58 },
       "id": 15,
       "type": "table",
       "title": "Model Details",

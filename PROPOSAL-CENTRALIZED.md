@@ -86,34 +86,83 @@ helm install grafana grafana/grafana
 
 ## Developer Onboarding
 
-### One-Time Setup Script
+### Critical: Identity Tracking
 
-Create `setup-claude-telemetry.sh` for developers:
+Without proper identity configuration, all developers show as "unknown" in dashboards. The `OTEL_RESOURCE_ATTRIBUTES` environment variable is **required** for per-developer metrics.
+
+### One-Time Setup Script (Bedrock)
+
+Create `setup-claude-telemetry.sh` for developers using AWS Bedrock:
 
 ```bash
 #!/bin/bash
-# Distributed to all developers
+# Distributed to all developers using Bedrock
+
+# Get user identity from git config
+USER_EMAIL=$(git config user.email)
+if [ -z "$USER_EMAIL" ]; then
+  echo "Error: git user.email not configured. Run: git config --global user.email 'you@company.com'"
+  exit 1
+fi
+
+# Prompt for team (or detect from email domain)
+read -p "Enter your team name (e.g., platform, frontend, backend): " TEAM_NAME
+TEAM_NAME=${TEAM_NAME:-unknown}
 
 # Company OTEL endpoint
 OTEL_ENDPOINT="https://otel.company.com:4317"
-AUTH_TOKEN="${CLAUDE_METRICS_TOKEN}"  # From 1Password/Vault
 
 # Add to shell profile
-cat >> ~/.zshrc << 'EOF'
-# Claude Code Telemetry
+cat >> ~/.zshrc << EOF
+# Claude Code Telemetry - Bedrock
+export CLAUDE_CODE_ENABLE_TELEMETRY=1
+export OTEL_METRICS_EXPORTER=otlp
+export OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+export OTEL_EXPORTER_OTLP_ENDPOINT="${OTEL_ENDPOINT}"
+export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer \${CLAUDE_METRICS_TOKEN}"
+
+# CRITICAL: Identity tracking for per-developer metrics
+export OTEL_RESOURCE_ATTRIBUTES="user_email=${USER_EMAIL},provider=bedrock,team=${TEAM_NAME},aws_profile=\${AWS_PROFILE:-default}"
+EOF
+
+echo ""
+echo "Setup complete!"
+echo "  User: ${USER_EMAIL}"
+echo "  Team: ${TEAM_NAME}"
+echo "  Provider: bedrock"
+echo ""
+echo "Restart your terminal and run 'claude' to start sending metrics."
+```
+
+### One-Time Setup Script (Anthropic API / Max)
+
+For developers using Anthropic API directly or Claude Max subscription:
+
+```bash
+#!/bin/bash
+# For Anthropic API / Max users
+
+USER_EMAIL=$(git config user.email)
+read -p "Enter your team name: " TEAM_NAME
+
+cat >> ~/.zshrc << EOF
+# Claude Code Telemetry - Anthropic
 export CLAUDE_CODE_ENABLE_TELEMETRY=1
 export OTEL_METRICS_EXPORTER=otlp
 export OTEL_EXPORTER_OTLP_PROTOCOL=grpc
 export OTEL_EXPORTER_OTLP_ENDPOINT="https://otel.company.com:4317"
-export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer ${CLAUDE_METRICS_TOKEN}"
-EOF
+export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer \${CLAUDE_METRICS_TOKEN}"
 
-echo "Done! Restart your terminal and run 'claude' to start sending metrics."
+# Identity tracking
+export OTEL_RESOURCE_ATTRIBUTES="user_email=${USER_EMAIL},provider=anthropic-max,team=${TEAM_NAME}"
+EOF
 ```
 
 ### MDM/Fleet Deployment
 
-For managed devices, use the Claude Code managed settings:
+For managed devices, use Claude Code managed settings.
+
+**Note:** `user_email` must be dynamically set per-device. Use MDM templating:
 
 ```json
 // /Library/Application Support/ClaudeCode/managed-settings.json (macOS)
@@ -124,9 +173,27 @@ For managed devices, use the Claude Code managed settings:
     "OTEL_METRICS_EXPORTER": "otlp",
     "OTEL_EXPORTER_OTLP_PROTOCOL": "grpc",
     "OTEL_EXPORTER_OTLP_ENDPOINT": "https://otel.company.com:4317",
-    "OTEL_EXPORTER_OTLP_HEADERS": "Authorization=Bearer ${CLAUDE_METRICS_TOKEN}"
+    "OTEL_EXPORTER_OTLP_HEADERS": "Authorization=Bearer ${CLAUDE_METRICS_TOKEN}",
+    "OTEL_RESOURCE_ATTRIBUTES": "user_email=${USER_EMAIL},provider=bedrock,team=${TEAM}"
   }
 }
+```
+
+For Jamf/Intune, use variable substitution:
+- `${USER_EMAIL}` → `$EMAIL` (Jamf) or `{{userprincipalname}}` (Intune)
+- `${TEAM}` → from device group or department field
+
+### Verifying Setup
+
+After setup, developers can verify their identity is tracked:
+
+```bash
+# Check environment
+echo $OTEL_RESOURCE_ATTRIBUTES
+# Should show: user_email=you@company.com,provider=bedrock,team=yourteam,...
+
+# Run a quick Claude session, then check Prometheus
+curl -s 'http://prometheus:9090/api/v1/query?query=claude_code_cost_usage_USD_total' | jq '.data.result[].metric.user_email'
 ```
 
 ## Dashboard Design
