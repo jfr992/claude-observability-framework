@@ -148,6 +148,7 @@
       "id": 60,
       "type": "stat",
       "title": "PRs Created",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "targets": [{ "expr": "sum(claude_code_pull_request_count_total) or vector(0)", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
@@ -157,6 +158,7 @@
       "id": 61,
       "type": "stat",
       "title": "Commits",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "targets": [{ "expr": "sum(claude_code_commit_count_total) or vector(0)", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } } }
