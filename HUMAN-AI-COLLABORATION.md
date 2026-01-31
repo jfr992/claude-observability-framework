@@ -1,152 +1,223 @@
-# Human-AI Collaboration: Co-Intelligence, Not Replacement
+# AI Observability: A Framework for Co-Intelligence
 
-## The Philosophy
+## Why We Measure
 
-Claude is a **co-intelligence** - designed to amplify your thinking, not replace it.
+This isn't about surveillance. It's not about blame. It's not about catching anyone doing something wrong.
 
-When you accept every suggestion without reading, you're not using AI assistance. You're abdicating your role as an engineer. Your mind atrophies. Your judgment weakens. You become a button-presser, not a craftsman.
+**We measure to learn.**
 
-**The goal is synergy:** Claude's speed and breadth + your judgment and depth.
+When you track your Claude Code usage, you're not auditing yourself - you're developing a feedback loop for growth. Like an athlete who watches game film, or a musician who records practice sessions, observability gives you the data to improve your craft.
 
-## The Metrics That Keep You Human
+The goal is simple: **become a better engineer who happens to use AI, not an AI operator who used to be an engineer.**
 
-### 1. Critical Thinking (Accept Rate)
+## The Philosophy: Co-Intelligence
 
-| Rate | What It Means | What To Do |
-|------|---------------|------------|
-| <60% | Claude doesn't understand your context | Improve CLAUDE.md, add examples |
-| 60-75% | Healthy friction | You're engaged, keep tuning |
-| **75-85%** | **OPTIMAL** | You're reviewing critically |
-| 85-95% | Getting passive | Slow down, read the diffs |
-| >95% | **DANGER** | You've stopped thinking |
+Claude is not a replacement for your mind. It's an extension of it.
 
-**Ask yourself before accepting:**
-- Did I actually read this diff?
-- Would I write it this way?
-- Are there edge cases Claude missed?
-- Does this match our patterns?
+Think of it like pair programming with an infinitely patient partner who:
+- Never gets tired of explaining
+- Remembers every pattern they've ever seen
+- Types faster than humanly possible
+- Has no ego about their suggestions being rejected
 
-### 2. Prompt Quality (Cache Ratio)
+But this partner also:
+- Can't see what you see
+- Doesn't know your codebase's history
+- Doesn't understand your team's unwritten rules
+- Has no intuition about what "feels right"
 
-High cache ratio means Claude understands your context. It means your CLAUDE.md, skills, and prompts are working.
+**You bring judgment. Claude brings speed. Together, you're unstoppable.**
 
-| Ratio | Meaning |
-|-------|---------|
-| <5:1 | Claude is rebuilding context every time |
-| 10-20:1 | Good context reuse |
-| >20:1 | Excellent - your setup is working |
+## What the Metrics Actually Tell You
 
-**To improve:** Write better CLAUDE.md with patterns, anti-patterns, and domain context.
+### About Your Learning (Accept Rate)
 
-### 3. Instruction Clarity (Tokens/Session)
+This isn't about whether you're "doing it right." It's about your relationship with AI suggestions.
 
-High tokens per session means compaction is happening - context is being lost and rebuilt.
+| Rate | What You're Learning |
+|------|---------------------|
+| <60% | Claude doesn't understand your context yet. Your CLAUDE.md needs work. Or you're working in a domain Claude hasn't seen much. |
+| 60-75% | Healthy tension. You're evaluating critically, pushing back when needed. |
+| 75-85% | The sweet spot. You trust Claude's suggestions but still catch issues. |
+| 85-95% | Ask yourself: am I still reading the diffs? |
+| >95% | Time for a calibration. Read the next 10 suggestions character-by-character. |
 
-| Tokens | Meaning |
-|--------|---------|
-| <100k | Clear prompts, efficient sessions |
-| 100-200k | Getting verbose |
-| >300k | Compaction happening - context lost |
+**The insight:** If your rate changes, ask why. Did you start a new project? Change domains? Get tired? The metric is a mirror, not a judge.
 
-**To improve:** Be specific upfront. Include constraints, expected output, and context in your first message.
+### About Your Communication (Cache Ratio)
 
-## Skills You Must Not Lose
+High cache ratio means Claude understands your context. It means you're communicating effectively.
 
-### Technical Skills
+Low cache ratio? You're re-explaining things. Claude is rebuilding context from scratch. Ask yourself:
+- Is my CLAUDE.md comprehensive enough?
+- Am I starting too many fresh sessions?
+- Could I structure my prompts to build on previous context?
 
-| Skill | How AI Tempts Atrophy | How To Stay Sharp |
-|-------|----------------------|-------------------|
-| **Debugging** | "Claude will fix it" | Read the error first, form a hypothesis |
-| **Architecture** | "Claude knows patterns" | Design the structure, let Claude implement |
-| **Code Reading** | "Just accept and move on" | Read every diff, understand the changes |
-| **Problem Decomposition** | "Give Claude the whole thing" | Break it down, prompt for pieces |
-| **Testing** | "Claude writes tests" | Define the test cases, verify the logic |
+**The insight:** This is about your documentation and communication skills. Better docs = better AI assistance.
 
-### Judgment Skills
+### About Your Clarity (Session Size)
 
-| Skill | What It Is | How To Preserve It |
-|-------|------------|-------------------|
-| **Trade-off Analysis** | Knowing when to choose X over Y | Ask Claude for options, YOU decide |
-| **Context Awareness** | Understanding the bigger picture | Explain context to Claude, don't assume |
-| **Quality Standards** | Knowing "good enough" | Reject suggestions that don't meet your bar |
-| **Pattern Recognition** | Seeing what's wrong before running | Review code before testing |
+Large sessions (high tokens) mean one of two things:
+1. You're doing deep, complex work (good)
+2. You're going in circles, context is getting compacted (opportunity)
 
-## The Collaboration Contract
+**The insight:** If sessions are consistently huge, try breaking work into smaller, focused tasks. Not because big sessions are "wrong," but because fresh context often produces better results.
 
-### What Claude Should Do
+## What We're Really Measuring: Growth
 
-1. Execute your vision, not replace it
-2. Offer options, not mandates
-3. Explain reasoning, so you learn
-4. Catch your blind spots
-5. Move faster on boilerplate
+### Technical Growth
 
-### What You Should Do
+| Observable | What It Reveals |
+|------------|-----------------|
+| Tools used | Are you exploring all capabilities? Bash, Read, Grep, Task agents? |
+| Models chosen | Are you matching model capability to task complexity? |
+| Session patterns | Do you know when to start fresh vs. continue? |
 
-1. **Think first** - Form an opinion before prompting
-2. **Read everything** - Every diff, every suggestion
-3. **Question suggestions** - "Is this the best way?"
-4. **Provide context** - Claude can't read your mind
-5. **Stay curious** - Understand why, not just what
+### Collaboration Growth
 
-## Red Flags: When You're Over-Relying
+| Observable | What It Reveals |
+|------------|-----------------|
+| Accept rate trend | Are you calibrating your trust appropriately over time? |
+| Cache ratio trend | Is your documentation improving? |
+| Cost/PR | Are you getting more efficient at delivering value? |
 
-- You can't explain what the code does
-- You haven't rejected a suggestion in days
-- You prompt before thinking
-- You feel anxious when Claude is slow
-- Your code reviews are "LGTM" with no comments
-- You can't work without AI assistance
+### Curiosity Indicators
 
-## Green Flags: Healthy Co-Intelligence
+The best engineers using AI share these patterns:
+- They **read the code** Claude generates, not just the outcome
+- They **ask why** Claude suggested something, not just accept it
+- They **experiment** with different prompting approaches
+- They **learn patterns** from Claude's suggestions and apply them independently
+- They **troubleshoot** when things don't work, treating Claude like a collaborator
 
-- You reject ~20% of suggestions after consideration
-- You modify suggestions to fit your style
-- You can explain every line of code
-- You use Claude for speed, not for thinking
-- You're learning from Claude's suggestions
-- You could work without AI (just slower)
+## The Anti-Patterns (And Why They Happen)
 
-## Prompting for Growth
+### "The Rubber Stamper" (>95% Accept)
 
-### Instead of: "Fix this bug"
-**Try:** "Here's my hypothesis about this bug: [X]. Can you verify and implement a fix?"
+**What's happening:** Accepting everything without reading.
 
-### Instead of: "Write tests for this"
-**Try:** "I want to test these scenarios: [list]. Generate tests for them."
+**Why it happens:** Trust built up over time, time pressure, fatigue.
 
-### Instead of: "Refactor this code"
-**Try:** "This code has [specific problems]. Refactor with [specific constraints]."
+**The cost:** You stop learning. Your skills atrophy. When Claude is wrong (and it will be), you won't catch it.
 
-### Instead of: "Build this feature"
-**Try:** "I'm implementing [feature]. Here's my design: [sketch]. Implement with these patterns: [list]."
+**The fix:** Not suspicion - curiosity. Read the diffs. Ask yourself: "Would I have written it this way?" If yes, great. If no, why not? Maybe Claude's way is better. Maybe it's not. Either way, you learned something.
 
-## Daily Practices
+### "The Micromanager" (<60% Accept)
 
-1. **Morning:** Review yesterday's AI-assisted code. Could you write it yourself?
-2. **Before prompting:** Form your own approach first
-3. **After accepting:** Verify you understand every change
-4. **Weekly:** Try one task without AI to stay sharp
-5. **Monthly:** Review your Accept Rate trend
+**What's happening:** Rejecting most suggestions.
 
-## The Meta-Goal
+**Why it happens:** Claude doesn't understand your context, or you don't trust it yet.
+
+**The cost:** You're not getting the speed benefit. You're doing Claude's job for it.
+
+**The fix:** Invest in context. Write better CLAUDE.md. Explain your patterns. Give Claude a chance to learn your codebase.
+
+### "The Context Burner" (>300k tokens/session)
+
+**What's happening:** Sessions running until they hit limits.
+
+**Why it happens:** Deep complex work, or going in circles, or not starting fresh when you should.
+
+**The cost:** Context gets compacted. Claude loses the thread. Quality degrades.
+
+**The fix:** Learn to recognize when a fresh session would help. Use `/compact` proactively. Break large tasks into phases.
+
+## The Real Questions to Ask
+
+Instead of "Am I using AI correctly?" ask:
+
+1. **Am I learning?**
+   - Do I understand the code Claude wrote?
+   - Could I write it myself if I had to?
+   - Am I picking up new patterns and techniques?
+
+2. **Am I curious?**
+   - Do I ask Claude to explain its reasoning?
+   - Do I experiment with different approaches?
+   - Do I read the diffs carefully?
+
+3. **Am I improving?**
+   - Is my prompting getting more effective?
+   - Am I delivering value faster?
+   - Are my code reviews still meaningful?
+
+4. **Am I in control?**
+   - Do I decide the architecture?
+   - Do I set the constraints?
+   - Do I make the judgment calls?
+
+## Troubleshooting: When Things Feel Off
+
+### "Claude keeps getting it wrong"
+
+**Check:** Your CLAUDE.md. Is it comprehensive? Does it include patterns, anti-patterns, and domain context?
+
+**Try:** Give Claude more context upfront. Include examples of what you want.
+
+### "I'm spending too much"
+
+**Check:** Cost/PR metric. Are you getting value for the cost?
+
+**Try:** Use Haiku for simple tasks. Start fresh sessions more often. Be more specific in initial prompts.
+
+### "I feel like I'm not learning anymore"
+
+**Check:** Your accept rate. Has it crept up toward 100%?
+
+**Try:** Deliberately slow down. Read every diff. Form your own opinion before seeing Claude's suggestion.
+
+### "Sessions feel inefficient"
+
+**Check:** Token/session metric. Cache ratio.
+
+**Try:** Better upfront context. Clearer problem statements. Know when to start fresh.
+
+## The Mindset
+
+**Observability is not surveillance.**
+
+It's the same reason you:
+- Track your workouts to improve fitness
+- Review your code to catch bugs
+- Reflect on projects to improve process
+
+You're not measuring to catch yourself being "bad." You're measuring to understand yourself better, to find patterns, to grow.
+
+**The metrics are mirrors, not judges.**
+
+When you see something in the data, don't ask "Is this good or bad?" Ask:
+- What does this tell me about how I work?
+- What would I like to be different?
+- What can I try to change it?
+
+## The Commitment
+
+Using AI well requires intentionality. Here's what that looks like:
+
+1. **Stay curious** - Ask why Claude suggested something, not just whether it works
+2. **Stay critical** - Read the diffs, understand the changes, push back when needed
+3. **Stay learning** - Notice patterns in Claude's suggestions, absorb the good ones
+4. **Stay in charge** - You decide the architecture, the patterns, the direction
+5. **Stay humble** - Sometimes Claude's way is better. Learn from it.
+
+## The Goal
 
 ```
-Your skills + Claude's speed = 10x output at 10x quality
+You + Claude = Better than either alone
 
-NOT:
-
-Claude's skills replacing yours = 10x output at 1x understanding
+Not: Claude doing your job
+Not: You doing Claude's job
+But: True collaboration where both contribute their strengths
 ```
 
-When your Accept Rate is 75-85%, your Cache Ratio is >20, and your Tokens/Session is <100k, you're in the sweet spot:
-
-- **You're thinking critically** (not rubber-stamping)
-- **Claude understands you** (context is working)
-- **Your prompts are clear** (efficient sessions)
+When you look at your metrics, you should see:
+- Evidence of critical engagement (75-85% accept rate)
+- Evidence of clear communication (high cache ratio)
+- Evidence of efficient work (reasonable session sizes)
+- Evidence of curiosity (varied tool usage, experimentation)
 
 This is co-intelligence. This is the goal.
 
 ---
 
-*"The computer is incredibly fast, accurate, and stupid. The human is incredibly slow, inaccurate, and brilliant. Together they are powerful beyond imagination."* - Unknown (often misattributed to Einstein)
+*"The best engineers don't just use AI - they collaborate with it. They bring judgment, context, and vision. AI brings speed, breadth, and tireless patience. Together, they create things neither could alone."*

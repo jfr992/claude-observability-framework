@@ -2,6 +2,8 @@
 
 Local observability stack for tracking Claude Code usage, cost, and ROI via OpenTelemetry.
 
+**Philosophy:** This is about growth, not surveillance. See [HUMAN-AI-COLLABORATION.md](HUMAN-AI-COLLABORATION.md) for the co-intelligence framework.
+
 ## Quick Start
 
 ```bash
@@ -16,16 +18,16 @@ open http://localhost:9090  # Prometheus
 ## Architecture
 
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────┐
-│   Claude Code   │────▶│  OTEL Collector  │────▶│  Prometheus │
-│  (your terminal)│     │   :4317/:4318    │     │    :9090    │
-└─────────────────┘     └──────────────────┘     └──────┬──────┘
-                                                        │
-                                                        ▼
-                                                 ┌─────────────┐
-                                                 │   Grafana   │
-                                                 │    :3000    │
-                                                 └─────────────┘
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Claude Code   │────▶│  OTEL Collector  │────▶│  Prometheus │────▶│   Grafana   │
+│  (your terminal)│     │   :4317/:4318    │     │    :9090    │     │    :3000    │
+└─────────────────┘     └────────┬─────────┘     └─────────────┘     └─────────────┘
+                                 │
+                                 ▼
+                          ┌─────────────┐
+                          │    Loki     │  (logs for tool usage)
+                          │    :3100    │
+                          └─────────────┘
 ```
 
 ## File Structure
@@ -33,18 +35,24 @@ open http://localhost:9090  # Prometheus
 ```
 claude-metrics/
 ├── docker-compose.yaml          # Container orchestration
-├── otel-config.yaml             # OTEL Collector pipeline
+├── otel-config.yaml             # OTEL Collector pipeline (metrics + logs)
 ├── prometheus.yaml              # Prometheus scrape config
+├── loki-config.yaml             # Loki log storage config
 ├── grafana/
 │   ├── dashboards/
-│   │   └── claude-code.json     # Main dashboard
+│   │   ├── claude-code.json     # Personal dashboard
+│   │   └── team-overview.json   # Team dashboard
 │   └── provisioning/            # Auto-provisioning
 ├── scripts/
-│   └── generate-roi-report.sh   # CLI report generator
+│   ├── setup-mac.sh             # Mac onboarding (interactive)
+│   ├── generate-report.sh       # CLI ROI report generator
+│   └── check-storage.sh         # Storage usage monitor
 ├── data/                        # Persistent storage (git-ignored)
-│   ├── prometheus/              # TSDB (30-day retention)
+│   ├── prometheus/              # Metrics TSDB
+│   ├── loki/                    # Log storage
 │   └── grafana/                 # Grafana DB
-└── CLAUDE.md                    # This file
+├── CLAUDE.md                    # This file
+└── HUMAN-AI-COLLABORATION.md    # Co-intelligence philosophy
 ```
 
 ## Enabling Telemetry
@@ -54,220 +62,156 @@ Set these environment variables before running Claude Code:
 ```bash
 export CLAUDE_CODE_ENABLE_TELEMETRY=1
 export OTEL_METRICS_EXPORTER=otlp
+export OTEL_LOGS_EXPORTER=otlp
 export OTEL_EXPORTER_OTLP_PROTOCOL=grpc
 export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 ```
 
+Or use the interactive setup:
+```bash
+./scripts/setup-mac.sh
+```
+
+Or use [claude-switch](https://github.com/your-org/claude-switcher) which configures telemetry automatically.
+
+## Dashboards
+
+### Personal Dashboard (claude-code)
+- **Overview:** Cost, tokens, sessions, lines of code
+- **Efficiency:** Accept Rate, Cache Ratio, Session Size gauges
+- **Breakdown:** By model, by token type, by terminal
+- **Tool Usage:** From Loki logs - see which tools you use most
+
+### Team Dashboard (team-overview)
+- **Organization Overview:** Total cost, active users, PRs, commits
+- **ROI Metrics:** Cost/PR, Cost/Session, Cost/Commit, Sessions/PR
+- **Developer Leaderboard:** Per-user metrics table
+- **Tool Usage:** Team-wide tool distribution
+- **Productivity:** Lines added/removed, active time, cost/hour
+
 ## Available Metrics
 
-Claude Code exports these metrics automatically:
-
-| Metric | Type | Labels | Description |
-|--------|------|--------|-------------|
-| `claude_code_cost_usage_USD_total` | Counter | model, session_id, user_email | Cumulative cost in USD |
-| `claude_code_token_usage_tokens_total` | Counter | model, type | Token counts |
-| `claude_code_session_count_total` | Counter | - | Session starts |
-| `claude_code_active_time_seconds_total` | Counter | - | Active usage time |
-| `claude_code_lines_of_code_count_total` | Counter | type (added/removed) | Lines changed |
-| `claude_code_code_edit_tool_decision_total` | Counter | decision, tool, language | Edit accepts/rejects |
-| `claude_code_pull_request_count_total` | Counter | - | PRs created |
-| `claude_code_commit_count_total` | Counter | - | Commits created |
+| Metric | Type | Description |
+|--------|------|-------------|
+| `claude_code_cost_usage_USD_total` | Counter | Cumulative cost in USD |
+| `claude_code_token_usage_tokens_total` | Counter | Token counts by type |
+| `claude_code_session_count_total` | Counter | Session starts |
+| `claude_code_active_time_seconds_total` | Counter | Active usage time |
+| `claude_code_lines_of_code_count_total` | Counter | Lines changed |
+| `claude_code_code_edit_tool_decision_total` | Counter | Edit accepts/rejects |
+| `claude_code_pull_request_count_total` | Counter | PRs created |
+| `claude_code_commit_count_total` | Counter | Commits created |
 
 ### Token Types
-
-The `type` label on `token_usage` has these values:
 - `input` - Tokens sent to the model
 - `output` - Tokens generated by the model
 - `cacheRead` - Tokens read from prompt cache
 - `cacheCreation` - Tokens used to create cache
 
-### Built-in Labels
+### Key Labels
+| Label | Description |
+|-------|-------------|
+| `model` | Model identifier |
+| `session_id` | Unique session ID |
+| `user_email` | User's email (required for per-user metrics) |
+| `terminal_type` | Terminal/IDE (iTerm.app, vscode, cursor) |
 
-These labels are automatically added by Claude Code:
+## Key Metrics & Benchmarks
 
-| Label | Example | Description |
-|-------|---------|-------------|
-| `model` | `claude-sonnet-4-20250514` | Model identifier |
-| `session_id` | `a549970d-91dc-...` | Unique session ID |
-| `user_email` | `user@example.com` | User's email |
-| `user_account_uuid` | `279cebac-...` | User's account ID |
-| `organization_id` | `99bd0c58-...` | Organization ID |
-| `terminal_type` | `iTerm.app`, `vscode` | Terminal/IDE |
-| `service_version` | `2.1.27` | Claude Code version |
+| Metric | Formula | Good | Warning | Concern |
+|--------|---------|------|---------|---------|
+| **Accept Rate** | accepts / total | 75-85% | 60-75% or 85-95% | <60% or >95% |
+| **Cache Ratio** | reads / creates | >20:1 | 10-20:1 | <10:1 |
+| **Session Size** | tokens / sessions | <100k | 100-300k | >300k |
+| **Cost/PR** | cost / prs | <$5 | $5-10 | >$10 |
+| **Cost/Session** | cost / sessions | <$0.10 | $0.10-0.50 | >$0.50 |
 
-## Dashboard Sections
+### What These Mean (Growth Mindset)
 
-### 1. Overview Row
-- **Total Cost** - Sum of all costs in time range
-- **Tokens** - Total token usage
-- **Sessions** - Unique session count
-- **Active Time** - Time spent in Claude Code
-- **Lines +/-** - Code added/removed
-- **Input/Output** - Token breakdown
+| Metric | What It Tells You |
+|--------|-------------------|
+| **Accept Rate** | Your critical engagement with AI suggestions |
+| **Cache Ratio** | How well your documentation communicates context |
+| **Session Size** | Whether you're working efficiently or going in circles |
+| **Cost/PR** | Value delivered per dollar spent |
 
-### 2. ROI Metrics Row
-- **PRs Created** - Pull requests made via Claude
-- **Commits** - Git commits made via Claude
-- **Cost/PR** - Average cost per pull request
-- **Edits** - Total edit tool invocations
-- **Accept %** - Edit acceptance rate (higher = better suggestions)
-- **Cache Ratio** - Cache reads / cache creation (higher = better efficiency)
+See [HUMAN-AI-COLLABORATION.md](HUMAN-AI-COLLABORATION.md) for the philosophy behind these metrics.
 
-### 3. Breakdown Row
-- Cost by Model (time series)
-- Tokens by Type (time series)
-- Cost by User (pie)
-- Tokens by Type (pie)
-- Cost by Model (pie)
-- By Terminal (pie)
-
-### 4. Bedrock Breakdown Row (Collapsed)
-Requires custom `OTEL_RESOURCE_ATTRIBUTES` setup:
-- Inference Profile vs Direct model
-- By AWS Profile
-- Bedrock Summary
-
-### 5. Session Details
-Table showing each session with:
-- Session ID
-- Provider
-- Model
-- Cost
-- Tokens
-
-### 6. Model Breakdown
-- Cost by Model (time series)
-- Tokens by Model (time series)
-- Model Details table (cost, input, output, cache read)
-
-## ROI Measurement
-
-### Generate Report
+## Generate ROI Report
 
 ```bash
 # Last 7 days (default)
-./scripts/generate-roi-report.sh
+./scripts/generate-report.sh
 
 # Last 30 days
-RANGE=30d ./scripts/generate-roi-report.sh
+RANGE=30d ./scripts/generate-report.sh
 
 # Save to file
-./scripts/generate-roi-report.sh > report.md
+./scripts/generate-report.sh > report.md
 ```
 
-### Key ROI Metrics
+## Storage & Retention
 
-| Metric | Formula | Good Value |
-|--------|---------|------------|
-| **Cost per PR** | total_cost / pr_count | < $5 |
-| **Accept Rate** | accepts / (accepts + rejects) | > 80% |
-| **Cache Ratio** | cache_reads / cache_created | > 20:1 |
-| **Cost per Hour** | total_cost / active_hours | < hourly rate |
+| Component | Time Limit | Size Limit | Notes |
+|-----------|------------|------------|-------|
+| Prometheus | 30 days | 1 GB | Whichever hits first |
+| Loki | 14 days | Ingestion throttled | Logs less critical |
+| Grafana | Unlimited | ~5 MB | Config only |
 
-### ROI Calculation
-
-```
-ROI = (Value Created - Cost) / Cost
-
-Value Created =
-  (PRs × avg_PR_value) +
-  (Hours_saved × hourly_rate) +
-  (Bugs_prevented × bug_cost)
+Check storage usage:
+```bash
+./scripts/check-storage.sh
 ```
 
-### Subscription vs API Comparison
+Emergency cleanup:
+```bash
+podman compose down
+rm -rf data/prometheus/* data/loki/*
+podman compose up -d
+```
 
-| Plan | Monthly | Break-even API Cost |
-|------|---------|---------------------|
-| Claude Pro | $20 | $20/month |
-| Claude Max 5x | $100 | $100/month |
-| Claude Max 20x | $200 | $200/month |
-| API (Bedrock/Direct) | Variable | N/A |
+## Custom Labels (Bedrock Users)
 
-Use the dashboard to track if your API costs exceed subscription thresholds.
-
-## Custom Labels (Optional)
-
-To track provider/Bedrock details, set `OTEL_RESOURCE_ATTRIBUTES`:
+Anthropic subscription users get `user_email` automatically. **Bedrock users MUST set it manually:**
 
 ```bash
-# For Bedrock with inference profile
-export OTEL_RESOURCE_ATTRIBUTES="provider=bedrock,inference_type=inference-profile,aws_profile=my-profile"
-
-# For Anthropic Max
-export OTEL_RESOURCE_ATTRIBUTES="provider=anthropic-max"
+USER_EMAIL=$(git config --global user.email)
+export OTEL_RESOURCE_ATTRIBUTES="user_email=$USER_EMAIL,provider=bedrock,team=platform"
 ```
-
-These enable the Bedrock Breakdown section in the dashboard.
 
 ## Common Tasks
 
-### Check if metrics are flowing
 ```bash
-podman logs claude-otel-collector 2>&1 | grep MetricsExporter
-```
+# Check if metrics are flowing
+podman logs claude-otel-collector 2>&1 | grep -E "(Metrics|Logs)Exporter"
 
-### Query Prometheus directly
-```bash
-# List all claude metrics
-curl -s 'http://localhost:9090/api/v1/label/__name__/values' | jq -r '.data[]' | grep claude
-
-# Get current cost
+# Query Prometheus directly
 curl -s 'http://localhost:9090/api/v1/query?query=sum(claude_code_cost_usage_USD_total)' | jq '.data.result[0].value[1]'
 
-# Get token breakdown
-curl -s 'http://localhost:9090/api/v1/query?query=sum by (type) (claude_code_token_usage_tokens_total)' | jq '.data.result'
-```
+# Restart after config changes
+podman compose restart grafana
+podman compose restart otel-collector
 
-### Restart services
-```bash
-podman compose restart grafana           # After dashboard edits
-podman compose restart otel-collector    # After OTEL config changes
-podman compose down && podman compose up -d  # Full restart
-```
-
-### Backup data
-```bash
-# Data persists in ./data/ - just copy the directory
-cp -r data/ backup/
+# Full restart
+podman compose down && podman compose up -d
 ```
 
 ## Troubleshooting
 
 ### No data in Grafana
-1. Check OTEL collector is receiving data:
-   ```bash
-   podman logs claude-otel-collector | grep MetricsExporter
-   ```
-2. Verify telemetry is enabled:
-   ```bash
-   echo $CLAUDE_CODE_ENABLE_TELEMETRY  # Should be 1
-   ```
-3. Check Prometheus targets:
-   Open http://localhost:9090/targets
+1. Verify telemetry is enabled: `echo $CLAUDE_CODE_ENABLE_TELEMETRY`
+2. Check OTEL collector: `podman logs claude-otel-collector`
+3. Check Prometheus targets: http://localhost:9090/targets
 
-### Metrics show 0 or stale
-- Prometheus marks metrics as stale after 5 minutes of no updates
-- Dashboard uses `max_over_time()` for infrequently-updated counters
-- Check time range selector in Grafana (top right)
+### Tool usage not showing
+1. Verify logs are enabled: `echo $OTEL_LOGS_EXPORTER` (should be `otlp`)
+2. Check Loki is running: `curl http://localhost:3100/ready`
+3. Query Loki directly: `curl -G http://localhost:3100/loki/api/v1/query --data-urlencode 'query={job="claude-code"}'`
 
 ### Dashboard looks wrong
 ```bash
 podman compose restart grafana
 ```
-
-### Container won't start
-```bash
-podman machine start  # If using podman
-podman compose down
-podman compose up -d
-```
-
-## Data Retention
-
-- **Prometheus**: 30 days (configured in docker-compose.yaml)
-- **Grafana**: Indefinite (dashboards, users, settings)
-- **Location**: `./data/` directory (persists across container restarts)
 
 ## References
 

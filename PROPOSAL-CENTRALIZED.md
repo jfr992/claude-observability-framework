@@ -405,6 +405,138 @@ EOF
 ### Break-even
 If monitoring helps identify just one developer misusing the tool ($50/month waste) or optimizes usage patterns to save 10% on API costs, it pays for itself.
 
+## IDE Integrations (Cursor / VS Code)
+
+### The Challenge
+
+Users accessing Claude through IDEs (not Claude Code CLI) present unique tracking challenges:
+
+| Tool | Claude Access | OTEL Support | Tracking Feasibility |
+|------|---------------|--------------|---------------------|
+| **Claude Code CLI** | Direct | Full support | Native |
+| **Cursor** | Built-in (proprietary) | None | Proxy only |
+| **VS Code + Claude Dev** | Direct API | None | Extension modification |
+| **VS Code + Continue** | Configurable | None | Custom backend |
+| **VS Code + Cline** | Direct API | None | Extension modification |
+
+### Option 1: API Proxy (All IDEs)
+
+Route all Claude API traffic through a metering proxy:
+
+```
+┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+│   Cursor    │────▶│   Metering   │────▶│  Anthropic  │
+│   VS Code   │     │    Proxy     │     │    API      │
+│   Cline     │     │  (Your Org)  │     │             │
+└─────────────┘     └──────┬───────┘     └─────────────┘
+                           │
+                           ▼
+                    ┌─────────────┐
+                    │   OTEL      │
+                    │  Collector  │
+                    └─────────────┘
+```
+
+**Implementation:**
+
+```yaml
+# metering-proxy/config.yaml
+server:
+  port: 8080
+
+upstream:
+  anthropic: https://api.anthropic.com
+
+metering:
+  otel_endpoint: http://otel-collector:4317
+  extract_user_from: X-User-Email header
+
+auth:
+  # Inject org API key, accept user tokens
+  api_key: ${ANTHROPIC_API_KEY}
+```
+
+**Developer Setup:**
+
+```bash
+# Point IDE to proxy instead of Anthropic directly
+export ANTHROPIC_BASE_URL="https://claude-proxy.company.com"
+```
+
+**Pros:**
+- Works with any tool using Anthropic API
+- Centralized metering and cost control
+- Can add rate limiting, audit logging
+
+**Cons:**
+- Single point of failure
+- Latency overhead (minimal)
+- Requires infrastructure
+
+### Option 2: Cursor Enterprise (Coming Soon)
+
+Cursor is developing enterprise features including:
+- Usage analytics dashboard
+- SAML/OIDC SSO
+- Admin controls
+
+Contact sales@cursor.sh for early access. When available, Cursor metrics could be ingested via:
+- API integration to pull usage data
+- Webhook callbacks to OTEL collector
+
+### Option 3: VS Code Extension Wrapper
+
+For extensions that support custom API endpoints (like Continue):
+
+```json
+// .continue/config.json
+{
+  "models": [{
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-20250514",
+    "apiBase": "https://claude-proxy.company.com"
+  }]
+}
+```
+
+### Option 4: Separate Tracking
+
+Accept that IDE usage won't have the same granular metrics as Claude Code:
+
+| Source | What You Can Track |
+|--------|-------------------|
+| **Claude Code** | Full OTEL metrics (cost, tokens, sessions, accept rate, tools) |
+| **Cursor/IDE** | API cost via billing, no tool/session data |
+
+Use Anthropic Admin Console or AWS Cost Explorer (for Bedrock) to see aggregate IDE spend.
+
+### Recommendation
+
+For most orgs, a hybrid approach works best:
+
+1. **Claude Code users** → Full OTEL telemetry (direct)
+2. **Cursor/IDE users** → API proxy for cost metering only
+3. **Billing reconciliation** → Monthly comparison of tracked vs billed
+
+The proxy approach catches ~95% of meaningful cost data without requiring changes to proprietary tools.
+
+### Cost Allocation for IDE Users
+
+If you can't get per-user metrics from IDEs, allocate costs by:
+
+```promql
+# Total Claude spend from billing
+claude_billing_total_USD{source="all"}
+
+# Subtract tracked CLI usage
+- sum(claude_code_cost_usage_USD_total)
+
+# Remainder = untracked IDE usage
+= claude_ide_untracked_USD
+```
+
+Then allocate untracked spend evenly across known IDE users, or by team headcount.
+
 ## Next Steps
 
 1. [ ] Choose deployment option (Cloud vs K8s vs Managed)
@@ -414,6 +546,8 @@ If monitoring helps identify just one developer misusing the tool ($50/month was
 5. [ ] Pilot with one team
 6. [ ] Roll out org-wide
 7. [ ] Set up weekly reporting
+8. [ ] Evaluate API proxy for IDE users
+9. [ ] Contact Cursor for enterprise beta
 
 ---
 

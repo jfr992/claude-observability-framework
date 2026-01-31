@@ -10,6 +10,8 @@ services:
     volumes:
       - ./otel-config.yaml:/etc/otelcol/config.yaml:ro
     restart: unless-stopped
+    depends_on:
+      - loki
   prometheus:
     image: prom/prometheus:v2.50.1
     container_name: claude-prometheus
@@ -19,6 +21,7 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention.time=30d'
+      - '--storage.tsdb.retention.size=1GB'
       - '--web.enable-lifecycle'
     volumes:
       - ./prometheus.yaml:/etc/prometheus/prometheus.yml:ro
@@ -26,6 +29,17 @@ services:
     restart: unless-stopped
     depends_on:
       - otel-collector
+
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: claude-loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml:ro
+      - ./data/loki:/loki
+    restart: unless-stopped
 
   grafana:
     image: grafana/grafana:10.4.1
