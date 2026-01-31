@@ -329,10 +329,7 @@
       {
         "name": "user",
         "type": "query",
-        "datasource": {
-          "type": "prometheus",
-          "uid": "prometheus"
-        },
+        "datasource": null,
         "definition": "label_values(claude_code_cost_usage_USD_total, user_email)",
         "query": {
           "qryType": 1,
