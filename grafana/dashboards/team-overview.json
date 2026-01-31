@@ -47,7 +47,7 @@
       "title": "Total PRs",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_pull_request_count_total) or vector(0)", "refId": "A" }],
+      "targets": [{ "expr": "max_over_time(sum(claude_code_pull_request_count_total)[1h:]) or vector(0)", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
     },
     {
@@ -57,7 +57,7 @@
       "title": "Total Commits",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_commit_count_total) or vector(0)", "refId": "A" }],
+      "targets": [{ "expr": "max_over_time(sum(claude_code_commit_count_total)[1h:]) or vector(0)", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } } }
     },
     {
@@ -104,7 +104,7 @@
       "title": "Cost/PR",
       "description": "Target: <$5. Lower is better ROI.",
       "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_cost_usage_USD_total) / (sum(claude_code_pull_request_count_total) > 0 or vector(1))", "refId": "A" }],
+      "targets": [{ "expr": "max_over_time(sum(claude_code_cost_usage_USD_total)[1h:]) / (max_over_time(sum(claude_code_pull_request_count_total)[1h:]) > 0 or vector(1))", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "currencyUSD", "decimals": 2, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "orange", "value": 10 }, { "color": "red", "value": 20 }] } } }
     },
     {
@@ -124,7 +124,7 @@
       "title": "Cost/Commit",
       "description": "Cost per git commit made via Claude.",
       "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_cost_usage_USD_total) / (sum(claude_code_commit_count_total) > 0 or vector(1))", "refId": "A" }],
+      "targets": [{ "expr": "max_over_time(sum(claude_code_cost_usage_USD_total)[1h:]) / (max_over_time(sum(claude_code_commit_count_total)[1h:]) > 0 or vector(1))", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "currencyUSD", "decimals": 2, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 1 }, { "color": "orange", "value": 3 }, { "color": "red", "value": 5 }] } } }
     },
     {
@@ -134,7 +134,7 @@
       "title": "Sessions/PR",
       "description": "How many sessions to produce a PR. Lower = efficient.",
       "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "count(count by (session_id) (claude_code_cost_usage_USD_total)) / (sum(claude_code_pull_request_count_total) > 0 or vector(1))", "refId": "A" }],
+      "targets": [{ "expr": "count(count by (session_id) (claude_code_cost_usage_USD_total)) / (max_over_time(sum(claude_code_pull_request_count_total)[1h:]) > 0 or vector(1))", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "short", "decimals": 1, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "orange", "value": 10 }, { "color": "red", "value": 20 }] } } }
     },
     {
@@ -451,7 +451,7 @@
       "description": "Code output per dollar spent (higher = better value)",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_lines_of_code_count_total{type=\"added\"}) / (sum(claude_code_cost_usage_USD_total) > 0 or vector(1))", "refId": "A" }],
+      "targets": [{ "expr": "(max_over_time(sum(claude_code_lines_of_code_count_total{type=\"added\"})[1h:]) or vector(0)) / (max_over_time(sum(claude_code_cost_usage_USD_total)[1h:]) > 0 or vector(1))", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "short", "decimals": 0, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 50 }, { "color": "green", "value": 100 }] } } }
     },
     {
@@ -462,7 +462,7 @@
       "description": "Lines removed / lines added. >0.5 = healthy refactoring. <0.2 = only adding code.",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "showThresholdLabels": false, "showThresholdMarkers": true },
-      "targets": [{ "expr": "sum(claude_code_lines_of_code_count_total{type=\"removed\"}) / (sum(claude_code_lines_of_code_count_total{type=\"added\"}) > 0 or vector(1))", "refId": "A" }],
+      "targets": [{ "expr": "(max_over_time(sum(claude_code_lines_of_code_count_total{type=\"removed\"})[1h:]) or vector(0)) / (max_over_time(sum(claude_code_lines_of_code_count_total{type=\"added\"})[1h:]) > 0 or vector(1))", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "short", "min": 0, "max": 2, "decimals": 2, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }, { "color": "yellow", "value": 0.2 }, { "color": "green", "value": 0.5 }, { "color": "blue", "value": 1 }] } } }
     },
     {
