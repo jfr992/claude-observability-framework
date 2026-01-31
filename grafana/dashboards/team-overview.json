@@ -329,12 +329,27 @@
       {
         "name": "user",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-        "query": "label_values(claude_code_cost_usage_USD_total, user_email)",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "definition": "label_values(claude_code_cost_usage_USD_total, user_email)",
+        "query": {
+          "qryType": 1,
+          "query": "label_values(claude_code_cost_usage_USD_total, user_email)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
         "refresh": 2,
         "includeAll": true,
         "multi": true,
-        "current": { "text": "All", "value": "$__all" }
+        "allValue": ".*",
+        "current": {},
+        "hide": 0,
+        "label": "User",
+        "options": [],
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1
       }
     ]
   },
