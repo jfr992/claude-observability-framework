@@ -19,7 +19,7 @@
       "type": "stat",
       "title": "Total Cost",
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(max_over_time(claude_code_cost_usage_USD_total[$__range]))", "refId": "A" }],
+      "targets": [{ "expr": "sum(claude_code_cost_usage_USD_total)", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 100 }, { "color": "red", "value": 500 }] } } }
     },
     {
@@ -37,7 +37,7 @@
       "type": "stat",
       "title": "Cost / User",
       "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(max_over_time(claude_code_cost_usage_USD_total[$__range])) / (count(count by (user_email) (claude_code_cost_usage_USD_total)) > 0 or vector(1))", "refId": "A" }],
+      "targets": [{ "expr": "sum(claude_code_cost_usage_USD_total) / (count(count by (user_email) (claude_code_cost_usage_USD_total)) > 0 or vector(1))", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 20 }, { "color": "red", "value": 50 }] } } }
     },
     {
