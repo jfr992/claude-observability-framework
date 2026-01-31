@@ -28,6 +28,28 @@ Many iterations = unclear instructions.
 | Cost per Commit | `total_cost / commit_count` | <$1 |
 | Tokens per Line | `total_tokens / lines_added` | <100 |
 | Cache Efficiency | `cache_read / cache_created` | >20:1 |
+| Tokens per Session | `total_tokens / session_count` | <100k |
+
+### Compaction Risk (Tokens per Session)
+
+High tokens per session indicates context compaction is likely happening, which means:
+- Sessions running too long (unclear initial prompts)
+- Too much back-and-forth iteration
+- Context being rebuilt repeatedly
+- Poor upfront context in CLAUDE.md/skills
+
+| Tokens/Session | Meaning | Action |
+|----------------|---------|--------|
+| <100k | Efficient sessions | Good prompts, clear instructions |
+| 100k-200k | Getting long | Consider clearer initial prompts |
+| 200k-300k | Compaction likely | Improve CLAUDE.md, use skills |
+| >300k | Highly inefficient | Major prompt/config issues |
+
+**Why compaction is bad:**
+1. Loss of context (important details may be summarized away)
+2. Wasted tokens rebuilding context
+3. Indicates unclear instructions requiring many turns
+4. Higher cost for same output
 
 ### Session Quality
 
@@ -230,16 +252,30 @@ Context isn't being reused. Try:
 2. Memory files for persistent context
 3. Less variation in prompt structure
 
+### If Tokens per Session is High (>200k)
+
+Sessions are running too long before completion. Try:
+1. More specific initial prompts (what, why, constraints)
+2. Include expected output format upfront
+3. Break complex tasks into smaller sessions
+4. Add task templates to skills
+5. Better CLAUDE.md with patterns and anti-patterns
+6. Use memory files for persistent project context
+
+High tokens/session = compaction happening = context being lost and rebuilt.
+
 ## The Meta-Goal
 
 **Optimal Claude usage = you thinking critically + Claude executing efficiently**
 
 The metrics should show:
 - 75-85% accept rate (you're engaged)
-- High cache ratio (good context setup)
+- High cache ratio >20:1 (good context setup)
+- Low tokens per session <100k (clear instructions)
 - Low cost per output (efficient prompts)
-- Few iterations (clear instructions)
+- Few iterations (no compaction)
 
 If you hit 100% accept, you've stopped thinking.
 If you hit 50% accept, Claude has stopped understanding.
+If your sessions hit 300k tokens, your prompts need work.
 Find the balance where both of you contribute.
