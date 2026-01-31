@@ -1,0 +1,327 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 100,
+      "type": "row",
+      "title": "Overview",
+      "collapsed": false
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 1 },
+      "id": 1,
+      "type": "stat",
+      "title": "Total Cost",
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum(increase(claude_code_cost_usage_USD_total[$__range]))", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 20 }] } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 3, "x": 4, "y": 1 },
+      "id": 2,
+      "type": "stat",
+      "title": "Tokens",
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum(increase(claude_code_token_usage_tokens_total[$__range]))", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 3, "x": 7, "y": 1 },
+      "id": 3,
+      "type": "stat",
+      "title": "Sessions",
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "count(count by (session_id) (claude_code_cost_usage_USD_total)) or vector(0)", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 3, "x": 10, "y": 1 },
+      "id": 4,
+      "type": "stat",
+      "title": "Active Time",
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum(increase(claude_code_active_time_seconds_total[$__range]))", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "s", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 3, "x": 13, "y": 1 },
+      "id": 5,
+      "type": "stat",
+      "title": "Lines +",
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum(increase(claude_code_lines_of_code_count_total{type=\"added\"}[$__range])) or vector(0)", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 3, "x": 16, "y": 1 },
+      "id": 6,
+      "type": "stat",
+      "title": "Lines -",
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum(increase(claude_code_lines_of_code_count_total{type=\"removed\"}[$__range])) or vector(0)", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }] } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 2, "x": 19, "y": 1 },
+      "id": 21,
+      "type": "stat",
+      "title": "Input",
+      "description": "Input tokens",
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"input\"}[$__range])) or vector(0)", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 3, "x": 21, "y": 1 },
+      "id": 22,
+      "type": "stat",
+      "title": "Output",
+      "description": "Output tokens",
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"output\"}[$__range])) or vector(0)", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] } } }
+    },
+    {
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+      "id": 105,
+      "type": "row",
+      "title": "ROI Metrics",
+      "collapsed": false
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 6 },
+      "id": 60,
+      "type": "stat",
+      "title": "PRs Created",
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum(increase(claude_code_pull_request_count_total[$__range])) or vector(0)", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 6 },
+      "id": 61,
+      "type": "stat",
+      "title": "Commits",
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum(increase(claude_code_commit_count_total[$__range])) or vector(0)", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 6 },
+      "id": 62,
+      "type": "stat",
+      "title": "Cost/PR",
+      "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum(increase(claude_code_cost_usage_USD_total[$__range])) / (sum(increase(claude_code_pull_request_count_total[$__range])) > 0 or vector(1))", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 15 }] } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 6 },
+      "id": 63,
+      "type": "stat",
+      "title": "Edits",
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum(increase(claude_code_code_edit_tool_decision_total[$__range])) or vector(0)", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 6 },
+      "id": 64,
+      "type": "stat",
+      "title": "Accept %",
+      "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "100 * sum(max_over_time(claude_code_code_edit_tool_decision_total{decision=\"accept\"}[$__range])) / (sum(max_over_time(claude_code_code_edit_tool_decision_total[$__range])) > 0 or vector(1))", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "percent", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 60 }, { "color": "green", "value": 80 }] } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 6 },
+      "id": 65,
+      "type": "stat",
+      "title": "Cache Ratio",
+      "description": "Cache reads / cache creation",
+      "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / (sum(increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[$__range])) > 0 or vector(1))", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 1, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 5 }, { "color": "green", "value": 20 }] } } }
+    },
+    {
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 10 },
+      "id": 101,
+      "type": "row",
+      "title": "Provider Comparison",
+      "collapsed": false
+    },
+    {
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 11 },
+      "id": 30,
+      "type": "timeseries",
+      "title": "Cost by Model",
+      "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["sum"] }, "tooltip": { "mode": "multi" } },
+      "targets": [{ "expr": "sum by (model) (rate(claude_code_cost_usage_USD_total[5m])) * 3600", "legendFormat": "{{model}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "currencyUSD", "custom": { "lineWidth": 2, "fillOpacity": 30, "stacking": { "mode": "normal" } } } }
+    },
+    {
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 11 },
+      "id": 31,
+      "type": "timeseries",
+      "title": "Tokens by Type",
+      "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["sum"] }, "tooltip": { "mode": "multi" } },
+      "targets": [{ "expr": "sum by (type) (rate(claude_code_token_usage_tokens_total[5m]))", "legendFormat": "{{type}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "lineWidth": 2, "fillOpacity": 30, "stacking": { "mode": "normal" } } } }
+    },
+    {
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 19 },
+      "id": 32,
+      "type": "piechart",
+      "title": "Cost by User",
+      "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum by (user_email) (increase(claude_code_cost_usage_USD_total[$__range]))", "legendFormat": "{{user_email}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
+    },
+    {
+      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 19 },
+      "id": 33,
+      "type": "piechart",
+      "title": "Tokens by Type",
+      "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum by (type) (increase(claude_code_token_usage_tokens_total[$__range]))", "legendFormat": "{{type}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short" } }
+    },
+    {
+      "gridPos": { "h": 8, "w": 6, "x": 12, "y": 19 },
+      "id": 12,
+      "type": "piechart",
+      "title": "Cost by Model",
+      "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum by (model) (increase(claude_code_cost_usage_USD_total[$__range]))", "legendFormat": "{{model}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
+    },
+    {
+      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 19 },
+      "id": 14,
+      "type": "piechart",
+      "title": "By Terminal",
+      "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum by (terminal_type) (increase(claude_code_cost_usage_USD_total[$__range]))", "legendFormat": "{{terminal_type}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
+    },
+    {
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 27 },
+      "id": 104,
+      "type": "row",
+      "title": "Bedrock Breakdown (requires OTEL_RESOURCE_ATTRIBUTES)",
+      "collapsed": true
+    },
+    {
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 28 },
+      "id": 50,
+      "type": "piechart",
+      "title": "Inference Profile vs Direct",
+      "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum by (inference_type) (increase(claude_code_cost_usage_USD_total{provider=\"bedrock\"}[$__range]))", "legendFormat": "{{inference_type}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "currencyUSD" }, "overrides": [{ "matcher": { "id": "byName", "options": "inference-profile" }, "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }] }, { "matcher": { "id": "byName", "options": "direct" }, "properties": [{ "id": "color", "value": { "fixedColor": "yellow", "mode": "fixed" } }] }] }
+    },
+    {
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 28 },
+      "id": 51,
+      "type": "piechart",
+      "title": "By AWS Profile",
+      "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "expr": "sum by (aws_profile) (increase(claude_code_cost_usage_USD_total{provider=\"bedrock\"}[$__range]))", "legendFormat": "{{aws_profile}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
+    },
+    {
+      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 28 },
+      "id": 52,
+      "type": "stat",
+      "title": "Bedrock Summary",
+      "options": { "colorMode": "value", "graphMode": "none", "orientation": "horizontal", "reduceOptions": { "calcs": ["lastNotNull"] }, "textMode": "value_and_name" },
+      "targets": [
+        { "expr": "sum(increase(claude_code_cost_usage_USD_total{provider=\"bedrock\",inference_type=\"inference-profile\"}[$__range])) or vector(0)", "legendFormat": "Inference Profile", "refId": "A" },
+        { "expr": "sum(increase(claude_code_cost_usage_USD_total{provider=\"bedrock\",inference_type=\"direct\"}[$__range])) or vector(0)", "legendFormat": "Direct Model", "refId": "B" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "palette-classic" } } }
+    },
+    {
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 34 },
+      "id": 102,
+      "type": "row",
+      "title": "Session Details",
+      "collapsed": false
+    },
+    {
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 35 },
+      "id": 40,
+      "type": "table",
+      "title": "Sessions",
+      "options": { "showHeader": true, "sortBy": [{ "displayName": "Cost", "desc": true }] },
+      "targets": [
+        { "expr": "sum by (session_id, provider, model) (increase(claude_code_cost_usage_USD_total[$__range]))", "refId": "cost", "format": "table", "instant": true },
+        { "expr": "sum by (session_id, provider, model) (increase(claude_code_token_usage_tokens_total[$__range]))", "refId": "tokens", "format": "table", "instant": true }
+      ],
+      "transformations": [
+        { "id": "merge", "options": {} },
+        { "id": "organize", "options": { "excludeByName": { "Time": true }, "renameByName": { "session_id": "Session", "provider": "Provider", "model": "Model", "Value #cost": "Cost", "Value #tokens": "Tokens" } } }
+      ],
+      "fieldConfig": { "defaults": {}, "overrides": [{ "matcher": { "id": "byName", "options": "Cost" }, "properties": [{ "id": "unit", "value": "currencyUSD" }] }, { "matcher": { "id": "byName", "options": "Tokens" }, "properties": [{ "id": "unit", "value": "short" }] }, { "matcher": { "id": "byName", "options": "Session" }, "properties": [{ "id": "custom.width", "value": 300 }] }] }
+    },
+    {
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 43 },
+      "id": 103,
+      "type": "row",
+      "title": "Model Breakdown",
+      "collapsed": false
+    },
+    {
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 44 },
+      "id": 10,
+      "type": "timeseries",
+      "title": "Cost by Model",
+      "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["sum"] }, "tooltip": { "mode": "multi" } },
+      "targets": [{ "expr": "sum by (model) (rate(claude_code_cost_usage_USD_total[5m])) * 3600", "legendFormat": "{{model}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "currencyUSD", "custom": { "lineWidth": 2, "fillOpacity": 30, "stacking": { "mode": "normal" } } } }
+    },
+    {
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 44 },
+      "id": 11,
+      "type": "timeseries",
+      "title": "Tokens by Model",
+      "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["sum"] }, "tooltip": { "mode": "multi" } },
+      "targets": [{ "expr": "sum by (model) (rate(claude_code_token_usage_tokens_total[5m]))", "legendFormat": "{{model}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "lineWidth": 2, "fillOpacity": 30, "stacking": { "mode": "normal" } } } }
+    },
+    {
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 52 },
+      "id": 15,
+      "type": "table",
+      "title": "Model Details",
+      "options": { "showHeader": true, "sortBy": [{ "displayName": "Cost", "desc": true }] },
+      "targets": [
+        { "expr": "sum by (model, provider) (increase(claude_code_cost_usage_USD_total[$__range]))", "refId": "cost", "format": "table", "instant": true },
+        { "expr": "sum by (model, provider) (increase(claude_code_token_usage_tokens_total{type=\"input\"}[$__range]))", "refId": "input", "format": "table", "instant": true },
+        { "expr": "sum by (model, provider) (increase(claude_code_token_usage_tokens_total{type=\"output\"}[$__range]))", "refId": "output", "format": "table", "instant": true },
+        { "expr": "sum by (model, provider) (increase(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range]))", "refId": "cacheRead", "format": "table", "instant": true }
+      ],
+      "transformations": [
+        { "id": "merge", "options": {} },
+        { "id": "organize", "options": { "excludeByName": { "Time": true }, "renameByName": { "model": "Model", "provider": "Provider", "Value #cost": "Cost", "Value #input": "Input", "Value #output": "Output", "Value #cacheRead": "Cache Read" } } }
+      ],
+      "fieldConfig": { "defaults": {}, "overrides": [{ "matcher": { "id": "byName", "options": "Cost" }, "properties": [{ "id": "unit", "value": "currencyUSD" }] }, { "matcher": { "id": "byName", "options": "Input" }, "properties": [{ "id": "unit", "value": "short" }] }, { "matcher": { "id": "byName", "options": "Output" }, "properties": [{ "id": "unit", "value": "short" }] }, { "matcher": { "id": "byName", "options": "Cache Read" }, "properties": [{ "id": "unit", "value": "short" }] }] }
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["claude-code", "ai", "tokens", "cost", "bedrock", "anthropic"],
+  "templating": { "list": [] },
+  "time": { "from": "now-24h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Claude Code Metrics",
+  "uid": "claude-code-metrics",
+  "version": 4
+}
