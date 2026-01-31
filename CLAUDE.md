@@ -46,7 +46,9 @@ claude-metrics/
 ├── scripts/
 │   ├── setup-mac.sh             # Mac onboarding (interactive)
 │   ├── generate-report.sh       # CLI ROI report generator
-│   └── check-storage.sh         # Storage usage monitor
+│   ├── check-storage.sh         # Storage usage monitor
+│   └── health-check.sh          # Quick metrics health check
+├── TESTING.md                   # Testing guide and patterns
 ├── data/                        # Persistent storage (git-ignored)
 │   ├── prometheus/              # Metrics TSDB
 │   ├── loki/                    # Log storage
