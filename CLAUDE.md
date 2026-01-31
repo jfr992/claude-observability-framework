@@ -155,7 +155,7 @@ RANGE=30d ./scripts/generate-report.sh
 | Component | Time Limit | Size Limit | Notes |
 |-----------|------------|------------|-------|
 | Prometheus | 30 days | 1 GB | Whichever hits first |
-| Loki | 14 days | Ingestion throttled | Logs less critical |
+| Loki | 30 days | Ingestion throttled | Tool usage logs |
 | Grafana | Unlimited | ~5 MB | Config only |
 
 Check storage usage:

@@ -30,7 +30,7 @@ TOTAL_SIZE=$(du -sh "$DATA_DIR" 2>/dev/null | cut -f1)
 echo "Component       Size        Limit       Retention"
 echo "─────────────────────────────────────────────────"
 printf "%-15s %-11s %-11s %s\n" "Prometheus" "$PROMETHEUS_SIZE" "$PROMETHEUS_LIMIT" "30 days"
-printf "%-15s %-11s %-11s %s\n" "Loki" "$LOKI_SIZE" "n/a" "14 days"
+printf "%-15s %-11s %-11s %s\n" "Loki" "$LOKI_SIZE" "n/a" "30 days"
 printf "%-15s %-11s %-11s %s\n" "Grafana" "$GRAFANA_SIZE" "n/a" "∞ (config only)"
 echo "─────────────────────────────────────────────────"
 printf "%-15s %-11s\n" "TOTAL" "$TOTAL_SIZE"
