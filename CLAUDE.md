@@ -138,7 +138,7 @@ Or use [claude-switch](https://github.com/your-org/claude-switcher) which config
 | **Session Size** | Whether you're working efficiently or going in circles |
 | **Cost/PR** | Value delivered per dollar spent |
 
-See [GUIDE.md](GUIDE.md) for the philosophy behind these metrics.
+See [GUIDE.md](GUIDE.md) for the philosophy behind these metrics and the **Prompt Review** practice.
 
 ## Generate ROI Report
 

@@ -289,6 +289,101 @@ This indicates:
 
 ---
 
+## Part 6: Prompt Review
+
+### The Idea
+
+Code review improved software quality by making thinking visible. **Prompt review** does the same for human-AI collaboration.
+
+When you review a PR, you see *what* changed. But you don't see *how* it was created - the prompts, the iterations, the refinements that led to the final code.
+
+**Better prompts = Better code = Better engineers**
+
+### Why This Matters
+
+| Without Prompt Review | With Prompt Review |
+|-----------------------|-------------------|
+| Everyone reinvents prompting | Team shares what works |
+| Good patterns stay siloed | Knowledge spreads organically |
+| Same mistakes repeated | Learn from each other's iterations |
+| "Magic" results seem random | Reproducible success patterns |
+
+### How to Practice It
+
+**Lightweight approaches (pick what fits your team):**
+
+1. **PR Description Context**
+   ```markdown
+   ## How this was built
+   Key prompt: "Refactor the auth module to use the repository
+   pattern. Keep backward compatibility with existing callers."
+
+   Iterations: Started with full rewrite, scaled back after
+   Claude suggested incremental approach.
+   ```
+
+2. **Commit Message Notes**
+   ```
+   feat: add rate limiting to API endpoints
+
+   Prompted with: "Add rate limiting using token bucket,
+   100 req/min per user, return 429 with retry-after header"
+   ```
+
+3. **Team Retros**
+   - Share a prompt that worked surprisingly well
+   - Share one that needed many iterations (and why)
+   - Discuss patterns emerging across the team
+
+4. **Prompt Library**
+   - Keep a shared doc of effective prompts for common tasks
+   - Version them like you version code
+   - Note which CLAUDE.md context they assume
+
+### What Makes a Good Prompt (Review Criteria)
+
+| Element | Good | Needs Work |
+|---------|------|------------|
+| **Specificity** | "Add pagination with cursor-based approach, 50 items default" | "Add pagination" |
+| **Context** | References existing patterns in codebase | Assumes Claude knows your conventions |
+| **Constraints** | "Must work with existing API contract" | No boundaries mentioned |
+| **Output Format** | "Return the modified function only" | No guidance on response shape |
+| **Examples** | "Like we did in UserService.list()" | No reference points |
+
+### The Growth Loop
+
+```
+Write Prompt → Get Result → Review What Worked → Share Pattern → Team Improves
+      ↑                                                              │
+      └──────────────────────────────────────────────────────────────┘
+```
+
+### Questions for Prompt Review
+
+When reviewing someone's prompt (including your own):
+
+1. **Clarity** - Would another engineer understand the intent?
+2. **Completeness** - Does it include necessary constraints?
+3. **Efficiency** - Could it be shorter without losing meaning?
+4. **Reusability** - Could this become a team pattern or skill?
+
+### Not Audit - Growth
+
+This isn't about:
+- ❌ Tracking who uses AI "correctly"
+- ❌ Mandating prompt documentation
+- ❌ Creating bureaucracy around AI usage
+
+This is about:
+- ✅ Learning from each other
+- ✅ Building shared understanding
+- ✅ Improving collectively
+- ✅ Making the implicit explicit
+
+**Start small.** One prompt shared in a PR description. One pattern discussed in retro. The goal is culture shift, not compliance.
+
+---
+
 ## The Meta-Goal
 
 ```

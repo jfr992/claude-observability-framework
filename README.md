@@ -98,6 +98,20 @@ Organization-wide visibility:
 **Cost:** Context compacted. Quality degrades.
 **Fix:** Fresh sessions. Use `/compact`. Break tasks into phases.
 
+## Prompt Review
+
+**Code review improved code quality. Prompt review improves AI collaboration.**
+
+Just like we review code to share knowledge, consider reviewing the *prompts* that led to changes:
+
+- **In PRs:** Add a note about key prompts used
+- **In retros:** Share what prompting patterns worked
+- **As a team:** Build a library of effective prompts
+
+This isn't audit—it's collective learning. Better prompts → better results → everyone improves.
+
+See [GUIDE.md](GUIDE.md#part-6-prompt-review) for the full framework.
+
 ## Available Scripts
 
 ```bash
