@@ -168,6 +168,28 @@ Accept Rate = Accepted Edits / Total Edits
 
 **The goal is NOT 100%.** The goal is thoughtful collaboration.
 
+#### ⚠️ Known Limitation
+
+This metric only captures the **initial accept/reject decision**, not the full feedback loop:
+
+```
+1. Claude proposes edit
+2. You accept (looks reasonable)     ← METRIC RECORDED HERE
+3. You test it → doesn't work
+4. You ask for changes               ← NOT CAPTURED
+5. Claude fixes it
+6. You accept again                  ← ANOTHER ACCEPT RECORDED
+```
+
+**Result:** A developer who accepts → tests → iterates shows 100% accept rate, same as someone rubber-stamping.
+
+**What this means:**
+- High accept rate isn't automatically bad if you're testing and iterating
+- The metric works best as a **self-reflection tool**, not a judgment
+- Your workflow matters: accept-then-test is valid, the metric just can't see it
+
+**Better signal:** If your accept rate is high AND your cache ratio is high AND you're getting good results, you're probably fine. The metric is one data point, not the whole picture.
+
 ---
 
 ## The Architect's Responsibilities
@@ -444,6 +466,17 @@ When you see something in the data, don't ask "Is this good enough?" Ask:
 - Commits, PRs, lines of code (gameable, meaningless)
 - Cost per output (penalizes complex work)
 - Developer comparisons (creates wrong incentives)
+
+### Dashboard Metrics with Known Limitations
+
+**Human Score** - A composite metric combining Accept Rate, Cache Ratio, and Session Size into a single number (0-100). While convenient, it:
+- Uses arbitrary weights (50/40/10 points)
+- Assumes 80% accept rate is optimal for everyone
+- Obscures the individual metrics that are more actionable
+
+*Recommendation:* Look at the three gauges individually instead. They tell you more.
+
+**Accept Rate** - Only captures the initial accept/reject click, not the full feedback loop. See the detailed limitation documented above.
 
 ---
 
