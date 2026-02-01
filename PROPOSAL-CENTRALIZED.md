@@ -3,10 +3,36 @@
 ## Executive Summary
 
 Deploy a shared observability stack that all developers point their Claude Code telemetry to. This enables:
-- **Org-wide visibility** into AI tool adoption and ROI
-- **Per-developer metrics** for coaching and optimization
+- **Org-wide visibility** into AI tool adoption and usage patterns
+- **Per-developer metrics** for self-improvement (not surveillance)
 - **Team-level aggregation** for budget allocation
 - **Cost tracking** across Bedrock/API/Subscription usage
+
+## ⚠️ Philosophy: Growth, Not Surveillance
+
+Before implementing, read [GUIDE.md](GUIDE.md) for the full philosophy. Key points:
+
+**This framework measures communication quality, not productivity.**
+
+| Metric | What It Actually Tells You |
+|--------|---------------------------|
+| Cache Ratio | Is your CLAUDE.md communicating context effectively? |
+| Session Size | Are sessions efficient or going in circles? |
+| Accept Rate | Is the developer engaged or rubber-stamping? |
+
+**What NOT to use these metrics for:**
+- ❌ Performance reviews based on PRs/commits/lines (gameable)
+- ❌ Leaderboards that rank developers (creates wrong incentives)
+- ❌ Cost/PR targets (penalizes complex, thoughtful work)
+- ❌ Comparing developers (everyone's work is different)
+
+**What TO use these metrics for:**
+- ✅ Budget planning and cost allocation
+- ✅ Identifying developers who might need CLAUDE.md help (low cache ratio)
+- ✅ Self-reflection dashboards for individual growth
+- ✅ Aggregate trends (is adoption growing? are sessions getting more efficient?)
+
+The leaderboard and per-developer views below exist for **visibility**, not **judgment**. Use them to offer help, not assign blame.
 
 ## Architecture
 
@@ -233,13 +259,25 @@ sum by (team) (
 )
 ```
 
-### 4. Leaderboard
+### 4. Leaderboard (Use With Caution)
+
+> ⚠️ **Warning:** Leaderboards can incentivize gaming (more commits ≠ better work).
+> Use for visibility and offering help, not ranking or performance review.
+> Consider showing only Cache Ratio and Session Size, which are harder to game.
 
 | Developer | PRs | Commits | Cost | Cost/PR | Accept % |
 |-----------|-----|---------|------|---------|----------|
 | alice@... | 23 | 89 | $45 | $1.96 | 94% |
 | bob@... | 18 | 52 | $78 | $4.33 | 81% |
 | carol@... | 31 | 124 | $62 | $2.00 | 88% |
+
+**Better alternative - Communication Quality view:**
+
+| Developer | Cache Ratio | Session Size | Accept % | Action |
+|-----------|-------------|--------------|----------|--------|
+| alice@... | 8:1 | 250k | 94% | Offer CLAUDE.md help |
+| bob@... | 25:1 | 80k | 81% | ✅ Healthy |
+| carol@... | 15:1 | 120k | 88% | ✅ Good |
 
 ## Custom Labels for Team Tracking
 
@@ -382,12 +420,22 @@ EOF
 
 ## Success Metrics
 
+**Adoption metrics (reasonable to track):**
+
 | Metric | Target | Why |
 |--------|--------|-----|
 | Developer adoption | >80% within 30 days | Tool is being used |
-| Avg accept rate | >75% | Suggestions are useful |
-| Cost per PR | <$10 | Efficient usage |
 | Weekly active users | Stable or growing | Sustained value |
+| Avg cache ratio | >15:1 | CLAUDE.md practices spreading |
+| Avg session size | <150k | Developers using efficiently |
+
+**Metrics to monitor but NOT target:**
+
+| Metric | Why Not a Target |
+|--------|------------------|
+| Accept rate | 75-85% is healthy, but varies by workflow (see GUIDE.md limitations) |
+| Cost per PR | Penalizes complex work; a $50 architecture PR is more valuable than 10 $5 typo fixes |
+| PRs/Commits | Gameable; incentivizes splitting work artificially |
 
 ## Cost-Benefit Analysis
 
