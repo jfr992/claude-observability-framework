@@ -45,9 +45,9 @@ claude-metrics/
 │   └── provisioning/            # Auto-provisioning
 ├── scripts/
 │   ├── setup-mac.sh             # Mac onboarding (interactive)
-│   ├── generate-report.sh       # CLI ROI report generator
+│   ├── generate-report.sh       # Communication quality report (3 key metrics)
 │   ├── check-storage.sh         # Storage usage monitor
-│   └── health-check.sh          # Quick metrics health check
+│   └── health-check.sh          # Stack health + key metrics check
 ├── TESTING.md                   # Testing guide and patterns
 ├── data/                        # Persistent storage (git-ignored)
 │   ├── prometheus/              # Metrics TSDB
@@ -140,7 +140,9 @@ Three metrics that tell you how well you're communicating with Claude:
 
 See [GUIDE.md](GUIDE.md) for the full Architect philosophy.
 
-## Generate ROI Report
+## Generate Communication Quality Report
+
+Check your three key metrics (Cache Ratio, Session Size, Accept Rate):
 
 ```bash
 # Last 7 days (default)
@@ -151,6 +153,11 @@ RANGE=30d ./scripts/generate-report.sh
 
 # Save to file
 ./scripts/generate-report.sh > report.md
+```
+
+Quick health check (stack status + key metrics):
+```bash
+./scripts/health-check.sh
 ```
 
 ## Storage & Retention
