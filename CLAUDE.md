@@ -1,8 +1,8 @@
 # Claude Observability Framework
 
-Team/org productivity framework for tracking Claude Code usage, cost, and ROI via OpenTelemetry.
+Framework for improving human-AI collaboration via OpenTelemetry metrics.
 
-**Philosophy:** This is about growth, not surveillance. See [GUIDE.md](GUIDE.md) for the co-intelligence framework.
+**Philosophy:** You are the Architect. Claude is your implementation partner. We measure communication quality, not productivity. See [GUIDE.md](GUIDE.md) for the full philosophy.
 
 ## Quick Start
 
@@ -119,26 +119,26 @@ Or use [claude-switch](https://github.com/your-org/claude-switcher) which config
 | `user_email` | User's email (required for per-user metrics) |
 | `terminal_type` | Terminal/IDE (iTerm.app, vscode, cursor) |
 
-## Key Metrics & Benchmarks
+## Key Metrics (Communication Quality)
 
-| Metric | Formula | Good | Warning | Concern |
-|--------|---------|------|---------|---------|
-| **Accept Rate** | accepts / total | 75-85% | 60-75% or 85-95% | <60% or >95% |
-| **Cache Ratio** | reads / creates | >20:1 | 10-20:1 | <10:1 |
-| **Session Size** | tokens / sessions | <100k | 100-300k | >300k |
-| **Cost/PR** | cost / prs | <$5 | $5-10 | >$10 |
-| **Cost/Session** | cost / sessions | <$0.10 | $0.10-0.50 | >$0.50 |
+Three metrics that tell you how well you're communicating with Claude:
 
-### What These Mean (Growth Mindset)
+| Metric | Formula | Target | What It Means |
+|--------|---------|--------|---------------|
+| **Cache Ratio** | cacheRead / cacheCreate | >20:1 | Your CLAUDE.md is working |
+| **Session Size** | tokens / sessions | <100k | You're being efficient |
+| **Accept Rate** | accepts / total | 75-85% | You're engaged, not rubber-stamping |
 
-| Metric | What It Tells You |
-|--------|-------------------|
-| **Accept Rate** | Your critical engagement with AI suggestions |
-| **Cache Ratio** | How well your documentation communicates context |
-| **Session Size** | Whether you're working efficiently or going in circles |
-| **Cost/PR** | Value delivered per dollar spent |
+### What to Improve
 
-See [GUIDE.md](GUIDE.md) for the philosophy behind these metrics and the **Prompt Review** practice.
+| Symptom | Meaning | Action |
+|---------|---------|--------|
+| Low cache ratio (<10:1) | Claude rebuilds context constantly | Improve your CLAUDE.md |
+| Large sessions (>300k) | Going in circles or unclear prompts | Fresh sessions, clearer goals |
+| High accept rate (>95%) | Not reviewing critically | Slow down, read the diffs |
+| Low accept rate (<60%) | Claude misunderstands you | Add examples and patterns |
+
+See [GUIDE.md](GUIDE.md) for the full Architect philosophy.
 
 ## Generate ROI Report
 

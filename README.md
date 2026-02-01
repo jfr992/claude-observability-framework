@@ -1,11 +1,13 @@
 # Claude Observability Framework
 
-A team/org productivity framework for tracking Claude Code usage, cost, and ROI via OpenTelemetry.
+A framework for improving human-AI collaboration via OpenTelemetry metrics.
 
-**Philosophy:** Metrics are mirrors, not judges. This framework measures growth, not compliance.
+**Philosophy:** You are the Architect. Claude is your implementation partner. We measure **communication quality**, not productivity.
 
 ```
-You + Claude = Better than either alone
+You bring judgment, security, and vision.
+Claude brings speed, patterns, and patience.
+The Architect decides what to build. AI helps build it right.
 ```
 
 ## Quick Start
@@ -62,55 +64,35 @@ Organization-wide visibility:
 - **Developer Leaderboard:** Per-user metrics
 - **Productivity:** Lines added/removed, active time
 
-## Key Metrics & What They Mean
+## Key Metrics (Communication Quality)
 
-| Metric | Optimal | What It Reveals |
-|--------|---------|-----------------|
-| **Accept Rate** | 75-85% | Your critical engagement with AI suggestions |
-| **Cache Ratio** | >20:1 | How well your CLAUDE.md communicates context |
-| **Session Size** | <100k tokens | Whether you're working efficiently |
-| **Cost/PR** | <$5 | Value delivered per dollar spent |
+Three metrics that matter - all about how well you communicate with Claude:
 
-### Accept Rate Interpretation
+| Metric | Target | What It Means |
+|--------|--------|---------------|
+| **Cache Ratio** | >20:1 | Your CLAUDE.md is working - Claude remembers your context |
+| **Session Size** | <100k | You're being efficient - not going in circles |
+| **Accept Rate** | 75-85% | You're engaged - reviewing thoughtfully, not rubber-stamping |
 
-| Rate | Meaning | Action |
-|------|---------|--------|
-| <60% | Claude doesn't understand your context | Improve CLAUDE.md, add examples |
-| 60-75% | Healthy tension | You're engaged, suggestions need work |
-| **75-85%** | **Optimal** | Good prompts, active review |
-| 85-95% | Getting passive | Review more critically |
-| >95% | Rubber stamping | Stop and read the diffs |
+### What NOT to Measure
 
-## Anti-Patterns to Avoid
+- **Commits, PRs, Lines of Code** - Gameable vanity metrics that incentivize wrong behavior
+- **Cost per output** - Penalizes complex, thoughtful work
+- **Developer comparisons** - Creates competition instead of collaboration
 
-### The Rubber Stamper (>95% Accept)
-**Problem:** Accepting everything without reading.
-**Cost:** You stop learning. Skills atrophy.
-**Fix:** Read diffs. Ask "Would I have written it this way?"
+See [GUIDE.md](GUIDE.md) for the full Architect philosophy.
 
-### The Micromanager (<60% Accept)
-**Problem:** Rejecting most suggestions.
-**Cost:** Not getting the speed benefit.
-**Fix:** Invest in context. Better CLAUDE.md. Give Claude a chance.
+## The Architect's Role
 
-### The Context Burner (>300k tokens)
-**Problem:** Sessions running until they hit limits.
-**Cost:** Context compacted. Quality degrades.
-**Fix:** Fresh sessions. Use `/compact`. Break tasks into phases.
+When using AI as a co-intelligence partner:
 
-## Prompt Review
-
-**Code review improved code quality. Prompt review improves AI collaboration.**
-
-Just like we review code to share knowledge, consider reviewing the *prompts* that led to changes:
-
-- **In PRs:** Add a note about key prompts used
-- **In retros:** Share what prompting patterns worked
-- **As a team:** Build a library of effective prompts
-
-This isn't audit—it's collective learning. Better prompts → better results → everyone improves.
-
-See [GUIDE.md](GUIDE.md#part-6-prompt-review) for the full framework.
+| You Own (Architect) | Claude Helps With |
+|---------------------|-------------------|
+| System design & architecture | Writing code within your constraints |
+| Security principles | Implementing patterns you've defined |
+| Non-functional requirements | Exploring options for you to evaluate |
+| Technology selection | Generating tests you've designed |
+| Code review & quality gates | Refactoring with your rules |
 
 ## Available Scripts
 
@@ -152,21 +134,14 @@ This enables Claude to help with metrics interpretation and troubleshooting.
 
 ## The Philosophy
 
-This isn't surveillance. It's not blame. It's not catching anyone doing something wrong.
+This isn't surveillance. This isn't productivity tracking. **This is learning.**
 
-**We measure to learn.**
+The metrics tell you about your **communication quality** with Claude:
+- Is your CLAUDE.md working? (Cache Ratio)
+- Are you being efficient? (Session Size)
+- Are you still the Architect? (Accept Rate)
 
-When you track your Claude Code usage, you're developing a feedback loop for growth. Like an athlete watching game film or a musician recording practice sessions, observability gives you data to improve your craft.
-
-The goal: **become a better engineer who happens to use AI, not an AI operator who used to be an engineer.**
-
-### The Commitment
-
-1. **Stay curious** - Ask why, not just whether it works
-2. **Stay critical** - Read diffs, push back when needed
-3. **Stay learning** - Absorb good patterns from Claude
-4. **Stay in charge** - You decide architecture and direction
-5. **Stay humble** - Sometimes Claude's way is better
+**The goal:** Improve how you communicate, collaborate, and build together.
 
 ## References
 

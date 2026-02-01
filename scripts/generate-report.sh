@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Claude Code ROI Report Generator
-# Fetches metrics from Prometheus and generates a markdown report
+# Claude Code Communication Quality Report
+# Measures how well you're collaborating with Claude
 #
 # Usage:
 #   ./scripts/generate-report.sh              # Last 7 days
@@ -43,8 +43,6 @@ log "Fetching metrics from Prometheus (range: $RANGE)..."
 TOTAL_COST=$(prom_query "sum(claude_code_cost_usage_USD_total)")
 TOTAL_TOKENS=$(prom_query "sum(claude_code_token_usage_tokens_total)")
 TOTAL_SESSIONS=$(prom_query "count(count by (session_id) (claude_code_cost_usage_USD_total))")
-TOTAL_PRS=$(prom_query "sum(claude_code_pull_request_count_total)")
-TOTAL_COMMITS=$(prom_query "sum(claude_code_commit_count_total)")
 ACTIVE_USERS=$(prom_query "count(count by (user_email) (claude_code_cost_usage_USD_total))")
 
 # Token breakdown
@@ -57,54 +55,55 @@ CACHE_CREATE=$(prom_query "sum(claude_code_token_usage_tokens_total{type=\"cache
 ACCEPTS=$(prom_query "sum(claude_code_code_edit_tool_decision_total{decision=\"accept\"})")
 TOTAL_DECISIONS=$(prom_query "sum(claude_code_code_edit_tool_decision_total)")
 
-# Calculate derived metrics
-COST_PER_SESSION=$(echo "scale=4; $TOTAL_COST / ($TOTAL_SESSIONS + 0.0001)" | bc)
-COST_PER_PR=$(echo "scale=2; $TOTAL_COST / ($TOTAL_PRS + 0.0001)" | bc)
-COST_PER_USER=$(echo "scale=2; $TOTAL_COST / ($ACTIVE_USERS + 0.0001)" | bc)
+# Calculate derived metrics (the three that matter)
 TOKENS_PER_SESSION=$(echo "scale=0; $TOTAL_TOKENS / ($TOTAL_SESSIONS + 1)" | bc)
 CACHE_RATIO=$(echo "scale=1; $CACHE_READ / ($CACHE_CREATE + 1)" | bc)
 ACCEPT_RATE=$(echo "scale=1; 100 * $ACCEPTS / ($TOTAL_DECISIONS + 1)" | bc)
 
+# Cost metrics (informational, not for comparison)
+COST_PER_SESSION=$(echo "scale=4; $TOTAL_COST / ($TOTAL_SESSIONS + 0.0001)" | bc)
+COST_PER_USER=$(echo "scale=2; $TOTAL_COST / ($ACTIVE_USERS + 0.0001)" | bc)
+
 # Cost by model
 COST_BY_MODEL=$(prom_query_labels "sum by (model) (claude_code_cost_usage_USD_total)")
-
-# Cost by user
-COST_BY_USER=$(prom_query_labels "sum by (user_email) (claude_code_cost_usage_USD_total)")
 
 log "Generating report..."
 
 # Generate report
 cat << EOF
-# Claude Code ROI Report
+# Claude Code Communication Quality Report
+
 **Generated:** $(date '+%Y-%m-%d %H:%M:%S')
 **Period:** Last ${RANGE}
 
-## Executive Summary
+---
 
-| Metric | Value | Assessment |
-|--------|-------|------------|
-| **Total Cost** | \$${TOTAL_COST} | - |
-| **Active Users** | ${ACTIVE_USERS} | - |
-| **Total Sessions** | ${TOTAL_SESSIONS} | - |
-| **Cost/Session** | \$${COST_PER_SESSION} | $([ $(echo "$COST_PER_SESSION < 0.10" | bc) -eq 1 ] && echo "Good" || echo "Monitor") |
-| **Cost/User** | \$${COST_PER_USER} | - |
+## Communication Quality (The Three Metrics That Matter)
 
-## Productivity Metrics
+| Metric | Value | Target | Assessment |
+|--------|-------|--------|------------|
+| **Cache Ratio** | ${CACHE_RATIO}:1 | >20:1 | $([ $(echo "$CACHE_RATIO > 20" | bc) -eq 1 ] && echo "✅ Excellent - Claude understands your context" || ([ $(echo "$CACHE_RATIO > 10" | bc) -eq 1 ] && echo "✅ Good" || echo "⚠️ Improve your CLAUDE.md")) |
+| **Session Size** | ${TOKENS_PER_SESSION} tokens | <100k | $([ $(echo "$TOKENS_PER_SESSION < 100000" | bc) -eq 1 ] && echo "✅ Efficient" || ([ $(echo "$TOKENS_PER_SESSION < 300000" | bc) -eq 1 ] && echo "⚠️ Getting long" || echo "❌ Too long - start fresh more often")) |
+| **Accept Rate** | ${ACCEPT_RATE}% | 75-85% | $([ $(echo "$ACCEPT_RATE >= 75 && $ACCEPT_RATE <= 85" | bc) -eq 1 ] && echo "✅ Optimal - engaged review" || ([ $(echo "$ACCEPT_RATE > 95" | bc) -eq 1 ] && echo "⚠️ Too high - are you rubber-stamping?" || ([ $(echo "$ACCEPT_RATE < 60" | bc) -eq 1 ] && echo "⚠️ Too low - Claude misunderstands you" || echo "✅ Healthy"))) |
 
-| Metric | Value | Notes |
-|--------|-------|-------|
-| **PRs Created** | ${TOTAL_PRS} | Via Claude Code |
-| **Commits** | ${TOTAL_COMMITS} | Via Claude Code |
-| **Cost/PR** | \$${COST_PER_PR} | Target: <\$5 |
-| **Accept Rate** | ${ACCEPT_RATE}% | Optimal: 75-85% |
+### What These Tell You
 
-## Efficiency Indicators
+- **Cache Ratio** = Is your CLAUDE.md communicating context effectively?
+- **Session Size** = Are you being efficient or going in circles?
+- **Accept Rate** = Are you still the Architect or just clicking accept?
 
-| Metric | Value | Threshold | Status |
-|--------|-------|-----------|--------|
-| **Cache Ratio** | ${CACHE_RATIO}:1 | >20 = excellent | $([ $(echo "$CACHE_RATIO > 20" | bc) -eq 1 ] && echo "Excellent" || ([ $(echo "$CACHE_RATIO > 10" | bc) -eq 1 ] && echo "Good" || echo "Needs Work")) |
-| **Tokens/Session** | ${TOKENS_PER_SESSION} | <100k = efficient | $([ $(echo "$TOKENS_PER_SESSION < 100000" | bc) -eq 1 ] && echo "Efficient" || ([ $(echo "$TOKENS_PER_SESSION < 300000" | bc) -eq 1 ] && echo "Monitor" || echo "High Risk")) |
-| **Accept Rate** | ${ACCEPT_RATE}% | 75-85% = optimal | $([ $(echo "$ACCEPT_RATE >= 75 && $ACCEPT_RATE <= 85" | bc) -eq 1 ] && echo "Optimal" || ([ $(echo "$ACCEPT_RATE > 95" | bc) -eq 1 ] && echo "Rubber Stamping?" || echo "Review")) |
+---
+
+## Usage Summary
+
+| Metric | Value |
+|--------|-------|
+| Total Cost | \$${TOTAL_COST} |
+| Total Tokens | ${TOTAL_TOKENS} |
+| Sessions | ${TOTAL_SESSIONS} |
+| Active Users | ${ACTIVE_USERS} |
+| Cost/Session | \$${COST_PER_SESSION} |
+| Cost/User | \$${COST_PER_USER} |
 
 ## Token Breakdown
 
@@ -117,51 +116,92 @@ cat << EOF
 
 ## Cost by Model
 
+| Model | Cost |
+|-------|------|
 $(echo "$COST_BY_MODEL" | jq -r '.[] | "| \(.metric.model) | $\(.value[1]) |"' 2>/dev/null || echo "| No data | - |")
 
-## Cost by User
-
-$(echo "$COST_BY_USER" | jq -r '.[] | "| \(.metric.user_email) | $\(.value[1]) |"' 2>/dev/null || echo "| No data | - |")
-
-## Subscription Break-Even Analysis
-
-Based on current API usage of \$${TOTAL_COST}:
-
-| Plan | Monthly Cost | Your Usage | Recommendation |
-|------|--------------|------------|----------------|
-| Claude Pro | \$20/user | \$${COST_PER_USER}/user | $([ $(echo "$COST_PER_USER > 20" | bc) -eq 1 ] && echo "Consider Pro" || echo "API is cheaper") |
-| Claude Max 5x | \$100/user | \$${COST_PER_USER}/user | $([ $(echo "$COST_PER_USER > 100" | bc) -eq 1 ] && echo "Consider Max 5x" || echo "API is cheaper") |
-| Claude Max 20x | \$200/user | \$${COST_PER_USER}/user | $([ $(echo "$COST_PER_USER > 200" | bc) -eq 1 ] && echo "Consider Max 20x" || echo "API is cheaper") |
+---
 
 ## Recommendations
 
 EOF
 
-# Generate recommendations based on metrics
+# Generate recommendations based on communication metrics
+RECS=0
+
 if [ $(echo "$CACHE_RATIO < 10" | bc) -eq 1 ]; then
-    echo "1. **Improve CLAUDE.md**: Cache ratio of ${CACHE_RATIO}:1 is low. Better project documentation will improve cache efficiency."
+    RECS=$((RECS + 1))
+    cat << EOF
+### ${RECS}. Improve Your CLAUDE.md
+
+Cache ratio of ${CACHE_RATIO}:1 means Claude is rebuilding context frequently.
+
+**Action:** Add to your CLAUDE.md:
+- Architecture decisions and patterns
+- Security requirements
+- Code style preferences
+- Examples of good code in your codebase
+
+EOF
 fi
 
 if [ $(echo "$ACCEPT_RATE > 95" | bc) -eq 1 ]; then
-    echo "2. **Review Accept Behavior**: ${ACCEPT_RATE}% accept rate suggests rubber-stamping. Encourage critical review of suggestions."
+    RECS=$((RECS + 1))
+    cat << EOF
+### ${RECS}. Slow Down and Review
+
+Accept rate of ${ACCEPT_RATE}% suggests you might be rubber-stamping.
+
+**Action:** Before accepting, ask yourself:
+- Would I have written it this way?
+- Does this follow our security requirements?
+- Are there edge cases not handled?
+
+EOF
 fi
 
 if [ $(echo "$ACCEPT_RATE < 60" | bc) -eq 1 ]; then
-    echo "2. **Prompt Engineering Training**: ${ACCEPT_RATE}% accept rate is low. Train developers on effective prompting."
+    RECS=$((RECS + 1))
+    cat << EOF
+### ${RECS}. Help Claude Understand You
+
+Accept rate of ${ACCEPT_RATE}% means Claude often misunderstands your intent.
+
+**Action:**
+- Add more examples to your CLAUDE.md
+- Be more specific in your prompts
+- Include constraints and acceptance criteria
+
+EOF
 fi
 
 if [ $(echo "$TOKENS_PER_SESSION > 300000" | bc) -eq 1 ]; then
-    echo "3. **Session Management**: ${TOKENS_PER_SESSION} tokens/session is high. Use /compact or start fresh sessions more often."
+    RECS=$((RECS + 1))
+    cat << EOF
+### ${RECS}. Start Fresh More Often
+
+${TOKENS_PER_SESSION} tokens per session is high. Context compaction may be losing details.
+
+**Action:**
+- Start new sessions for new tasks
+- Use /compact when context gets stale
+- Break large tasks into phases
+
+EOF
 fi
 
-if [ $(echo "$COST_PER_PR > 10" | bc) -eq 1 ]; then
-    echo "4. **Cost Efficiency**: \$${COST_PER_PR}/PR is above target. Review usage patterns for optimization."
+if [ "$RECS" -eq 0 ]; then
+    echo "✅ All communication metrics look healthy!"
+    echo ""
 fi
 
 cat << EOF
-
 ---
-*Report generated by claude-metrics. Dashboard: http://localhost:3000*
+
+*Remember: These metrics measure communication quality, not productivity.*
+*The goal is better collaboration, not more output.*
+
+*Dashboard: http://localhost:3000*
 EOF
 
 log "Report complete."

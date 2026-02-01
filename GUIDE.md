@@ -1,406 +1,450 @@
-# Co-Intelligence Guide
+# The Architect's Guide to AI Collaboration
 
-A framework for human-AI collaboration that measures growth, not compliance.
-
-## Why We Measure
-
-This isn't surveillance. It's not blame. It's not catching anyone doing something wrong.
-
-**We measure to learn.**
-
-When you track your Claude Code usage, you're developing a feedback loop for growth. Like an athlete watching game film or a musician recording practice sessions, observability gives you data to improve your craft.
-
-The goal: **become a better engineer who happens to use AI, not an AI operator who used to be an engineer.**
-
-## The Philosophy
-
-Claude is not a replacement for your mind. It's an extension of it.
-
-Think of pair programming with an infinitely patient partner who:
-- Never gets tired of explaining
-- Remembers every pattern they've ever seen
-- Types faster than humanly possible
-- Has no ego about suggestions being rejected
-
-But this partner also:
-- Can't see what you see
-- Doesn't know your codebase's history
-- Doesn't understand your team's unwritten rules
-- Has no intuition about what "feels right"
-
-**You bring judgment. Claude brings speed. Together, you're unstoppable.**
+A framework for human-AI co-intelligence. Not surveillance. Not productivity tracking. **Learning.**
 
 ---
 
-## Part 1: Understanding Your Metrics
+## The Core Idea
 
-### Accept Rate (Critical Thinking)
+You are the **Architect**. Claude is your **implementation partner**.
 
-| Rate | What It Means | What To Do |
-|------|---------------|------------|
-| <60% | Claude doesn't understand your context | Improve CLAUDE.md, add examples |
-| 60-75% | Healthy tension | You're engaged, suggestions need work |
-| **75-85%** | **Optimal** | Good prompts, active review |
-| 85-95% | Getting passive | Review more critically |
-| >95% | Rubber stamping | You've stopped thinking |
+This isn't about measuring how much code Claude writes for you. It's about improving how you communicate, collaborate, and build together.
 
-**The insight:** If your rate changes, ask why. Did you start a new project? Change domains? Get tired? The metric is a mirror, not a judge.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         YOU (Architect)                         │
+├─────────────────────────────────────────────────────────────────┤
+│  • System design & architecture                                 │
+│  • Security principles & threat modeling                        │
+│  • Non-functional requirements (performance, HA, scalability)   │
+│  • Functional requirements & acceptance criteria                │
+│  • Technology & SDK selection                                   │
+│  • Code review & quality gates                                  │
+│  • DRY, SOLID, patterns - the "why" behind decisions            │
+│  • TDD strategy - what to test and why                          │
+└─────────────────────────────────────────────────────────────────┘
+                              ↕
+                    (Clear Communication)
+                              ↕
+┌─────────────────────────────────────────────────────────────────┐
+│                    CLAUDE (Implementation)                      │
+├─────────────────────────────────────────────────────────────────┤
+│  • Writing code that follows your patterns                      │
+│  • Implementing tests you've designed                           │
+│  • Exploring approaches you can evaluate                        │
+│  • Refactoring with constraints you've set                      │
+│  • Generating boilerplate you'd rather not type                 │
+│  • Explaining options so you can decide                         │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-### Cache Ratio (Communication Quality)
+**The metric we care about:** How well does Claude understand your intent?
 
-| Ratio | Meaning | Action |
-|-------|---------|--------|
-| <5:1 | Poor context reuse | Improve CLAUDE.md significantly |
-| 5-10:1 | Below average | Add more patterns and examples |
+---
+
+## Why NOT to Track
+
+Before explaining what to measure, let's be clear about what NOT to measure and why:
+
+### Don't Track: Commits, PRs, Lines of Code
+
+These are **vanity metrics** that incentivize wrong behavior:
+
+| Metric | Why It's Harmful |
+|--------|------------------|
+| Commit count | Incentivizes many small commits to inflate numbers |
+| PR count | Incentivizes splitting work artificially |
+| Lines of code | More code ≠ better code. Often the opposite. |
+| Cost per commit | Penalizes thoughtful, complex work |
+
+**The problem:** If you measure commits, people will commit more. If you measure lines, people will write verbose code. You get what you measure.
+
+### Don't Track: Leaderboards
+
+Comparing developers by AI usage metrics creates:
+- Competition instead of collaboration
+- Gaming behavior to look good
+- Anxiety about being "at the bottom"
+- Focus on metrics instead of outcomes
+
+**This isn't a race.** Everyone's work is different. A developer doing complex architecture work will have different metrics than one doing bug fixes.
+
+### Don't Track: "Productivity"
+
+AI collaboration isn't about output volume. It's about:
+- Making better decisions
+- Catching issues earlier
+- Learning new patterns
+- Building maintainable systems
+
+None of these show up in token counts.
+
+---
+
+## What TO Measure (And Why)
+
+Three metrics tell you about your **communication quality** with Claude:
+
+### 1. Cache Ratio (Is Your Context Working?)
+
+```
+Cache Ratio = Cache Reads / Cache Creates
+```
+
+| Ratio | What It Means | Action |
+|-------|---------------|--------|
+| <5:1 | Claude rebuilds context constantly | Your CLAUDE.md needs work |
+| 5-10:1 | Some context reuse | Add more patterns and examples |
 | 10-20:1 | Good | Keep refining |
-| **>20:1** | **Excellent** | Your documentation is working |
+| **>20:1** | **Excellent** | Claude understands your world |
 
-High cache ratio = Claude understands your context = you're communicating effectively.
+**Why this matters:** A high cache ratio means Claude remembers your patterns, your preferences, your architecture. You're not repeating yourself. Your CLAUDE.md is doing its job.
 
-### Session Size (Efficiency)
-
-| Tokens/Session | Meaning | Action |
-|----------------|---------|--------|
-| <100k | Efficient | Good prompts, clear instructions |
-| 100-200k | Getting long | Consider clearer initial prompts |
-| 200-300k | Compaction likely | Improve CLAUDE.md, use skills |
-| >300k | Inefficient | Major prompt/config issues |
-
-**Why compaction is bad:**
-1. Loss of context (important details summarized away)
-2. Wasted tokens rebuilding context
-3. Higher cost for same output
-
-### Cost Efficiency
-
-| Metric | Target | Why |
-|--------|--------|-----|
-| Cost/PR | <$5 | Value delivered per dollar |
-| Cost/Commit | <$1 | Granular productivity |
-| Cost/Session | <$0.10 | Session efficiency |
-| Tokens/Line | <100 | Code output efficiency |
-
----
-
-## Part 2: Optimizing Your Setup
-
-### What to Put in CLAUDE.md
-
-**DO Include (Improves Suggestions):**
-
+**How to improve:**
 ```markdown
-## Code Style
-- Use early returns
+# In your CLAUDE.md
+
+## Architecture Decisions
+- We use the repository pattern for data access
+- All API responses follow RFC 7807 Problem Details
+- Example: see src/repositories/UserRepository.ts
+
+## Security Requirements
+- All user input must be validated with Zod schemas
+- SQL queries use parameterized statements only
+- Secrets come from environment variables, never hardcoded
+
+## Our Patterns
 - Prefer composition over inheritance
+- Use early returns to reduce nesting
 - Max function length: 30 lines
-
-## Patterns We Use
-- Repository pattern for data access
-- Factory pattern for object creation
-- Example: [link to good code]
-
-## Anti-Patterns to Avoid
-- No god objects
-- No magic strings
-- No nested callbacks >2 levels
-
-## Domain Context
-- We're building a fintech app
-- Compliance is critical
-- All money in cents, not floats
 ```
 
-**DON'T Include (Wastes Tokens):**
+### 2. Session Size (Are You Going in Circles?)
+
+```
+Tokens per Session = Total Tokens / Session Count
+```
+
+| Size | What It Means | Action |
+|------|---------------|--------|
+| <100k | Efficient sessions | Good prompts, clear direction |
+| 100-200k | Getting long | Consider breaking into phases |
+| 200-300k | Compaction risk | Start fresh more often |
+| >300k | Inefficient | Major communication issues |
+
+**Why this matters:** Long sessions mean either:
+1. Deep, complex work (fine)
+2. Going in circles, unclear direction (problem)
+
+When sessions get too long, Claude's context gets compacted - it forgets important details. You lose context and waste tokens rebuilding it.
+
+**How to improve:**
+- Start sessions with clear goals
+- Use `/compact` when context gets stale
+- Break large tasks into phases
+- Know when a fresh session helps
+
+### 3. Accept Rate (Are You Engaged?)
+
+```
+Accept Rate = Accepted Edits / Total Edits
+```
+
+| Rate | What It Means | Action |
+|------|---------------|--------|
+| <60% | Claude misunderstands you | Improve CLAUDE.md, clearer prompts |
+| 60-75% | Healthy tension | You're reviewing carefully |
+| **75-85%** | **Optimal** | Good communication, engaged review |
+| 85-95% | Getting passive | Slow down, read more carefully |
+| >95% | Rubber stamping | You've stopped being the Architect |
+
+**Why this matters:** This isn't about Claude being "right" or "wrong." It's about whether you're engaged.
+
+- Too low = Claude doesn't understand your context
+- Too high = You're not reviewing critically
+
+**The danger of 95%+:** You've stopped being the Architect. You're just approving code you haven't really read. When Claude makes a mistake (and it will), you won't catch it.
+
+**The goal is NOT 100%.** The goal is thoughtful collaboration.
+
+---
+
+## The Architect's Responsibilities
+
+When you use AI as a co-intelligence partner, your role shifts. You're not typing less - you're **thinking more**.
+
+### 1. Security Principles
+
+You define the security model. Claude implements it.
 
 ```markdown
-## Generic Advice
-- Write clean code (too vague)
-- Follow best practices (which ones?)
-- Be careful (not actionable)
+# Your job (in CLAUDE.md or prompts):
+- Define authentication strategy (JWT, sessions, OAuth)
+- Specify authorization model (RBAC, ABAC, policies)
+- Identify sensitive data and handling requirements
+- Set encryption requirements (at rest, in transit)
+- Define input validation rules
+
+# Claude's job:
+- Implement the patterns you've specified
+- Follow security best practices you've outlined
+- Flag potential issues for your review
 ```
 
-### A/B Testing Your Config
+### 2. Non-Functional Requirements
 
-Version your configurations to measure impact:
+You set the constraints. Claude works within them.
 
-```bash
-# In your shell profile
-export OTEL_RESOURCE_ATTRIBUTES="config_version=v1,..."
+```markdown
+# Performance
+- API responses < 200ms p99
+- Batch processing handles 10k records
+- Database queries must use indexes
+
+# Availability
+- Service must handle pod restarts gracefully
+- Implement circuit breakers for external calls
+- Health checks at /healthz and /readyz
+
+# Scalability
+- Stateless services (no local state)
+- Horizontal scaling via replicas
+- Queue-based processing for async work
 ```
 
-Update when you change CLAUDE.md:
-```bash
-export OTEL_RESOURCE_ATTRIBUTES="config_version=v2,..."
+### 3. Functional Requirements
+
+You define what "done" looks like. Claude builds it.
+
+```markdown
+# Feature: User Registration
+Given a valid email and password
+When the user submits the registration form
+Then a new account is created
+And a verification email is sent
+And the user is redirected to /verify-email
+
+# Edge cases:
+- Duplicate email: return 409 with clear message
+- Weak password: return 400 with requirements
+- Rate limit: 5 attempts per minute per IP
 ```
 
-**What to version:**
+### 4. Technology Selection
 
-| Config | Location | What to Track |
-|--------|----------|---------------|
-| CLAUDE.md | Project root | Coding style, patterns, rules |
-| Memory files | `~/.claude/memory/` | Persistent context |
-| Skills | `~/.claude/skills/` | Custom commands |
-| Settings | `~/.claude/settings.json` | Permissions, defaults |
+You choose the stack. Claude works with it.
 
-### Optimization Experiments
+```markdown
+# Stack Decisions
+- Runtime: Node.js 20 (we need worker threads)
+- Framework: Fastify (performance over Express)
+- ORM: Drizzle (type-safe, good migrations)
+- Validation: Zod (runtime + TypeScript inference)
+- Testing: Vitest (faster than Jest, compatible API)
 
-**Experiment 1: CLAUDE.md Specificity**
+# Why these choices:
+- [Link to ADR or decision doc]
+```
 
-| Version | Style | Expected Result |
-|---------|-------|-----------------|
-| v1 | Generic | Low accept rate |
-| v2 | Project-specific patterns | Higher accept rate |
-| v3 | Examples + anti-patterns | Optimal (75-85%) |
+### 5. Quality Gates
 
-**Experiment 2: Memory File Impact**
+You define what quality means. Claude helps achieve it.
 
-| Version | Setup | Measure |
-|---------|-------|---------|
-| v1 | No memory files | Baseline cache ratio |
-| v2 | Key decisions documented | Improved cache ratio |
-| v3 | Full context + examples | Maximum efficiency |
+```markdown
+# Code Quality
+- All public functions have JSDoc comments
+- No any types without explicit justification
+- Test coverage > 80% for business logic
+- E2E tests for critical paths
+
+# Review Checklist
+- [ ] Security: No hardcoded secrets, input validated
+- [ ] Performance: No N+1 queries, pagination on lists
+- [ ] Maintainability: Functions < 30 lines, clear names
+- [ ] Testing: Happy path + edge cases covered
+```
 
 ---
 
-## Part 3: Anti-Patterns and Fixes
+## The Communication Loop
 
-### The Rubber Stamper (>95% Accept)
-
-**What's happening:** Accepting everything without reading.
-
-**Why:** Trust built up, time pressure, fatigue.
-
-**The cost:** You stop learning. Skills atrophy. When Claude is wrong, you won't catch it.
-
-**The fix:** Not suspicion - curiosity. Read the diffs. Ask: "Would I have written it this way?"
-
-### The Micromanager (<60% Accept)
-
-**What's happening:** Rejecting most suggestions.
-
-**Why:** Claude doesn't understand your context.
-
-**The cost:** You're not getting the speed benefit.
-
-**The fix:** Invest in context. Write better CLAUDE.md. Add examples. Give Claude a chance.
-
-### The Context Burner (>300k tokens)
-
-**What's happening:** Sessions running until they hit limits.
-
-**Why:** Deep work, or going in circles.
-
-**The cost:** Context compacted. Quality degrades.
-
-**The fix:** Recognize when fresh sessions help. Use `/compact`. Break tasks into phases.
-
-### The Expensive Developer (>$10/PR)
-
-**What's happening:** Too many iterations or unclear prompts.
-
-**Why:** Vague initial requests, too much back-and-forth.
-
-**The fix:**
-1. Be specific in initial prompts
-2. Include expected output format
-3. Break complex tasks into steps
-4. Add task templates to skills
-
----
-
-## Part 4: The Growth Mindset
-
-### Questions to Ask Yourself
-
-Instead of "Am I using AI correctly?" ask:
-
-1. **Am I learning?**
-   - Do I understand the code Claude wrote?
-   - Could I write it myself?
-   - Am I picking up new patterns?
-
-2. **Am I curious?**
-   - Do I ask Claude to explain its reasoning?
-   - Do I experiment with approaches?
-   - Do I read the diffs carefully?
-
-3. **Am I improving?**
-   - Is my prompting more effective?
-   - Am I delivering value faster?
-   - Are my code reviews meaningful?
-
-4. **Am I in control?**
-   - Do I decide the architecture?
-   - Do I set the constraints?
-   - Do I make the judgment calls?
-
-### The Commitment
-
-1. **Stay curious** - Ask why, not just whether it works
-2. **Stay critical** - Read diffs, push back when needed
-3. **Stay learning** - Absorb good patterns from Claude
-4. **Stay in charge** - You decide architecture and direction
-5. **Stay humble** - Sometimes Claude's way is better
-
-### What Good Looks Like
-
-After a week of healthy usage:
+Good AI collaboration is a feedback loop:
 
 ```
-Accept Rate:     75-85%     # Critical but trusting
-Cache Ratio:     >20:1      # Good context reuse
-Tokens/Session:  <100k      # Efficient sessions
-Cost/PR:         <$5        # Good ROI
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│   1. CONTEXT                                                    │
+│      └─ CLAUDE.md, memory files, project structure              │
+│                         ↓                                       │
+│   2. PROMPT                                                     │
+│      └─ Clear request with constraints and examples             │
+│                         ↓                                       │
+│   3. RESULT                                                     │
+│      └─ Claude's implementation attempt                         │
+│                         ↓                                       │
+│   4. REVIEW                                                     │
+│      └─ You evaluate: Does this match intent?                   │
+│                         ↓                                       │
+│   5. FEEDBACK                                                   │
+│      └─ Accept, reject, or refine                               │
+│                         ↓                                       │
+│   6. LEARN                                                      │
+│      └─ Update CLAUDE.md if patterns emerge                     │
+│                         │                                       │
+│                         └───────────────────────────────────────┤
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-This indicates:
-- **Engaged review** - not rubber-stamping
-- **Clear communication** - Claude understands context
-- **Efficient sessions** - not going in circles
-- **Value delivery** - producing meaningful output
+**The metrics tell you where this loop breaks down:**
+
+| Problem | Symptom | Fix |
+|---------|---------|-----|
+| Poor context | Low cache ratio | Better CLAUDE.md |
+| Unclear prompts | Long sessions | Clearer initial requests |
+| Not reviewing | High accept rate | Slow down, read diffs |
+| Misalignment | Low accept rate | More examples, patterns |
 
 ---
 
-## Part 5: Troubleshooting
+## Anti-Patterns
 
-### "Claude keeps getting it wrong"
+### The Rubber Stamper
 
-**Check:** CLAUDE.md - comprehensive? patterns? anti-patterns? domain context?
+**Symptom:** Accept rate > 95%
 
-**Try:** More context upfront. Include examples of what you want.
+**What's happening:** You're approving everything without reading.
 
-### "I'm spending too much"
+**The cost:** Skills atrophy. When Claude is wrong, you won't catch it. You're no longer the Architect - you're just a button-clicker.
 
-**Check:** Cost/PR metric.
+**The fix:** Before accepting, ask yourself: "Would I have written it this way? Why or why not?"
 
-**Try:** Haiku for simple tasks. Fresh sessions. Specific initial prompts.
+### The Micromanager
 
-### "I feel like I'm not learning"
+**Symptom:** Accept rate < 60%
 
-**Check:** Accept rate creeping toward 100%?
+**What's happening:** Claude doesn't understand your context.
 
-**Try:** Deliberately slow down. Read every diff. Form your opinion first.
+**The cost:** You're not getting the collaboration benefit. Might as well type it yourself.
 
-### "Sessions feel inefficient"
+**The fix:** Invest in context. Write a proper CLAUDE.md. Include examples of code you like. Give Claude a chance to understand your style.
 
-**Check:** Tokens/session. Cache ratio.
+### The Context Burner
 
-**Try:** Better upfront context. Clearer problem statements. Know when to start fresh.
+**Symptom:** Sessions > 300k tokens regularly
+
+**What's happening:** You're either doing genuinely complex work or going in circles.
+
+**The cost:** Context compaction loses important details. You spend tokens rebuilding context that was lost.
+
+**The fix:** Fresh sessions for new tasks. Use `/compact` intentionally. Break large work into phases.
+
+### The Vague Requester
+
+**Symptom:** Low cache ratio, frequent misunderstandings
+
+**What's happening:** Your prompts lack specificity. Claude guesses and often guesses wrong.
+
+**The fix:** Include constraints, examples, and acceptance criteria. "Add pagination" → "Add cursor-based pagination, 50 items default, return next_cursor in response."
 
 ---
 
-## Part 6: Prompt Review
+## Prompt Review (Not Audit)
+
+Share what works. Learn from each other.
 
 ### The Idea
 
-Code review improved software quality by making thinking visible. **Prompt review** does the same for human-AI collaboration.
+Code review made code quality visible. **Prompt review** makes AI collaboration visible.
 
-When you review a PR, you see *what* changed. But you don't see *how* it was created - the prompts, the iterations, the refinements that led to the final code.
+When you review a PR, you see what changed. You don't see the prompts that created it. Sharing prompts helps everyone improve.
 
-**Better prompts = Better code = Better engineers**
+### How to Do It (Lightweight)
 
-### Why This Matters
+**In PRs:**
+```markdown
+## How this was built
+Key prompt: "Implement rate limiting using token bucket algorithm,
+100 requests per minute per user, return 429 with Retry-After header"
 
-| Without Prompt Review | With Prompt Review |
-|-----------------------|-------------------|
-| Everyone reinvents prompting | Team shares what works |
-| Good patterns stay siloed | Knowledge spreads organically |
-| Same mistakes repeated | Learn from each other's iterations |
-| "Magic" results seem random | Reproducible success patterns |
-
-### How to Practice It
-
-**Lightweight approaches (pick what fits your team):**
-
-1. **PR Description Context**
-   ```markdown
-   ## How this was built
-   Key prompt: "Refactor the auth module to use the repository
-   pattern. Keep backward compatibility with existing callers."
-
-   Iterations: Started with full rewrite, scaled back after
-   Claude suggested incremental approach.
-   ```
-
-2. **Commit Message Notes**
-   ```
-   feat: add rate limiting to API endpoints
-
-   Prompted with: "Add rate limiting using token bucket,
-   100 req/min per user, return 429 with retry-after header"
-   ```
-
-3. **Team Retros**
-   - Share a prompt that worked surprisingly well
-   - Share one that needed many iterations (and why)
-   - Discuss patterns emerging across the team
-
-4. **Prompt Library**
-   - Keep a shared doc of effective prompts for common tasks
-   - Version them like you version code
-   - Note which CLAUDE.md context they assume
-
-### What Makes a Good Prompt (Review Criteria)
-
-| Element | Good | Needs Work |
-|---------|------|------------|
-| **Specificity** | "Add pagination with cursor-based approach, 50 items default" | "Add pagination" |
-| **Context** | References existing patterns in codebase | Assumes Claude knows your conventions |
-| **Constraints** | "Must work with existing API contract" | No boundaries mentioned |
-| **Output Format** | "Return the modified function only" | No guidance on response shape |
-| **Examples** | "Like we did in UserService.list()" | No reference points |
-
-### The Growth Loop
-
-```
-Write Prompt → Get Result → Review What Worked → Share Pattern → Team Improves
-      ↑                                                              │
-      └──────────────────────────────────────────────────────────────┘
+What worked: Specifying the algorithm and response format upfront
 ```
 
-### Questions for Prompt Review
+**In retros:**
+- Share a prompt that worked surprisingly well
+- Share one that took many iterations (and what finally worked)
 
-When reviewing someone's prompt (including your own):
+**In your team:**
+- Keep a shared doc of effective prompts
+- Note what context they assume
 
-1. **Clarity** - Would another engineer understand the intent?
-2. **Completeness** - Does it include necessary constraints?
-3. **Efficiency** - Could it be shorter without losing meaning?
-4. **Reusability** - Could this become a team pattern or skill?
+### This Is NOT
 
-### Not Audit - Growth
+- ❌ Mandatory documentation
+- ❌ Tracking who prompts "correctly"
+- ❌ Performance review material
+- ❌ Another compliance checkbox
 
-This isn't about:
-- ❌ Tracking who uses AI "correctly"
-- ❌ Mandating prompt documentation
-- ❌ Creating bureaucracy around AI usage
+### This IS
 
-This is about:
+- ✅ Sharing what works
 - ✅ Learning from each other
-- ✅ Building shared understanding
-- ✅ Improving collectively
+- ✅ Building collective skill
 - ✅ Making the implicit explicit
-
-**Start small.** One prompt shared in a PR description. One pattern discussed in retro. The goal is culture shift, not compliance.
 
 ---
 
-## The Meta-Goal
+## The Meta-Point
 
 ```
 You + Claude = Better than either alone
 
-Not: Claude doing your job
-Not: You doing Claude's job
-But: True collaboration where both contribute strengths
+Your judgment + Claude's speed
+Your context + Claude's patterns
+Your vision + Claude's implementation
 ```
 
-**The metrics are mirrors, not judges.**
+The metrics aren't scorecards. They're **mirrors**.
 
-When you see something in the data, don't ask "Is this good or bad?" Ask:
-- What does this tell me about how I work?
-- What would I like to be different?
-- What can I try to change it?
+When you see something in the data, don't ask "Is this good enough?" Ask:
+
+- What does this tell me about how I'm communicating?
+- What would help Claude understand me better?
+- Am I still the Architect, or have I abdicated?
 
 ---
 
-*"The best engineers don't just use AI - they collaborate with it. They bring judgment, context, and vision. AI brings speed, breadth, and tireless patience. Together, they create things neither could alone."*
+## Quick Reference
+
+### What You Own (Architect)
+- Architecture & system design
+- Security model & principles
+- Performance & availability requirements
+- Technology selection & rationale
+- Code review & quality gates
+- The "why" behind every decision
+
+### What Claude Helps With (Implementation)
+- Writing code within your constraints
+- Implementing patterns you've defined
+- Exploring options for you to evaluate
+- Generating tests you've designed
+- Refactoring with your rules
+- Explaining tradeoffs so you can decide
+
+### What to Measure (Communication)
+| Metric | Target | Meaning |
+|--------|--------|---------|
+| Cache Ratio | >20:1 | Your context is working |
+| Session Size | <100k | You're being efficient |
+| Accept Rate | 75-85% | You're engaged |
+
+### What NOT to Measure
+- Commits, PRs, lines of code (gameable, meaningless)
+- Cost per output (penalizes complex work)
+- Developer comparisons (creates wrong incentives)
+
+---
+
+*"The best engineers don't just use AI - they architect with it. They bring judgment, security, and vision. AI brings speed, patterns, and patience. The Architect decides what to build. AI helps build it right."*

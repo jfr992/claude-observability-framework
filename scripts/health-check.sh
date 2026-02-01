@@ -56,9 +56,9 @@ printf "Total Cost:        \$%s\n" "$COST"
 SESSIONS=$(curl -s "$PROMETHEUS_URL/api/v1/query?query=count(count%20by%20(session_id)(claude_code_cost_usage_USD_total))" 2>/dev/null | jq -r '.data.result[0].value[1] // "0"')
 printf "Sessions:          %s\n" "$SESSIONS"
 
-# Commits
-COMMITS=$(curl -s "$PROMETHEUS_URL/api/v1/query?query=sum(claude_code_commit_count_total)" 2>/dev/null | jq -r '.data.result[0].value[1] // "0"')
-printf "Commits:           %s\n" "$COMMITS"
+# Tokens
+TOKENS=$(curl -s "$PROMETHEUS_URL/api/v1/query?query=sum(claude_code_token_usage_tokens_total)" 2>/dev/null | jq -r '.data.result[0].value[1] // "0"')
+printf "Total Tokens:      %s\n" "$TOKENS"
 
 # Accept rate
 ACCEPTS=$(curl -s "$PROMETHEUS_URL/api/v1/query?query=sum(claude_code_code_edit_tool_decision_total{decision=\"accept\"})" 2>/dev/null | jq -r '.data.result[0].value[1] // "0"')
@@ -110,6 +110,18 @@ if [ "${CACHE_CREATE%.*}" -gt 0 ]; then
         echo "✅ Cache Ratio ${CACHE_RATIO}:1 is excellent"
     else
         echo "✅ Cache Ratio ${CACHE_RATIO}:1 is good"
+    fi
+fi
+
+# Assess session size
+if [ "$SESSIONS" -gt 0 ] && [ "${TOKENS%.*}" -gt 0 ]; then
+    TOKENS_PER_SESSION=$(awk "BEGIN {printf \"%.0f\", $TOKENS / $SESSIONS}")
+    if [ "$TOKENS_PER_SESSION" -gt 300000 ]; then
+        echo "⚠️  Session Size ${TOKENS_PER_SESSION} tokens - consider fresh sessions"
+    elif [ "$TOKENS_PER_SESSION" -lt 100000 ]; then
+        echo "✅ Session Size ${TOKENS_PER_SESSION} tokens - efficient"
+    else
+        echo "✅ Session Size ${TOKENS_PER_SESSION} tokens - moderate"
     fi
 fi
 
