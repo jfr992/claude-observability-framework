@@ -99,7 +99,7 @@ After the test, you should see:
 | Metric | Healthy Range | What It Means |
 |--------|---------------|---------------|
 | Accept Rate | 75-85% | You're thinking critically |
-| Cache Ratio | >10:1 | Context is being reused |
+| Cache Hit Rate | >80% | Context is being reused |
 | Session tokens | <100k | Efficient session |
 
 Check with:
@@ -132,7 +132,7 @@ curl -s 'http://localhost:9090/api/v1/query?query=sum(claude_code_commit_count_t
 - If Claude keeps missing your patterns → improve your CLAUDE.md
 - If you're rejecting style-only issues → configure Claude's style preferences
 
-### Cache Ratio < 10:1
+### Cache Hit Rate < 70%
 **Problem:** Context isn't being reused efficiently.
 
 **Test:** Start a session, make a change, then ask a follow-up question. If Claude seems to have forgotten context, your CLAUDE.md may need work.
@@ -153,7 +153,7 @@ Use the included script:
 This checks:
 - Stack health (Prometheus, Grafana, Loki)
 - Metric availability
-- Key metrics (Cost, Tokens, Sessions, Accept Rate, Cache Ratio)
+- Key metrics (Cost, Tokens, Sessions, Accept Rate, Cache Hit Rate)
 - Session efficiency assessment
 
 ## Cleanup
@@ -176,7 +176,7 @@ After a week of normal usage, healthy metrics show:
 
 ```
 Accept Rate:     75-85%     # Critical but trusting
-Cache Ratio:     >20:1      # Good context reuse
+Cache Hit Rate:  >90%       # Good context reuse
 Tokens/Session:  <100k      # Efficient sessions
 ```
 

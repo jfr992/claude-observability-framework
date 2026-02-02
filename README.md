@@ -82,7 +82,7 @@ Cost/PR, Cost/Session, and Cost/Commit are included but with important framing:
 | Use Case | Vanity Metric? | Learning Tool? |
 |----------|----------------|----------------|
 | "Juan costs $10/PR, fire him" | - Bad | — |
-| "Juan's Cost/PR is high, let's check his cache ratio and help" | — | - Good |
+| "Juan's Cost/PR is high, let's check his cache hit rate and help" | — | - Good |
 
 **Always interpret with context:**
 
