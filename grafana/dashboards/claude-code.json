@@ -110,8 +110,8 @@
       "gridPos": { "h": 5, "w": 6, "x": 6, "y": 6 },
       "id": 71,
       "type": "gauge",
-      "title": "Prompt Quality",
-      "description": "Cache Ratio = cacheRead / cacheCreation.\n\n• <5:1 = Poor CLAUDE.md/skills\n• 10-20:1 = Good context setup\n• >20:1 = Excellent - Claude understands you\n\nBetter prompts = better cache = lower cost.",
+      "title": "Context Efficiency",
+      "description": "Cache Ratio = cacheRead / cacheCreation.\n\n• <5:1 = Poor CLAUDE.md/skills\n• 10-20:1 = Good context setup\n• >20:1 = Excellent - Claude understands you\n\nBetter context setup = higher reuse = lower cost.",
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "showThresholdLabels": false, "showThresholdMarkers": true },
       "targets": [{ "expr": "sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}) > 0 or vector(1))", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "short", "min": 0, "max": 50, "decimals": 1, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "orange", "value": 5 }, { "color": "yellow", "value": 10 }, { "color": "green", "value": 20 }] } } }
