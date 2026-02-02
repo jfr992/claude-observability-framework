@@ -25,20 +25,20 @@ You are the **Architect**. Claude is your **implementation partner**.
 
 All three measure **communication quality**, not output volume.
 
-### 1. Cache Ratio
+### 1. Cache Hit Rate
 
 ```
-Cache Ratio = Cache Reads / Cache Creates
+Cache Hit Rate = Cache Reads / (Cache Reads + Cache Creates) × 100%
 ```
 
-| Ratio | Meaning | Action |
-|-------|---------|--------|
-| <5:1 | Claude rebuilds context constantly | Improve your CLAUDE.md |
-| 5-10:1 | Some context reuse | Add more patterns and examples |
-| 10-20:1 | Good | Keep refining |
-| >20:1 | Excellent | Claude understands your world |
+| Rate | Meaning | Action |
+|------|---------|--------|
+| <70% | Claude rebuilds context constantly | Improve your CLAUDE.md |
+| 70-80% | Some context reuse | Add more patterns and examples |
+| 80-90% | Good | Keep refining |
+| >90% | Excellent | Claude understands your world |
 
-A high cache ratio means Claude remembers your patterns. You're not repeating yourself.
+A high cache hit rate means Claude remembers your patterns. You're not repeating yourself.
 
 **To improve:** Document your architecture decisions, security requirements, and coding patterns in CLAUDE.md with concrete examples.
 
@@ -87,7 +87,7 @@ Accept → Test → "Actually, fix this" → Accept again
 
 A developer who accepts → tests → iterates shows **100% accept rate**, same as someone rubber-stamping. The metric can't tell the difference.
 
-**Interpret with context:** High accept rate + high cache ratio + good results = probably fine. High accept rate + low cache ratio + issues = probably rubber-stamping.
+**Interpret with context:** High accept rate + high cache hit rate + good results = probably fine. High accept rate + low cache hit rate + issues = probably rubber-stamping.
 
 ---
 
@@ -125,7 +125,7 @@ LEARN (update CLAUDE.md if patterns emerge)
 
 | Problem | Symptom | Fix |
 |---------|---------|-----|
-| Poor context | Low cache ratio | Better CLAUDE.md |
+| Poor context | Low cache hit rate | Better CLAUDE.md |
 | Unclear prompts | Long sessions | Clearer initial requests |
 | Not reviewing | High accept rate | Slow down, read diffs |
 | Misalignment | Low accept rate | More examples, patterns |
@@ -153,7 +153,7 @@ This is not mandatory documentation or performance review material. It's collect
 
 | Metric | Target | Meaning |
 |--------|--------|---------|
-| Cache Ratio | >20:1 | Your context is working |
+| Cache Hit Rate | >90% | Your context is working |
 | Session Size | <100k | You're being efficient |
 | Accept Rate | 75-85% | You're engaged |
 

@@ -98,8 +98,8 @@ After the test, you should see:
 
 | Metric | Healthy Range | What It Means |
 |--------|---------------|---------------|
-| Accept Rate | 60-80% | You're thinking critically |
-| Commits | 1-3 | Changes were committed |
+| Accept Rate | 75-85% | You're thinking critically |
+| Cache Ratio | >10:1 | Context is being reused |
 | Session tokens | <100k | Efficient session |
 
 Check with:
@@ -144,58 +144,17 @@ curl -s 'http://localhost:9090/api/v1/query?query=sum(claude_code_commit_count_t
 
 ## Automated Health Check Script
 
-Save this as `scripts/health-check.sh`:
+Use the included script:
 
 ```bash
-#!/bin/bash
-# Quick health check for Claude Code metrics
-
-PROMETHEUS_URL="${PROMETHEUS_URL:-http://localhost:9090}"
-
-echo "=== Claude Code Metrics Health Check ==="
-echo ""
-
-# Check if Prometheus is up
-if ! curl -s "$PROMETHEUS_URL/-/healthy" > /dev/null; then
-    echo "❌ Prometheus is not reachable at $PROMETHEUS_URL"
-    exit 1
-fi
-echo "✅ Prometheus is healthy"
-
-# Check for any Claude metrics
-METRICS=$(curl -s "$PROMETHEUS_URL/api/v1/label/__name__/values" | jq -r '.data[]' | grep -c claude)
-if [ "$METRICS" -eq 0 ]; then
-    echo "⚠️  No Claude Code metrics found. Have you run a session with telemetry enabled?"
-else
-    echo "✅ Found $METRICS Claude Code metric types"
-fi
-
-# Get accept rate
-ACCEPTS=$(curl -s "$PROMETHEUS_URL/api/v1/query?query=sum(claude_code_code_edit_tool_decision_total{decision=\"accept\"})" | jq -r '.data.result[0].value[1] // "0"')
-REJECTS=$(curl -s "$PROMETHEUS_URL/api/v1/query?query=sum(claude_code_code_edit_tool_decision_total{decision=\"reject\"})" | jq -r '.data.result[0].value[1] // "0"')
-TOTAL=$((ACCEPTS + REJECTS))
-
-if [ "$TOTAL" -gt 0 ]; then
-    RATE=$((ACCEPTS * 100 / TOTAL))
-    echo ""
-    echo "Edit Decisions: $ACCEPTS accepts, $REJECTS rejects"
-    if [ "$RATE" -gt 95 ]; then
-        echo "⚠️  Accept Rate: ${RATE}% (possible rubber-stamping)"
-    elif [ "$RATE" -lt 50 ]; then
-        echo "⚠️  Accept Rate: ${RATE}% (very low - check CLAUDE.md)"
-    else
-        echo "✅ Accept Rate: ${RATE}% (healthy range)"
-    fi
-fi
-
-# Get cost
-COST=$(curl -s "$PROMETHEUS_URL/api/v1/query?query=sum(claude_code_cost_usage_USD_total)" | jq -r '.data.result[0].value[1] // "0"')
-echo ""
-echo "Total Cost: \$$COST"
-
-echo ""
-echo "=== Health Check Complete ==="
+./scripts/health-check.sh
 ```
+
+This checks:
+- Stack health (Prometheus, Grafana, Loki)
+- Metric availability
+- Key metrics (Cost, Tokens, Sessions, Accept Rate, Cache Ratio)
+- Session efficiency assessment
 
 ## Cleanup
 
@@ -213,21 +172,20 @@ podman compose up -d
 
 ## What Good Looks Like
 
-After a week of normal usage, a healthy developer profile shows:
+After a week of normal usage, healthy metrics show:
 
 ```
 Accept Rate:     75-85%     # Critical but trusting
 Cache Ratio:     >20:1      # Good context reuse
 Tokens/Session:  <100k      # Efficient sessions
-Cost/PR:         <$5        # Good ROI
-Commits:         Growing    # Productive output
 ```
 
 This indicates:
 - **Engaged review** - not rubber-stamping
-- **Clear communication** - Claude understands context
+- **Clear communication** - Claude understands your context via CLAUDE.md
 - **Efficient sessions** - not going in circles
-- **Value delivery** - producing meaningful output
+
+**Note:** Don't optimize for metrics. Use them to understand your collaboration patterns, then improve your CLAUDE.md or prompting style accordingly.
 
 ---
 

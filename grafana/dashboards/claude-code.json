@@ -1,5 +1,7 @@
 {
-  "annotations": { "list": [] },
+  "annotations": {
+    "list": []
+  },
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -7,407 +9,1851 @@
   "links": [],
   "panels": [
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
       "id": 100,
       "type": "row",
       "title": "Overview (Cumulative Session Totals)",
       "collapsed": false
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 1 },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
       "id": 1,
       "type": "stat",
       "title": "Total Cost",
       "description": "Cumulative cost for all sessions",
-      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_cost_usage_USD_total)", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 20 }] } } }
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(claude_code_cost_usage_USD_total)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 5
+              },
+              {
+                "color": "red",
+                "value": 20
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 4, "w": 3, "x": 4, "y": 1 },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 4,
+        "y": 1
+      },
       "id": 2,
       "type": "stat",
       "title": "Tokens",
       "description": "Cumulative tokens for all sessions",
-      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_token_usage_tokens_total)", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(claude_code_token_usage_tokens_total)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 4, "w": 3, "x": 7, "y": 1 },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 7,
+        "y": 1
+      },
       "id": 3,
       "type": "stat",
       "title": "Sessions",
-      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "count(count by (session_id) (claude_code_cost_usage_USD_total)) or vector(0)", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } } }
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "count(count by (session_id) (claude_code_cost_usage_USD_total)) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 4, "w": 3, "x": 10, "y": 1 },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 10,
+        "y": 1
+      },
       "id": 4,
       "type": "stat",
       "title": "Active Time",
-      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_active_time_seconds_total)", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "s", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] } } }
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(claude_code_active_time_seconds_total)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": null
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 4, "w": 3, "x": 13, "y": 1 },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 13,
+        "y": 1
+      },
       "id": 5,
       "type": "stat",
       "title": "Lines +",
-      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_lines_of_code_count_total{type=\"added\"}) or vector(0)", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(claude_code_lines_of_code_count_total{type=\"added\"}) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 4, "w": 3, "x": 16, "y": 1 },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 16,
+        "y": 1
+      },
       "id": 6,
       "type": "stat",
       "title": "Lines -",
-      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_lines_of_code_count_total{type=\"removed\"}) or vector(0)", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }] } } }
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(claude_code_lines_of_code_count_total{type=\"removed\"}) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 4, "w": 2, "x": 19, "y": 1 },
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 19,
+        "y": 1
+      },
       "id": 21,
       "type": "stat",
       "title": "Input",
       "description": "Input tokens",
-      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_token_usage_tokens_total{type=\"input\"}) or vector(0)", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } } }
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(claude_code_token_usage_tokens_total{type=\"input\"}) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 4, "w": 3, "x": 21, "y": 1 },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 21,
+        "y": 1
+      },
       "id": 22,
       "type": "stat",
       "title": "Output",
       "description": "Output tokens",
-      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_token_usage_tokens_total{type=\"output\"}) or vector(0)", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] } } }
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(claude_code_token_usage_tokens_total{type=\"output\"}) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": null
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
       "id": 106,
       "type": "row",
       "title": "Your Growth (Am I Still Thinking?)",
       "collapsed": false
     },
     {
-      "gridPos": { "h": 5, "w": 6, "x": 0, "y": 6 },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 6
+      },
       "id": 70,
       "type": "gauge",
       "title": "Critical Thinking",
-      "description": "Accept Rate = accepts / total edits.\n\n• <60% = Claude doesn't understand your context\n• 75-85% = OPTIMAL - you're reviewing critically\n• >95% = DANGER - you've stopped thinking\n\nAsk yourself: Did I actually read that diff?",
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "showThresholdLabels": false, "showThresholdMarkers": true, "orientation": "auto" },
-      "targets": [{ "expr": "100 * sum(claude_code_code_edit_tool_decision_total{decision=\"accept\"}) / (sum(claude_code_code_edit_tool_decision_total) > 0 or vector(1))", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "orange", "value": 60 }, { "color": "green", "value": 75 }, { "color": "orange", "value": 90 }, { "color": "red", "value": 96 }] } } }
+      "description": "Accept Rate = accepts / total edits.\n\n\u2022 <60% = Claude doesn't understand your context\n\u2022 75-85% = OPTIMAL - you're reviewing critically\n\u2022 >95% = DANGER - you've stopped thinking\n\nAsk yourself: Did I actually read that diff?",
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "orientation": "auto"
+      },
+      "targets": [
+        {
+          "expr": "100 * sum(claude_code_code_edit_tool_decision_total{decision=\"accept\"}) / (sum(claude_code_code_edit_tool_decision_total) > 0 or vector(1))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 60
+              },
+              {
+                "color": "green",
+                "value": 75
+              },
+              {
+                "color": "orange",
+                "value": 90
+              },
+              {
+                "color": "red",
+                "value": 96
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 5, "w": 6, "x": 6, "y": 6 },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 6,
+        "y": 6
+      },
       "id": 71,
       "type": "gauge",
       "title": "Context Efficiency",
-      "description": "Cache Ratio = cacheRead / cacheCreation.\n\n• <5:1 = Poor CLAUDE.md/skills\n• 10-20:1 = Good context setup\n• >20:1 = Excellent - Claude understands you\n\nBetter context setup = higher reuse = lower cost.",
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "showThresholdLabels": false, "showThresholdMarkers": true },
-      "targets": [{ "expr": "sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}) > 0 or vector(1))", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "min": 0, "max": 50, "decimals": 1, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "orange", "value": 5 }, { "color": "yellow", "value": 10 }, { "color": "green", "value": 20 }] } } }
+      "description": "Cache Ratio = cacheRead / cacheCreation.\n\n\u2022 <5:1 = Poor CLAUDE.md/skills\n\u2022 10-20:1 = Good context setup\n\u2022 >20:1 = Excellent - Claude understands you\n\nBetter context setup = higher reuse = lower cost.",
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "expr": "sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}) > 0 or vector(1))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "max": 50,
+          "decimals": 1,
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 5
+              },
+              {
+                "color": "yellow",
+                "value": 10
+              },
+              {
+                "color": "green",
+                "value": 20
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 5, "w": 6, "x": 12, "y": 6 },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 12,
+        "y": 6
+      },
       "id": 72,
       "type": "gauge",
       "title": "Session Size",
-      "description": "Average tokens consumed per session.\n\n• <100k = Efficient (green)\n• 100-200k = Moderate (yellow)\n• 200-300k = Large (orange)\n• >300k = Compaction likely (red)\n\nLower is better. Use /compact or start fresh sessions to reduce.",
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "showThresholdLabels": false, "showThresholdMarkers": true },
-      "targets": [{ "expr": "sum(claude_code_token_usage_tokens_total) / (count(count by (session_id) (claude_code_cost_usage_USD_total)) > 0 or vector(1))", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "locale", "min": 0, "max": 500000, "decimals": 0, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 100000 }, { "color": "orange", "value": 200000 }, { "color": "red", "value": 300000 }] } } }
+      "description": "Average tokens consumed per session.\n\n\u2022 <100k = Efficient (green)\n\u2022 100-200k = Moderate (yellow)\n\u2022 200-300k = Large (orange)\n\u2022 >300k = Compaction likely (red)\n\nLower is better. Use /compact or start fresh sessions to reduce.",
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "expr": "sum(claude_code_token_usage_tokens_total) / (count(count by (session_id) (claude_code_cost_usage_USD_total)) > 0 or vector(1))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "locale",
+          "min": 0,
+          "max": 500000,
+          "decimals": 0,
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 100000
+              },
+              {
+                "color": "orange",
+                "value": 200000
+              },
+              {
+                "color": "red",
+                "value": 300000
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 5, "w": 6, "x": 18, "y": 6 },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 18,
+        "y": 6
+      },
       "id": 73,
       "type": "stat",
       "title": "Human Score",
-      "description": "Combined metric: Are you growing WITH Claude?\n\n• 80-100 = Healthy co-intelligence\n• 50-80 = Room to improve\n• <50 = Check your engagement\n\nGoal: Claude amplifies your mind, not replaces it.",
-      "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "clamp_max(clamp_min(50 - abs(80 - (100 * sum(claude_code_code_edit_tool_decision_total{decision=\"accept\"}) / (sum(claude_code_code_edit_tool_decision_total) > 0 or vector(1)))), 0) + clamp_max((sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}) > 0 or vector(1))) * 2, 40) + clamp_max((300000 - (sum(claude_code_token_usage_tokens_total) / (count(count by (session_id) (claude_code_cost_usage_USD_total)) > 0 or vector(1)))) / 30000, 10), 100)", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "orange", "value": 50 }, { "color": "yellow", "value": 70 }, { "color": "green", "value": 85 }] } } }
+      "description": "Combined metric: Are you growing WITH Claude?\n\n\u2022 80-100 = Healthy co-intelligence\n\u2022 50-80 = Room to improve\n\u2022 <50 = Check your engagement\n\nGoal: Claude amplifies your mind, not replaces it.",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "clamp_max(clamp_min(50 - abs(80 - (100 * sum(claude_code_code_edit_tool_decision_total{decision=\"accept\"}) / (sum(claude_code_code_edit_tool_decision_total) > 0 or vector(1)))), 0) + clamp_max((sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}) > 0 or vector(1))) * 2, 40) + clamp_max((300000 - (sum(claude_code_token_usage_tokens_total) / (count(count by (session_id) (claude_code_cost_usage_USD_total)) > 0 or vector(1)))) / 30000, 10), 100)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 50
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "green",
+                "value": 85
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 11 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
       "id": 105,
       "type": "row",
       "title": "ROI Metrics",
       "collapsed": false
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 12 },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 12
+      },
       "id": 60,
       "type": "stat",
       "title": "PRs Created",
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_pull_request_count_total) or vector(0)", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(claude_code_pull_request_count_total) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 12 },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 12
+      },
       "id": 61,
       "type": "stat",
       "title": "Commits",
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_commit_count_total) or vector(0)", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } } }
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(claude_code_commit_count_total) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 12 },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 12
+      },
       "id": 62,
       "type": "stat",
       "title": "Cost/PR",
-      "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_cost_usage_USD_total) / (sum(claude_code_pull_request_count_total) > 0 or vector(1))", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 15 }] } } }
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(claude_code_cost_usage_USD_total) / (sum(claude_code_pull_request_count_total) > 0 or vector(1))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 5
+              },
+              {
+                "color": "red",
+                "value": 15
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 12 },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 12
+      },
       "id": 63,
       "type": "stat",
       "title": "Edits",
-      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_code_edit_tool_decision_total) or vector(0)", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(claude_code_code_edit_tool_decision_total) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 12 },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 12
+      },
       "id": 64,
       "type": "stat",
       "title": "Accept %",
-      "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "100 * sum(claude_code_code_edit_tool_decision_total{decision=\"accept\"}) / (sum(claude_code_code_edit_tool_decision_total) > 0 or vector(1))", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "percent", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 60 }, { "color": "green", "value": 80 }] } } }
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "100 * sum(claude_code_code_edit_tool_decision_total{decision=\"accept\"}) / (sum(claude_code_code_edit_tool_decision_total) > 0 or vector(1))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 60
+              },
+              {
+                "color": "green",
+                "value": 80
+              }
+            ]
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 12 },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 12
+      },
       "id": 65,
       "type": "stat",
-      "title": "Cache Ratio",
-      "description": "Cache reads / cache creation",
-      "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}) > 0 or vector(1))", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "decimals": 1, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 5 }, { "color": "green", "value": 20 }] } } }
+      "title": "Cache Hit Rate",
+      "description": "% of token reads from cache. >90% = excellent. <80% = improve CLAUDE.md.",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "100 * sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) + sum(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 1,
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "yellow",
+                "value": 80
+              },
+              {
+                "color": "green",
+                "value": 90
+              }
+            ]
+          },
+          "max": 100
+        }
+      }
     },
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 16 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
       "id": 101,
       "type": "row",
       "title": "Usage Over Time",
       "collapsed": false
     },
     {
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 17 },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
       "id": 30,
       "type": "timeseries",
       "title": "Cost by Model (rate/hour)",
-      "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["sum"] }, "tooltip": { "mode": "multi" } },
-      "targets": [{ "expr": "sum by (model) (rate(claude_code_cost_usage_USD_total[5m])) * 3600", "legendFormat": "{{model}}", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "currencyUSD", "custom": { "lineWidth": 2, "fillOpacity": 30, "stacking": { "mode": "normal" } } } }
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "sum"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (model) (rate(claude_code_cost_usage_USD_total[5m])) * 3600",
+          "legendFormat": "{{model}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 30,
+            "stacking": {
+              "mode": "normal"
+            }
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 17 },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 17
+      },
       "id": 31,
       "type": "timeseries",
       "title": "Tokens by Type (rate)",
-      "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["sum"] }, "tooltip": { "mode": "multi" } },
-      "targets": [{ "expr": "sum by (type) (rate(claude_code_token_usage_tokens_total[5m]))", "legendFormat": "{{type}}", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short", "custom": { "lineWidth": 2, "fillOpacity": 30, "stacking": { "mode": "normal" } } } }
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "sum"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (type) (rate(claude_code_token_usage_tokens_total[5m]))",
+          "legendFormat": "{{type}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 30,
+            "stacking": {
+              "mode": "normal"
+            }
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 25 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 25
+      },
       "id": 107,
       "type": "row",
       "title": "Breakdown (Current Totals)",
       "collapsed": false
     },
     {
-      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 26 },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 26
+      },
       "id": 32,
       "type": "piechart",
       "title": "Cost by User",
-      "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum by (user_email) (claude_code_cost_usage_USD_total)", "legendFormat": "{{user_email}}", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (user_email) (claude_code_cost_usage_USD_total)",
+          "legendFormat": "{{user_email}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD"
+        }
+      }
     },
     {
-      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 26 },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 26
+      },
       "id": 33,
       "type": "piechart",
       "title": "Tokens by Type",
-      "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum by (type) (claude_code_token_usage_tokens_total)", "legendFormat": "{{type}}", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "short" } }
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (type) (claude_code_token_usage_tokens_total)",
+          "legendFormat": "{{type}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      }
     },
     {
-      "gridPos": { "h": 8, "w": 6, "x": 12, "y": 26 },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 26
+      },
       "id": 12,
       "type": "piechart",
       "title": "Cost by Model",
-      "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum by (model) (claude_code_cost_usage_USD_total)", "legendFormat": "{{model}}", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (model) (claude_code_cost_usage_USD_total)",
+          "legendFormat": "{{model}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD"
+        }
+      }
     },
     {
-      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 26 },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 26
+      },
       "id": 14,
       "type": "piechart",
       "title": "By Terminal",
-      "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "sum by (terminal_type) (claude_code_cost_usage_USD_total)", "legendFormat": "{{terminal_type}}", "refId": "A" }],
-      "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (terminal_type) (claude_code_cost_usage_USD_total)",
+          "legendFormat": "{{terminal_type}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD"
+        }
+      }
     },
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 34 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 34
+      },
       "id": 104,
       "type": "row",
       "title": "Bedrock Breakdown (requires OTEL_RESOURCE_ATTRIBUTES)",
       "collapsed": true,
       "panels": [
         {
-          "gridPos": { "h": 6, "w": 8, "x": 0, "y": 35 },
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 35
+          },
           "id": 50,
           "type": "piechart",
           "title": "Inference Profile vs Direct",
-          "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
-          "targets": [{ "expr": "sum by (inference_type) (claude_code_cost_usage_USD_total{provider=\"bedrock\"})", "legendFormat": "{{inference_type}}", "refId": "A" }],
-          "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "values": [
+                "value",
+                "percent"
+              ]
+            },
+            "pieType": "donut",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            }
+          },
+          "targets": [
+            {
+              "expr": "sum by (inference_type) (claude_code_cost_usage_USD_total{provider=\"bedrock\"})",
+              "legendFormat": "{{inference_type}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "currencyUSD"
+            }
+          }
         },
         {
-          "gridPos": { "h": 6, "w": 8, "x": 8, "y": 35 },
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 8,
+            "y": 35
+          },
           "id": 51,
           "type": "piechart",
           "title": "By AWS Profile",
-          "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] } },
-          "targets": [{ "expr": "sum by (aws_profile) (claude_code_cost_usage_USD_total{provider=\"bedrock\"})", "legendFormat": "{{aws_profile}}", "refId": "A" }],
-          "fieldConfig": { "defaults": { "unit": "currencyUSD" } }
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "values": [
+                "value",
+                "percent"
+              ]
+            },
+            "pieType": "donut",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            }
+          },
+          "targets": [
+            {
+              "expr": "sum by (aws_profile) (claude_code_cost_usage_USD_total{provider=\"bedrock\"})",
+              "legendFormat": "{{aws_profile}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "currencyUSD"
+            }
+          }
         },
         {
-          "gridPos": { "h": 6, "w": 8, "x": 16, "y": 35 },
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 16,
+            "y": 35
+          },
           "id": 52,
           "type": "stat",
           "title": "Bedrock Cost",
-          "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-          "targets": [{ "expr": "sum(claude_code_cost_usage_USD_total{provider=\"bedrock\"}) or vector(0)", "refId": "A" }],
-          "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] } } }
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            }
+          },
+          "targets": [
+            {
+              "expr": "sum(claude_code_cost_usage_USD_total{provider=\"bedrock\"}) or vector(0)",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "currencyUSD",
+              "color": {
+                "mode": "thresholds"
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "orange",
+                    "value": null
+                  }
+                ]
+              }
+            }
+          }
         }
       ]
     },
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 41 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 41
+      },
       "id": 102,
       "type": "row",
       "title": "Session Details",
       "collapsed": false
     },
     {
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 42 },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 42
+      },
       "id": 40,
       "type": "table",
       "title": "Sessions",
-      "options": { "showHeader": true, "sortBy": [{ "displayName": "Cost", "desc": true }] },
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "Cost",
+            "desc": true
+          }
+        ]
+      },
       "targets": [
-        { "expr": "sum by (session_id, model) (claude_code_cost_usage_USD_total)", "refId": "cost", "format": "table", "instant": true },
-        { "expr": "sum by (session_id, model) (claude_code_token_usage_tokens_total)", "refId": "tokens", "format": "table", "instant": true }
+        {
+          "expr": "sum by (session_id, model) (claude_code_cost_usage_USD_total)",
+          "refId": "cost",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "sum by (session_id, model) (claude_code_token_usage_tokens_total)",
+          "refId": "tokens",
+          "format": "table",
+          "instant": true
+        }
       ],
       "transformations": [
-        { "id": "merge", "options": {} },
-        { "id": "organize", "options": { "excludeByName": { "Time": true }, "renameByName": { "session_id": "Session", "model": "Model", "Value #cost": "Cost", "Value #tokens": "Tokens" } } }
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "session_id": "Session",
+              "model": "Model",
+              "Value #cost": "Cost",
+              "Value #tokens": "Tokens"
+            }
+          }
+        }
       ],
-      "fieldConfig": { "defaults": {}, "overrides": [{ "matcher": { "id": "byName", "options": "Cost" }, "properties": [{ "id": "unit", "value": "currencyUSD" }] }, { "matcher": { "id": "byName", "options": "Tokens" }, "properties": [{ "id": "unit", "value": "short" }] }, { "matcher": { "id": "byName", "options": "Session" }, "properties": [{ "id": "custom.width", "value": 300 }] }] }
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cost"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tokens"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Session"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 300
+              }
+            ]
+          }
+        ]
+      }
     },
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 50 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 50
+      },
       "id": 103,
       "type": "row",
       "title": "Model Breakdown",
       "collapsed": false
     },
     {
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 51 },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 51
+      },
       "id": 15,
       "type": "table",
       "title": "Model Details",
-      "options": { "showHeader": true, "sortBy": [{ "displayName": "Cost", "desc": true }] },
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "Cost",
+            "desc": true
+          }
+        ]
+      },
       "targets": [
-        { "expr": "sum by (model) (claude_code_cost_usage_USD_total)", "refId": "cost", "format": "table", "instant": true },
-        { "expr": "sum by (model) (claude_code_token_usage_tokens_total{type=\"input\"})", "refId": "input", "format": "table", "instant": true },
-        { "expr": "sum by (model) (claude_code_token_usage_tokens_total{type=\"output\"})", "refId": "output", "format": "table", "instant": true },
-        { "expr": "sum by (model) (claude_code_token_usage_tokens_total{type=\"cacheRead\"})", "refId": "cacheRead", "format": "table", "instant": true }
+        {
+          "expr": "sum by (model) (claude_code_cost_usage_USD_total)",
+          "refId": "cost",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "sum by (model) (claude_code_token_usage_tokens_total{type=\"input\"})",
+          "refId": "input",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "sum by (model) (claude_code_token_usage_tokens_total{type=\"output\"})",
+          "refId": "output",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "expr": "sum by (model) (claude_code_token_usage_tokens_total{type=\"cacheRead\"})",
+          "refId": "cacheRead",
+          "format": "table",
+          "instant": true
+        }
       ],
       "transformations": [
-        { "id": "merge", "options": {} },
-        { "id": "organize", "options": { "excludeByName": { "Time": true }, "renameByName": { "model": "Model", "Value #cost": "Cost", "Value #input": "Input", "Value #output": "Output", "Value #cacheRead": "Cache Read" } } }
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "model": "Model",
+              "Value #cost": "Cost",
+              "Value #input": "Input",
+              "Value #output": "Output",
+              "Value #cacheRead": "Cache Read"
+            }
+          }
+        }
       ],
-      "fieldConfig": { "defaults": {}, "overrides": [{ "matcher": { "id": "byName", "options": "Cost" }, "properties": [{ "id": "unit", "value": "currencyUSD" }] }, { "matcher": { "id": "byName", "options": "Input" }, "properties": [{ "id": "unit", "value": "short" }] }, { "matcher": { "id": "byName", "options": "Output" }, "properties": [{ "id": "unit", "value": "short" }] }, { "matcher": { "id": "byName", "options": "Cache Read" }, "properties": [{ "id": "unit", "value": "short" }] }] }
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cost"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Input"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Output"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cache Read"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          }
+        ]
+      }
     },
     {
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 54 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 54
+      },
       "id": 108,
       "type": "row",
       "title": "Tool Usage (from Loki Logs)",
       "collapsed": false
     },
     {
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 55 },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 55
+      },
       "id": 80,
       "type": "piechart",
       "title": "Tool Usage Distribution",
       "description": "Tools used in Claude Code sessions (from Loki logs)",
-      "datasource": { "type": "loki", "uid": "loki" },
-      "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }, "pieType": "donut", "reduceOptions": { "calcs": ["sum"] } },
-      "targets": [{
-        "expr": "sum by (attributes_tool_name) (count_over_time({job=\"claude-code\"} |~ \"tool_result\" | json [$__range]))",
-        "legendFormat": "{{attributes_tool_name}}",
-        "refId": "A"
-      }],
-      "fieldConfig": { "defaults": { "unit": "short", "displayName": "${__field.labels.attributes_tool_name}" } }
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (attributes_tool_name) (count_over_time({job=\"claude-code\"} |~ \"tool_result\" | json [$__range]))",
+          "legendFormat": "{{attributes_tool_name}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "displayName": "${__field.labels.attributes_tool_name}"
+        }
+      }
     },
     {
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 55 },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 55
+      },
       "id": 81,
       "type": "timeseries",
       "title": "Tool Usage Over Time",
       "description": "Tool calls over time (from Loki logs)",
-      "datasource": { "type": "loki", "uid": "loki" },
-      "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["sum"] }, "tooltip": { "mode": "multi" } },
-      "targets": [{
-        "expr": "sum by (attributes_tool_name) (count_over_time({job=\"claude-code\"} |~ \"tool_result\" | json [$__interval]))",
-        "legendFormat": "{{attributes_tool_name}}",
-        "refId": "A"
-      }],
-      "fieldConfig": { "defaults": { "unit": "short", "displayName": "${__field.labels.attributes_tool_name}", "custom": { "lineWidth": 2, "fillOpacity": 20, "stacking": { "mode": "normal" } } } }
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "sum"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (attributes_tool_name) (count_over_time({job=\"claude-code\"} |~ \"tool_result\" | json [$__interval]))",
+          "legendFormat": "{{attributes_tool_name}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "displayName": "${__field.labels.attributes_tool_name}",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 20,
+            "stacking": {
+              "mode": "normal"
+            }
+          }
+        }
+      }
     },
     {
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 63 },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 63
+      },
       "id": 82,
       "type": "logs",
       "title": "Recent Tool Activity",
       "description": "Recent tool calls and decisions",
-      "datasource": { "type": "loki", "uid": "loki" },
-      "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "prettifyLogMessage": true, "enableLogDetails": true, "dedupStrategy": "none", "sortOrder": "Descending" },
-      "targets": [{
-        "expr": "{job=\"claude-code\"} |= \"tool\"",
-        "refId": "A"
-      }]
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": true,
+        "enableLogDetails": true,
+        "dedupStrategy": "none",
+        "sortOrder": "Descending"
+      },
+      "targets": [
+        {
+          "expr": "{job=\"claude-code\"} |= \"tool\"",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 71
+      },
+      "id": 108,
+      "type": "row",
+      "title": "\ud83d\udea8 Health Indicators (Stuck Detection)",
+      "collapsed": false
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 72
+      },
+      "id": 80,
+      "type": "stat",
+      "title": "\u26a0\ufe0f Long Sessions (No Commits)",
+      "description": "Sessions >200k tokens with 0 commits. May indicate developers getting stuck or going in circles.",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "count(\n      (sum by (session_id) (claude_code_token_usage_tokens_total) > 200000)\n      unless\n      (sum by (session_id) (claude_code_commit_count_total) > 0)\n    ) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              },
+              {
+                "color": "orange",
+                "value": 3
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 72
+      },
+      "id": 81,
+      "type": "gauge",
+      "title": "\u26a0\ufe0f Rejection Rate",
+      "description": "% of edits rejected. High rejection (>40%) may indicate miscommunication with Claude.",
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "expr": "100 * sum(claude_code_code_edit_tool_decision_total{decision=\"reject\"}) / (sum(claude_code_code_edit_tool_decision_total) > 0 or vector(1))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 20
+              },
+              {
+                "color": "orange",
+                "value": 40
+              },
+              {
+                "color": "red",
+                "value": 60
+              }
+            ]
+          }
+        }
+      }
     }
   ],
   "refresh": "30s",
   "schemaVersion": 39,
-  "tags": ["claude-code", "ai", "tokens", "cost", "bedrock", "anthropic"],
-  "templating": { "list": [] },
-  "time": { "from": "now-24h", "to": "now" },
+  "tags": [
+    "claude-code",
+    "ai",
+    "tokens",
+    "cost",
+    "bedrock",
+    "anthropic"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
   "timepicker": {},
   "timezone": "browser",
   "title": "Claude Observability - Personal",

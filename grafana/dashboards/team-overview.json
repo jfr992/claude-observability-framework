@@ -330,8 +330,8 @@
       },
       "id": 7,
       "type": "gauge",
-      "title": "Cache Ratio",
-      "description": "Higher = better CLAUDE.md/skills. <5 = bad config. >20 = excellent.",
+      "title": "Cache Hit Rate",
+      "description": "% of token reads from cache. >90% = excellent. <80% = improve CLAUDE.md.",
       "options": {
         "reduceOptions": {
           "calcs": [
@@ -343,15 +343,15 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheCreation\"}) > 0 or vector(1))",
+          "expr": "100 * sum(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}) + sum(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheCreation\"}))",
           "refId": "A"
         }
       ],
       "fieldConfig": {
         "defaults": {
-          "unit": "short",
+          "unit": "percent",
           "min": 0,
-          "max": 50,
+          "max": 100,
           "decimals": 1,
           "color": {
             "mode": "thresholds"
@@ -365,15 +365,15 @@
               },
               {
                 "color": "orange",
-                "value": 5
+                "value": 70
               },
               {
                 "color": "yellow",
-                "value": 10
+                "value": 80
               },
               {
                 "color": "green",
-                "value": 20
+                "value": 90
               }
             ]
           }
@@ -689,7 +689,7 @@
       "id": 54,
       "type": "stat",
       "title": "Cost/User/Day",
-      "description": "Daily cost per active user.",
+      "description": "Daily cost per active user. Adapts to time range selected.",
       "options": {
         "colorMode": "value",
         "graphMode": "none",
@@ -701,7 +701,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}) / (count(count by (user_email) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})) > 0 or vector(1)) / 7",
+          "expr": "sum(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}) / (count(count by (user_email) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})) > 0 or vector(1)) / ($__range_s / 86400)",
           "refId": "A"
         }
       ],
@@ -746,7 +746,7 @@
       "id": 55,
       "type": "stat",
       "title": "Projected Monthly",
-      "description": "Current usage projected to 30 days per user.",
+      "description": "\u26a0\ufe0f Requires 1d+ time range for accuracy. Projects current cost rate to 30 days per user.",
       "options": {
         "colorMode": "value",
         "graphMode": "none",
@@ -758,7 +758,7 @@
       },
       "targets": [
         {
-          "expr": "(sum(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}) / (count(count by (user_email) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})) > 0 or vector(1)) / 7) * 30",
+          "expr": "(sum(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}) / (count(count by (user_email) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})) > 0 or vector(1))) / ($__range_s / 86400) * 30",
           "refId": "A"
         }
       ],
@@ -861,7 +861,7 @@
           "instant": true
         },
         {
-          "expr": "sum by (user_email) (claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}) / on(user_email) group_left() (sum by (user_email) (claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheCreation\"}) > 0) or sum by (user_email) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"}) * 0",
+          "expr": "100 * sum by (user_email) (claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}) / (sum by (user_email) (claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}) + sum by (user_email) (claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheCreation\"}))",
           "refId": "cache",
           "format": "table",
           "instant": true
@@ -885,7 +885,7 @@
               "Value #sessions": "Sessions",
               "Value #prs": "PRs",
               "Value #accept": "Accept %",
-              "Value #cache": "Cache Ratio"
+              "Value #cache": "Cache %"
             },
             "indexByName": {
               "Developer": 0,
@@ -991,12 +991,12 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Cache Ratio"
+              "options": "Cache %"
             },
             "properties": [
               {
                 "id": "unit",
-                "value": "short"
+                "value": "percent"
               },
               {
                 "id": "decimals",
@@ -1019,15 +1019,15 @@
                     },
                     {
                       "color": "orange",
-                      "value": 5
+                      "value": 70
                     },
                     {
                       "color": "yellow",
-                      "value": 10
+                      "value": 80
                     },
                     {
                       "color": "green",
-                      "value": 20
+                      "value": 90
                     }
                   ]
                 }
@@ -1561,7 +1561,7 @@
     {
       "gridPos": {
         "h": 4,
-        "w": 4,
+        "w": 5,
         "x": 0,
         "y": 68
       },
@@ -1608,8 +1608,8 @@
     {
       "gridPos": {
         "h": 4,
-        "w": 4,
-        "x": 4,
+        "w": 5,
+        "x": 5,
         "y": 68
       },
       "id": 71,
@@ -1655,8 +1655,8 @@
     {
       "gridPos": {
         "h": 4,
-        "w": 4,
-        "x": 8,
+        "w": 5,
+        "x": 10,
         "y": 68
       },
       "id": 72,
@@ -1703,8 +1703,8 @@
     {
       "gridPos": {
         "h": 4,
-        "w": 4,
-        "x": 12,
+        "w": 5,
+        "x": 15,
         "y": 68
       },
       "id": 73,
@@ -1755,63 +1755,6 @@
               {
                 "color": "red",
                 "value": 20
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 16,
-        "y": 68
-      },
-      "id": 74,
-      "type": "stat",
-      "title": "Lines/Dollar",
-      "description": "Code output per dollar spent (higher = better value)",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        }
-      },
-      "targets": [
-        {
-          "expr": "(sum(claude_code_lines_of_code_count_total{user_email=~\"$developer\",type=\"added\"}) or vector(0)) / (sum(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}) > 0 or vector(1))",
-          "refId": "A"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "decimals": 0,
-          "color": {
-            "mode": "thresholds"
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 50
-              },
-              {
-                "color": "green",
-                "value": 100
               }
             ]
           }
@@ -2040,6 +1983,132 @@
           "unit": "short",
           "color": {
             "mode": "palette-classic"
+          }
+        }
+      }
+    },
+    {
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 79
+      },
+      "id": 108,
+      "type": "row",
+      "title": "\ud83d\udea8 Health Indicators (Stuck Detection)",
+      "collapsed": false
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 80
+      },
+      "id": 80,
+      "type": "stat",
+      "title": "\u26a0\ufe0f Long Sessions (No Commits)",
+      "description": "Sessions >200k tokens with 0 commits. May indicate developers getting stuck or going in circles.",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "count(\n          (sum by (session_id) (claude_code_token_usage_tokens_total{user_email=~\"$developer\"}) > 200000)\n          unless\n          (sum by (session_id) (claude_code_commit_count_total{user_email=~\"$developer\"}) > 0)\n        ) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              },
+              {
+                "color": "orange",
+                "value": 3
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 80
+      },
+      "id": 81,
+      "type": "gauge",
+      "title": "\u26a0\ufe0f Rejection Rate",
+      "description": "% of edits rejected. High rejection (>40%) may indicate miscommunication with Claude.",
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "expr": "100 * sum(claude_code_code_edit_tool_decision_total{user_email=~\"$developer\",decision=\"reject\"}) / (sum(claude_code_code_edit_tool_decision_total{user_email=~\"$developer\"}) > 0 or vector(1))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 20
+              },
+              {
+                "color": "orange",
+                "value": 40
+              },
+              {
+                "color": "red",
+                "value": 60
+              }
+            ]
           }
         }
       }

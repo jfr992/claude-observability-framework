@@ -14,8 +14,8 @@ The Architect decides what to build. AI helps build it right.
 
 ```bash
 # Clone
-git clone https://github.com/your-org/claude-metrics.git
-cd claude-metrics
+git clone https://github.com/jfr992/claude-observability-framework.git
+cd claude-observability-framework
 
 # Start stack
 podman compose up -d  # or docker compose
@@ -53,16 +53,17 @@ Or use the interactive setup: `./scripts/setup.sh`
 ### Personal Dashboard
 Track your individual AI collaboration patterns:
 - **Cost & Usage:** Total cost, tokens, sessions, active time
-- **Efficiency Gauges:** Accept Rate, Cache Ratio, Session Size
+- **Efficiency Gauges:** Accept Rate, Cache Hit Rate, Session Size
 - **Breakdowns:** By model, token type, terminal
 - **Tool Usage:** Which Claude Code tools you use most
 
 ### Team Dashboard
-Organization-wide visibility:
+Organization-wide visibility with **Developer filter** (All or specific user):
 - **Overview:** Total cost, active users, PRs, commits
 - **ROI Metrics:** Cost/PR, Cost/Session, Cost/Commit
-- **Developer Leaderboard:** Per-user metrics
-- **Productivity:** Lines added/removed, active time
+- **Developer Metrics:** Per-user breakdown with Cache Hit Rate
+- **Health Indicators:** Stuck developer detection (long sessions, no commits)
+- **Model Usage:** Which models each developer prefers
 
 ## Key Metrics (Communication Quality)
 
@@ -70,7 +71,7 @@ Three metrics that matter - all about how well you communicate with Claude:
 
 | Metric | Target | What It Means |
 |--------|--------|---------------|
-| **Cache Ratio** | >20:1 | Your CLAUDE.md is working - Claude remembers your context |
+| **Cache Hit Rate** | >90% | Your CLAUDE.md is working - Claude remembers your context |
 | **Session Size** | <100k | You're being efficient - not going in circles |
 | **Accept Rate** | 75-85% | You're engaged - reviewing thoughtfully, not rubber-stamping |
 
@@ -80,18 +81,18 @@ Cost/PR, Cost/Session, and Cost/Commit are included but with important framing:
 
 | Use Case | Vanity Metric? | Learning Tool? |
 |----------|----------------|----------------|
-| "John costs $10/PR, fire him" | ❌ Bad | — |
-| "John's Cost/PR is high, let's check his cache ratio and help" | — | ✅ Good |
+| "Juan costs $10/PR, fire him" | ❌ Bad | — |
+| "Juan's Cost/PR is high, let's check his cache ratio and help" | — | ✅ Good |
 
 **Always interpret with context:**
 
 | Pattern | Diagnosis | Action |
 |---------|-----------|--------|
-| High Cost/PR + Low Cache Ratio | Poor CLAUDE.md | Improve project documentation |
+| High Cost/PR + Low Cache Hit Rate | Poor CLAUDE.md | Improve project documentation |
 | High Cost/PR + Large Session Size | Going in circles | Start fresh sessions more often |
 | High Cost/PR + Normal metrics | Complex work | This is fine, expected for hard tasks |
 
-The dashboards show these metrics **alongside Cache Ratio and Session Size** so you get the full picture.
+The dashboards show these metrics **alongside Cache Hit Rate and Session Size** so you get the full picture.
 
 ### What NOT to Measure
 
@@ -116,10 +117,10 @@ When using AI as a co-intelligence partner:
 ## Available Scripts
 
 ```bash
-./scripts/setup.sh      # Interactive Mac setup
-./scripts/health-check.sh   # Quick metrics health check
-./scripts/check-storage.sh  # Storage usage monitor
-./scripts/generate-report.sh # CLI ROI report
+./scripts/setup-mac.sh       # Interactive Mac setup
+./scripts/health-check.sh    # Quick metrics health check
+./scripts/check-storage.sh   # Storage usage monitor
+./scripts/generate-report.sh # Communication quality report
 ```
 
 ## Storage & Retention
@@ -156,15 +157,17 @@ This enables Claude to help with metrics interpretation and troubleshooting.
 This isn't surveillance. This isn't productivity tracking. **This is learning.**
 
 The metrics tell you about your **communication quality** with Claude:
-- Is your CLAUDE.md working? (Cache Ratio)
+- Is your CLAUDE.md working? (Cache Hit Rate)
 - Are you being efficient? (Session Size)
 - Are you still the Architect? (Accept Rate)
+- Are developers getting stuck? (Health Indicators)
 
 **The goal:** Improve how you communicate, collaborate, and build together.
 
 ## References
 
 - [Claude Code Monitoring Docs](https://docs.anthropic.com/en/docs/claude-code/monitoring)
+- [Anthropic ROI Guide](https://github.com/anthropics/claude-code-monitoring-guide)
 - [OpenTelemetry Specification](https://opentelemetry.io/docs/specs/otel/)
 
 ---

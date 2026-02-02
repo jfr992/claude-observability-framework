@@ -88,7 +88,7 @@ Or use [claude-switch](https://github.com/your-org/claude-switcher) which config
 
 ### Personal Dashboard (claude-code)
 - **Overview:** Cost, tokens, sessions, lines of code
-- **Efficiency:** Accept Rate, Cache Ratio, Session Size gauges
+- **Efficiency:** Accept Rate, Cache Hit Rate, Session Size gauges
 - **Breakdown:** By model, by token type, by terminal
 - **Tool Usage:** From Loki logs - see which tools you use most
 
@@ -132,7 +132,7 @@ Three metrics that tell you how well you're communicating with Claude:
 
 | Metric | Formula | Target | What It Means |
 |--------|---------|--------|---------------|
-| **Cache Ratio** | cacheRead / cacheCreate | >20:1 | Your CLAUDE.md is working |
+| **Cache Hit Rate** | cacheRead / (cacheRead + cacheCreate) × 100% | >90% | Your CLAUDE.md is working |
 | **Session Size** | tokens / sessions | <100k | You're being efficient |
 | **Accept Rate** | accepts / total | 75-85% | You're engaged, not rubber-stamping |
 
@@ -149,7 +149,7 @@ See [GUIDE.md](GUIDE.md) for the full Architect philosophy.
 
 ## Generate Communication Quality Report
 
-Check your three key metrics (Cache Ratio, Session Size, Accept Rate):
+Check your three key metrics (Cache Hit Rate, Session Size, Accept Rate):
 
 ```bash
 # Last 7 days (default)
