@@ -57,7 +57,7 @@ TOTAL_DECISIONS=$(prom_query "sum(claude_code_code_edit_tool_decision_total)")
 
 # Calculate derived metrics (the three that matter)
 TOKENS_PER_SESSION=$(echo "scale=0; $TOTAL_TOKENS / ($TOTAL_SESSIONS + 1)" | bc)
-CACHE_RATIO=$(echo "scale=1; $CACHE_READ / ($CACHE_CREATE + 1)" | bc)
+CACHE_HIT_RATE=$(echo "scale=1; 100 * $CACHE_READ / ($CACHE_READ + $CACHE_CREATE + 1)" | bc)
 ACCEPT_RATE=$(echo "scale=1; 100 * $ACCEPTS / ($TOTAL_DECISIONS + 1)" | bc)
 
 # Cost metrics (informational, not for comparison)
@@ -82,13 +82,13 @@ cat << EOF
 
 | Metric | Value | Target | Assessment |
 |--------|-------|--------|------------|
-| **Cache Ratio** | ${CACHE_RATIO}:1 | >20:1 | $([ $(echo "$CACHE_RATIO > 20" | bc) -eq 1 ] && echo "✅ Excellent - Claude understands your context" || ([ $(echo "$CACHE_RATIO > 10" | bc) -eq 1 ] && echo "✅ Good" || echo "⚠️ Improve your CLAUDE.md")) |
+| **Cache Hit Rate** | ${CACHE_HIT_RATE}% | >90% | $([ $(echo "$CACHE_HIT_RATE > 90" | bc) -eq 1 ] && echo "✅ Excellent - Claude understands your context" || ([ $(echo "$CACHE_HIT_RATE > 80" | bc) -eq 1 ] && echo "✅ Good" || echo "⚠️ Improve your CLAUDE.md")) |
 | **Session Size** | ${TOKENS_PER_SESSION} tokens | <100k | $([ $(echo "$TOKENS_PER_SESSION < 100000" | bc) -eq 1 ] && echo "✅ Efficient" || ([ $(echo "$TOKENS_PER_SESSION < 300000" | bc) -eq 1 ] && echo "⚠️ Getting long" || echo "❌ Too long - start fresh more often")) |
 | **Accept Rate** | ${ACCEPT_RATE}% | 75-85% | $([ $(echo "$ACCEPT_RATE >= 75 && $ACCEPT_RATE <= 85" | bc) -eq 1 ] && echo "✅ Optimal - engaged review" || ([ $(echo "$ACCEPT_RATE > 95" | bc) -eq 1 ] && echo "⚠️ Too high - are you rubber-stamping?" || ([ $(echo "$ACCEPT_RATE < 60" | bc) -eq 1 ] && echo "⚠️ Too low - Claude misunderstands you" || echo "✅ Healthy"))) |
 
 ### What These Tell You
 
-- **Cache Ratio** = Is your CLAUDE.md communicating context effectively?
+- **Cache Hit Rate** = Is your CLAUDE.md communicating context effectively?
 - **Session Size** = Are you being efficient or going in circles?
 - **Accept Rate** = Are you still the Architect or just clicking accept?
 
@@ -129,12 +129,12 @@ EOF
 # Generate recommendations based on communication metrics
 RECS=0
 
-if [ $(echo "$CACHE_RATIO < 10" | bc) -eq 1 ]; then
+if [ $(echo "$CACHE_HIT_RATE < 70" | bc) -eq 1 ]; then
     RECS=$((RECS + 1))
     cat << EOF
 ### ${RECS}. Improve Your CLAUDE.md
 
-Cache ratio of ${CACHE_RATIO}:1 means Claude is rebuilding context frequently.
+Cache Hit Rate of ${CACHE_HIT_RATE}% means Claude is rebuilding context frequently.
 
 **Action:** Add to your CLAUDE.md:
 - Architecture decisions and patterns

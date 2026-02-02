@@ -72,15 +72,15 @@ else
     printf "Accept Rate:       N/A (no edit decisions yet)\n"
 fi
 
-# Cache ratio
+# Cache Hit Rate
 CACHE_READ=$(curl -s "$PROMETHEUS_URL/api/v1/query?query=sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"})" 2>/dev/null | jq -r '.data.result[0].value[1] // "0"')
 CACHE_CREATE=$(curl -s "$PROMETHEUS_URL/api/v1/query?query=sum(claude_code_token_usage_tokens_total{type=\"cacheCreation\"})" 2>/dev/null | jq -r '.data.result[0].value[1] // "0"')
-if [ "${CACHE_CREATE%.*}" -gt 0 ]; then
-    # Use awk for floating point division
-    CACHE_RATIO=$(awk "BEGIN {printf \"%.1f\", $CACHE_READ / $CACHE_CREATE}")
-    printf "Cache Ratio:       %s:1\n" "$CACHE_RATIO"
+CACHE_TOTAL=$(awk "BEGIN {printf \"%.0f\", $CACHE_READ + $CACHE_CREATE}")
+if [ "$CACHE_TOTAL" -gt 0 ]; then
+    CACHE_HIT_RATE=$(awk "BEGIN {printf \"%.1f\", 100 * $CACHE_READ / $CACHE_TOTAL}")
+    printf "Cache Hit Rate:    %s%%\n" "$CACHE_HIT_RATE"
 else
-    printf "Cache Ratio:       N/A\n"
+    printf "Cache Hit Rate:    N/A\n"
 fi
 
 echo ""
@@ -101,15 +101,15 @@ if [ "$TOTAL" -gt 0 ]; then
     fi
 fi
 
-# Assess cache ratio
-if [ "${CACHE_CREATE%.*}" -gt 0 ]; then
-    CACHE_INT=${CACHE_RATIO%.*}
-    if [ "$CACHE_INT" -lt 10 ]; then
-        echo "⚠️  Cache Ratio ${CACHE_RATIO}:1 is low - improve your CLAUDE.md"
-    elif [ "$CACHE_INT" -ge 20 ]; then
-        echo "✅ Cache Ratio ${CACHE_RATIO}:1 is excellent"
+# Assess cache hit rate
+if [ "$CACHE_TOTAL" -gt 0 ]; then
+    CACHE_INT=${CACHE_HIT_RATE%.*}
+    if [ "$CACHE_INT" -lt 70 ]; then
+        echo "- Cache Hit Rate ${CACHE_HIT_RATE}% is low - improve your CLAUDE.md"
+    elif [ "$CACHE_INT" -ge 90 ]; then
+        echo "- Cache Hit Rate ${CACHE_HIT_RATE}% is excellent"
     else
-        echo "✅ Cache Ratio ${CACHE_RATIO}:1 is good"
+        echo "- Cache Hit Rate ${CACHE_HIT_RATE}% is good"
     fi
 fi
 
