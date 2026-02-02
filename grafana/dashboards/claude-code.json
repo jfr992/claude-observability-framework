@@ -42,7 +42,7 @@
       },
       "targets": [
         {
-          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total[$__range]))",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -94,7 +94,7 @@
       },
       "targets": [
         {
-          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total[$__range]))",
+          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -180,7 +180,7 @@
       },
       "targets": [
         {
-          "expr": "sum(max_over_time(claude_code_active_time_seconds_total[$__range]))",
+          "expr": "sum(max_over_time(claude_code_active_time_seconds_total[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -473,7 +473,7 @@
       },
       "targets": [
         {
-          "expr": "100 * sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / (sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) + sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[$__range])))",
+          "expr": "100 * sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / (sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) + sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[$__range]))) or vector(0)",
           "refId": "A"
         }
       ],
@@ -899,7 +899,7 @@
       },
       "targets": [
         {
-          "expr": "100 * sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / (sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) + sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[$__range])))",
+          "expr": "100 * sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / (sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) + sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[$__range]))) or vector(0)",
           "refId": "A"
         }
       ],

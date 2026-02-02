@@ -41,7 +41,7 @@
       },
       "targets": [
         {
-          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range]))",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -343,7 +343,7 @@
       },
       "targets": [
         {
-          "expr": "100 * sum(max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}[$__range])) / (sum(max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}[$__range])) + sum(max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheCreation\"}[$__range])))",
+          "expr": "100 * sum(max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}[$__range])) / (sum(max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}[$__range])) + sum(max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheCreation\"}[$__range]))) or vector(0)",
           "refId": "A"
         }
       ],
@@ -855,13 +855,13 @@
           "instant": true
         },
         {
-          "expr": "100 * sum by (user_email) (max_over_time(claude_code_code_edit_tool_decision_total{user_email=~\"$developer\",decision=\"accept\"}[$__range])) / on(user_email) group_left() (sum by (user_email) (claude_code_code_edit_tool_decision_total) > 0) or sum by (user_email) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range])) * 0 + 100",
+          "expr": "100 * sum by (user_email) (max_over_time(claude_code_code_edit_tool_decision_total{user_email=~\"$developer\",decision=\"accept\"}[$__range])) / on(user_email) group_left() (sum by (user_email) (claude_code_code_edit_tool_decision_total) > 0) or sum by (user_email) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range])) * 0 + 100 or vector(0)",
           "refId": "accept",
           "format": "table",
           "instant": true
         },
         {
-          "expr": "100 * sum by (user_email) (max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}[$__range])) / (sum by (user_email) (max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}[$__range])) + sum by (user_email) (max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheCreation\"}[$__range])))",
+          "expr": "100 * sum by (user_email) (max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}[$__range])) / (sum by (user_email) (max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}[$__range])) + sum by (user_email) (max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheCreation\"}[$__range]))) or vector(0)",
           "refId": "cache",
           "format": "table",
           "instant": true
