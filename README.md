@@ -146,8 +146,8 @@ A skill file is included for Claude Code users:
 
 ```bash
 # Install the skill
-cp claude-observability.skill ~/.claude/skills/
-unzip -d ~/.claude/skills/claude-observability ~/.claude/skills/claude-observability.skill
+mkdir -p ~/.claude/skills/claude-observability
+cp claude-observability-skill.md ~/.claude/skills/claude-observability/SKILL.md
 ```
 
 This enables Claude to help with metrics interpretation and troubleshooting.
