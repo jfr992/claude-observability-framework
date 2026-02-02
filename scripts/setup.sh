@@ -46,10 +46,17 @@ echo -e "${YELLOW}Detected OS: $OS_NAME${NC}"
 
 # Detect shell
 SHELL_NAME=$(basename "$SHELL")
+IS_FISH=false
+
 if [ "$SHELL_NAME" = "zsh" ]; then
     SHELL_RC="$HOME/.zshrc"
 elif [ "$SHELL_NAME" = "bash" ]; then
     SHELL_RC="$HOME/.bashrc"
+elif [ "$SHELL_NAME" = "fish" ]; then
+    SHELL_RC="$HOME/.config/fish/config.fish"
+    IS_FISH=true
+    # Ensure fish config directory exists
+    mkdir -p "$HOME/.config/fish"
 else
     SHELL_RC="$HOME/.profile"
 fi
@@ -130,8 +137,12 @@ if grep -q "CLAUDE_CODE_ENABLE_TELEMETRY" "$SHELL_RC" 2>/dev/null; then
     if [ "$REPLACE" != "y" ] && [ "$REPLACE" != "Y" ]; then
         echo "Skipping shell config update."
     else
-        # Remove old config
-        sed_inplace '/# Claude Code Telemetry/,/^$/d' "$SHELL_RC"
+        # Remove old config (different patterns for fish vs bash/zsh)
+        if [ "$IS_FISH" = true ]; then
+            sed_inplace '/# Claude Code Telemetry/,/^set -gx OTEL_RESOURCE_ATTRIBUTES/d' "$SHELL_RC"
+        else
+            sed_inplace '/# Claude Code Telemetry/,/^export OTEL_RESOURCE_ATTRIBUTES/d' "$SHELL_RC"
+        fi
         ADD_CONFIG=true
     fi
 else
@@ -139,9 +150,26 @@ else
 fi
 
 if [ "$ADD_CONFIG" = true ]; then
-    cat >> "$SHELL_RC" << EOF
+    if [ "$IS_FISH" = true ]; then
+        # Fish shell uses 'set -gx' instead of 'export'
+        cat >> "$SHELL_RC" << EOF
 
-# Claude Code Telemetry - Added by setup-mac.sh on $(date +%Y-%m-%d)
+# Claude Code Telemetry - Added by setup.sh on $(date +%Y-%m-%d)
+set -gx CLAUDE_CODE_ENABLE_TELEMETRY 1
+set -gx OTEL_METRICS_EXPORTER otlp
+set -gx OTEL_LOGS_EXPORTER otlp
+set -gx OTEL_EXPORTER_OTLP_PROTOCOL grpc
+set -gx OTEL_EXPORTER_OTLP_ENDPOINT "$OTEL_ENDPOINT"
+
+# Identity tracking for per-developer metrics
+set -gx OTEL_RESOURCE_ATTRIBUTES "user_email=$USER_EMAIL,provider=$PROVIDER,team=$TEAM_NAME"
+
+EOF
+    else
+        # Bash, zsh, and POSIX shells use 'export'
+        cat >> "$SHELL_RC" << EOF
+
+# Claude Code Telemetry - Added by setup.sh on $(date +%Y-%m-%d)
 export CLAUDE_CODE_ENABLE_TELEMETRY=1
 export OTEL_METRICS_EXPORTER=otlp
 export OTEL_LOGS_EXPORTER=otlp
@@ -152,6 +180,7 @@ export OTEL_EXPORTER_OTLP_ENDPOINT="$OTEL_ENDPOINT"
 export OTEL_RESOURCE_ATTRIBUTES="user_email=$USER_EMAIL,provider=$PROVIDER,team=$TEAM_NAME"
 
 EOF
+    fi
     echo -e "${GREEN}Shell configuration added to $SHELL_RC${NC}"
 fi
 
@@ -183,12 +212,42 @@ if [ "$OTEL_ENDPOINT" = "http://localhost:4317" ]; then
             # Check if we're in the repo directory
             if [ -f "docker-compose.yaml" ]; then
                 echo "Starting monitoring stack..."
-                $CONTAINER_CMD compose up -d
-                echo -e "${GREEN}Stack started!${NC}"
-                echo ""
-                echo "Access dashboards at:"
-                echo "  Grafana:    http://localhost:3000 (admin / claudecode)"
-                echo "  Prometheus: http://localhost:9090"
+                if $CONTAINER_CMD compose up -d; then
+                    echo -e "${GREEN}Stack started!${NC}"
+                    echo ""
+
+                    # Wait for services to be ready
+                    echo "Waiting for services to start..."
+                    sleep 5
+
+                    # Verify health
+                    if curl -sf http://localhost:13133/health > /dev/null 2>&1; then
+                        echo -e "${GREEN}OTEL Collector healthy${NC}"
+                    else
+                        echo -e "${YELLOW}Warning: OTEL Collector may not be ready yet${NC}"
+                    fi
+
+                    if curl -sf http://localhost:9090/-/healthy > /dev/null 2>&1; then
+                        echo -e "${GREEN}Prometheus healthy${NC}"
+                    else
+                        echo -e "${YELLOW}Warning: Prometheus may not be ready yet${NC}"
+                    fi
+
+                    if curl -sf http://localhost:3000/api/health > /dev/null 2>&1; then
+                        echo -e "${GREEN}Grafana healthy${NC}"
+                    else
+                        echo -e "${YELLOW}Warning: Grafana may not be ready yet${NC}"
+                    fi
+
+                    echo ""
+                    echo "Access dashboards at:"
+                    echo "  Grafana:    http://localhost:3000 (admin / claudecode)"
+                    echo "  Prometheus: http://localhost:9090"
+                else
+                    echo -e "${RED}Failed to start monitoring stack${NC}"
+                    echo "Your shell config has been updated. You can start the stack manually later."
+                    echo "Run: $CONTAINER_CMD compose up -d"
+                fi
             else
                 echo -e "${YELLOW}docker-compose.yaml not found in current directory.${NC}"
                 echo "To start the stack later:"

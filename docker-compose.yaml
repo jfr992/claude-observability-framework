@@ -7,6 +7,7 @@ services:
       - "4317:4317"   # OTLP gRPC
       - "4318:4318"   # OTLP HTTP
       - "8889:8889"   # Prometheus metrics
+      - "13133:13133" # Health check
     volumes:
       - ./otel-config.yaml:/etc/otelcol/config.yaml:ro
     restart: unless-stopped
@@ -48,7 +49,7 @@ services:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=claudecode # Never hardcore a password or secret data in plain text files :D
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-claudecode}
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/claude-code.json
     volumes:
