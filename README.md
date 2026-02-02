@@ -31,7 +31,7 @@ export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 open http://localhost:3000  # Grafana (admin / claudecode)
 ```
 
-Or use the interactive setup: `./scripts/setup-mac.sh`
+Or use the interactive setup: `./scripts/setup.sh`
 
 ## Architecture
 
@@ -97,7 +97,7 @@ When using AI as a co-intelligence partner:
 ## Available Scripts
 
 ```bash
-./scripts/setup-mac.sh      # Interactive Mac setup
+./scripts/setup.sh      # Interactive Mac setup
 ./scripts/health-check.sh   # Quick metrics health check
 ./scripts/check-storage.sh  # Storage usage monitor
 ./scripts/generate-report.sh # CLI ROI report

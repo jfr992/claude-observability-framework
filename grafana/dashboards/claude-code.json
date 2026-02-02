@@ -57,7 +57,7 @@
       "type": "stat",
       "title": "Lines +",
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "max_over_time(sum(claude_code_lines_of_code_count_total{type=\"added\"})[1h:]) or vector(0)", "refId": "A" }],
+      "targets": [{ "expr": "sum(claude_code_lines_of_code_count_total{type=\"added\"}) or vector(0)", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
     },
     {
@@ -66,7 +66,7 @@
       "type": "stat",
       "title": "Lines -",
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "max_over_time(sum(claude_code_lines_of_code_count_total{type=\"removed\"})[1h:]) or vector(0)", "refId": "A" }],
+      "targets": [{ "expr": "sum(claude_code_lines_of_code_count_total{type=\"removed\"}) or vector(0)", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }] } } }
     },
     {
@@ -150,7 +150,7 @@
       "title": "PRs Created",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "max_over_time(sum(claude_code_pull_request_count_total)[1h:]) or vector(0)", "refId": "A" }],
+      "targets": [{ "expr": "sum(claude_code_pull_request_count_total) or vector(0)", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } } }
     },
     {
@@ -160,7 +160,7 @@
       "title": "Commits",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "max_over_time(sum(claude_code_commit_count_total)[1h:]) or vector(0)", "refId": "A" }],
+      "targets": [{ "expr": "sum(claude_code_commit_count_total) or vector(0)", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } } }
     },
     {
@@ -169,7 +169,7 @@
       "type": "stat",
       "title": "Cost/PR",
       "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "targets": [{ "expr": "max_over_time(sum(claude_code_cost_usage_USD_total)[1h:]) / (max_over_time(sum(claude_code_pull_request_count_total)[1h:]) > 0 or vector(1))", "refId": "A" }],
+      "targets": [{ "expr": "sum(claude_code_cost_usage_USD_total) / (sum(claude_code_pull_request_count_total) > 0 or vector(1))", "refId": "A" }],
       "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 15 }] } } }
     },
     {
