@@ -20,6 +20,16 @@ processors:
     limit_mib: 512
     spike_limit_mib: 128
 
+  # Add resource attributes to metrics for Bedrock users
+  # Only adds if not already present (avoids duplicates)
+  transform:
+    metric_statements:
+      - context: datapoint
+        statements:
+          - set(attributes["provider"], resource.attributes["provider"]) where attributes["provider"] == nil and resource.attributes["provider"] != nil
+          - set(attributes["team"], resource.attributes["team"]) where attributes["team"] == nil and resource.attributes["team"] != nil
+          - set(attributes["user_email"], resource.attributes["user_email"]) where attributes["user_email"] == nil and resource.attributes["user_email"] != nil
+
 exporters:
   prometheus:
     endpoint: "0.0.0.0:8889"
@@ -48,7 +58,7 @@ service:
   pipelines:
     metrics:
       receivers: [otlp]
-      processors: [memory_limiter, batch]
+      processors: [memory_limiter, transform, batch]
       exporters: [prometheus, debug]
 
     logs:
