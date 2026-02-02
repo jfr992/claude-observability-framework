@@ -16,7 +16,7 @@ Before implementing, read [GUIDE.md](GUIDE.md) for the full philosophy. Key poin
 
 | Metric | What It Actually Tells You |
 |--------|---------------------------|
-| Cache Ratio | Is your CLAUDE.md communicating context effectively? |
+| Cache Hit Rate | Is your CLAUDE.md communicating context effectively? |
 | Session Size | Are sessions efficient or going in circles? |
 | Accept Rate | Is the developer engaged or rubber-stamping? |
 
@@ -28,7 +28,7 @@ Before implementing, read [GUIDE.md](GUIDE.md) for the full philosophy. Key poin
 
 **What TO use these metrics for:**
 - ✅ Budget planning and cost allocation
-- ✅ Identifying developers who might need CLAUDE.md help (low cache ratio)
+- ✅ Identifying developers who might need CLAUDE.md help (low cache hit rate)
 - ✅ Self-reflection dashboards for individual growth
 - ✅ Aggregate trends (is adoption growing? are sessions getting more efficient?)
 
@@ -263,7 +263,7 @@ sum by (team) (
 
 > ⚠️ **Warning:** Leaderboards can incentivize gaming (more commits ≠ better work).
 > Use for visibility and offering help, not ranking or performance review.
-> Consider showing only Cache Ratio and Session Size, which are harder to game.
+> Consider showing only Cache Hit Rate and Session Size, which are harder to game.
 
 | Developer | PRs | Commits | Cost | Cost/PR | Accept % |
 |-----------|-----|---------|------|---------|----------|
@@ -273,11 +273,11 @@ sum by (team) (
 
 **Better alternative - Communication Quality view:**
 
-| Developer | Cache Ratio | Session Size | Accept % | Action |
+| Developer | Cache Hit % | Session Size | Accept % | Action |
 |-----------|-------------|--------------|----------|--------|
-| alice@... | 8:1 | 250k | 94% | Offer CLAUDE.md help |
-| bob@... | 25:1 | 80k | 81% | ✅ Healthy |
-| carol@... | 15:1 | 120k | 88% | ✅ Good |
+| alice@... | 72% | 250k | 94% | Offer CLAUDE.md help |
+| bob@... | 96% | 80k | 81% | ✅ Healthy |
+| carol@... | 88% | 120k | 88% | ✅ Good |
 
 ## Custom Labels for Team Tracking
 
@@ -426,7 +426,7 @@ EOF
 |--------|--------|-----|
 | Developer adoption | >80% within 30 days | Tool is being used |
 | Weekly active users | Stable or growing | Sustained value |
-| Avg cache ratio | >15:1 | CLAUDE.md practices spreading |
+| Avg cache hit rate | >85% | CLAUDE.md practices spreading |
 | Avg session size | <150k | Developers using efficiently |
 
 **Metrics to monitor but NOT target:**
