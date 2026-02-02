@@ -28,7 +28,7 @@ exporters:
     metric_expiration: 180m
     enable_open_metrics: true
     resource_to_telemetry_conversion:
-      enabled: true
+      enabled: false
 
   loki:
     endpoint: "http://loki:3100/loki/api/v1/push"
