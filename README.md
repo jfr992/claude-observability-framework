@@ -1,13 +1,13 @@
 # Claude Observability Framework
 
-A framework for improving human-AI collaboration via OpenTelemetry metrics.
-
-**Philosophy:** You are the Architect. Claude is your implementation partner. We measure **communication quality**, not productivity.
+A framework or general suggestions for improving human-AI collaboration via OpenTelemetry metrics.
+**The goal:** Improve how you communicate, collaborate, and build together.
+**Philosophy:** You are the Architect. Claude and its swarm act as your implementation partners. In early adoption, we measure communication quality, not productivity. (initially in earlly adoption). Let's prevent the nonsense factories.
 
 ```
-You bring judgment, security, and vision.
-Claude brings speed, patterns, and patience.
-The Architect decides what to build. AI helps build it right.
+You bring judgment, security, vision, patterns, best practices.
+Claude brings speed, implementation, and patience.
+The Architect decides how, what to build and when. AI helps build it right.
 ```
 
 ## Quick Start
@@ -67,7 +67,7 @@ Organization-wide visibility with **Developer filter** (All or specific user):
 
 ## Key Metrics (Communication Quality)
 
-Three metrics that matter - all about how well you communicate with Claude:
+Some metrics that matter - all about how well you communicate with Claude and how good is your setup:
 
 | Metric | Target | What It Means |
 |--------|--------|---------------|
@@ -82,29 +82,32 @@ Cost/PR, Cost/Session, and Cost/Commit are included but with important framing:
 | Use Case | Vanity Metric? | Learning Tool? |
 |----------|----------------|----------------|
 | "Juan costs $10/PR, fire him" | - Bad | — |
-| "Juan's Cost/PR is high, let's check his cache hit rate and help" | — | - Good |
+| "Juan's Cost/PR is high, let's check his cache hit rate and help" | — | - Good | 
+
+** Focus on a collaborative effort to improve prompts, instructions, skills, agents, hooks, code examples, and help content—rather than scrutinizing.
 
 **Always interpret with context:**
 
 | Pattern | Diagnosis | Action |
 |---------|-----------|--------|
 | High Cost/PR + Low Cache Hit Rate | Poor CLAUDE.md | Improve project documentation |
-| High Cost/PR + Large Session Size | Going in circles | Start fresh sessions more often |
+| High Cost/PR + Large Session Size | Going in circles | Start fresh sessions more often | /clear |
 | High Cost/PR + Normal metrics | Complex work | This is fine, expected for hard tasks |
 
 The dashboards show these metrics **alongside Cache Hit Rate and Session Size** so you get the full picture.
 
+- **Developer leaderboard for ranking** - It should create collaboration rather than competition, ask the early or senior adopters to spread the knowledge.
+
 ### What NOT to Measure
 
-- **Commits, PRs, Lines of Code alone** - Gameable vanity metrics that incentivize wrong behavior
+- **Commits, PRs, Lines of Code alone** - Gameable vanity metrics that incentivize wrong behavior, you can ask AI to create a script to print 1m crab emojis.
 - **Cost per output without context** - Penalizes complex, thoughtful work
-- **Developer comparisons for ranking** - Creates competition instead of collaboration
 
-See [GUIDE.md](GUIDE.md) for the full Architect philosophy.
+See [GUIDE.md](GUIDE.md) for the full Architect/Co-intelligence philosophy.
 
 ## The Architect's Role
 
-When using AI as a co-intelligence partner:
+When using AI as a co-intelligence partner, you have the ideas, you know the tools, you know how to prompt, instruct:
 
 | You Own (Architect) | Claude Helps With |
 |---------------------|-------------------|
@@ -114,10 +117,16 @@ When using AI as a co-intelligence partner:
 | Technology selection | Generating tests you've designed |
 | Code review & quality gates | Refactoring with your rules |
 
-## Available Scripts
+## Personal Dashboard Example
+
+Use it to see how your context is improving, higher cache hit ratio means your memory files are getting better. Feel free to adjust the metrics to your needs.
+
+![alt text](image.png) 
+
+## Available Scripts for the personal setup.
 
 ```bash
-./scripts/setup-mac.sh       # Interactive Mac setup
+./scripts/setup.sh       # Interactive setup
 ./scripts/health-check.sh    # Quick metrics health check
 ./scripts/check-storage.sh   # Storage usage monitor
 ./scripts/generate-report.sh # Communication quality report
@@ -127,7 +136,7 @@ When using AI as a co-intelligence partner:
 
 | Component | Time Limit | Size Limit |
 |-----------|------------|------------|
-| Prometheus | 30 days | 1 GB |
+| Prometheus | 30 days | 1 GB | (adjut per your needs)
 | Loki | 30 days | Ingestion throttled |
 | Grafana | Unlimited | ~5 MB (config only) |
 
@@ -154,7 +163,7 @@ This enables Claude to help with metrics interpretation and troubleshooting.
 
 ## The Philosophy
 
-This isn't surveillance. This isn't productivity tracking. **This is learning.**
+This isn't surveillance. This isn't productivity tracking, remember... CO-INTELLIGENCE!
 
 The metrics tell you about your **communication quality** with Claude:
 - Is your CLAUDE.md working? (Cache Hit Rate)
@@ -162,7 +171,9 @@ The metrics tell you about your **communication quality** with Claude:
 - Are you still the Architect? (Accept Rate)
 - Are developers getting stuck? (Health Indicators)
 
-**The goal:** Improve how you communicate, collaborate, and build together.
+
+NOTE: a 100% Critical Thinking accept edits doesn't mean you are doing wrong, sometimes the feedback and correction comes after the edit. The idea would be at the end to collaborate, be the expert, let the robot be your executor.
+
 
 ## References
 
@@ -172,4 +183,4 @@ The metrics tell you about your **communication quality** with Claude:
 
 ---
 
-*"The best engineers don't just use AI - they collaborate with it. They bring judgment, context, and vision. AI brings speed, breadth, and tireless patience. Together, they create things neither could alone."*
+*"The best engineers don't just use AI - they collaborate with it. They bring judgment, context, and vision, expertise and pre-AI experience. AI brings speed, breadth, and tireless patience. Together, they create things neither could alone."*
