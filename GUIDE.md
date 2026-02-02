@@ -75,7 +75,7 @@ Accept Rate = Accepted Edits / Total Edits
 
 **The goal is NOT 100%.** The goal is thoughtful collaboration.
 
-#### ⚠️ Known Limitation
+#### - Known Limitation
 
 This metric only captures the **initial click**, not the full loop:
 

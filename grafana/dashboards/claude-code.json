@@ -460,8 +460,8 @@
       },
       "id": 71,
       "type": "gauge",
-      "title": "Context Efficiency",
-      "description": "Cache Ratio = cacheRead / cacheCreation.\n\n\u2022 <5:1 = Poor CLAUDE.md/skills\n\u2022 10-20:1 = Good context setup\n\u2022 >20:1 = Excellent - Claude understands you\n\nBetter context setup = higher reuse = lower cost.",
+      "title": "Cache Hit Rate",
+      "description": "Cache Hit Rate = cacheRead / (cacheRead + cacheCreation) x 100%\n\n- <70% = Claude rebuilds context constantly\n- 70-80% = Some context reuse\n- 80-90% = Good\n- >90% = Excellent\n\nImprove by documenting patterns in CLAUDE.md.",
       "options": {
         "reduceOptions": {
           "calcs": [
@@ -473,15 +473,15 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}) > 0 or vector(1))",
+          "expr": "100 * sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) + sum(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}))",
           "refId": "A"
         }
       ],
       "fieldConfig": {
         "defaults": {
-          "unit": "short",
+          "unit": "percent",
           "min": 0,
-          "max": 50,
+          "max": 100,
           "decimals": 1,
           "color": {
             "mode": "thresholds"
@@ -495,15 +495,15 @@
               },
               {
                 "color": "orange",
-                "value": 5
+                "value": 70
               },
               {
                 "color": "yellow",
-                "value": 10
+                "value": 80
               },
               {
                 "color": "green",
-                "value": 20
+                "value": 90
               }
             ]
           }

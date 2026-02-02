@@ -64,7 +64,7 @@ Review utils.py and suggest improvements one at a time.
 I'll accept or reject each suggestion.
 ```
 
-### Edits to ACCEPT ✅
+### Edits to ACCEPT
 
 These represent genuinely valuable improvements:
 
@@ -77,7 +77,7 @@ These represent genuinely valuable improvements:
 
 **Pattern:** Accept edits that fix real problems or add clear value without complexity.
 
-### Edits to REJECT ❌
+### Edits to REJECT
 
 These represent over-engineering or unnecessary changes:
 
