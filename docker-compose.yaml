@@ -21,7 +21,7 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention.time=30d'
-      - '--storage.tsdb.retention.size=1GB'
+      - '--storage.tsdb.retention.size=5GB'
       - '--web.enable-lifecycle'
     volumes:
       - ./prometheus.yaml:/etc/prometheus/prometheus.yml:ro
@@ -48,7 +48,7 @@ services:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=claudecode
+      - GF_SECURITY_ADMIN_PASSWORD=claudecode # Never hardcore a password or secret data in plain text files :D
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/claude-code.json
     volumes:

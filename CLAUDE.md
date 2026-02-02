@@ -171,7 +171,7 @@ Quick health check (stack status + key metrics):
 
 | Component | Time Limit | Size Limit | Notes |
 |-----------|------------|------------|-------|
-| Prometheus | 30 days | 1 GB | Whichever hits first |
+| Prometheus | 30 days | 5 GB | Whichever hits first |
 | Loki | 30 days | Ingestion throttled | Tool usage logs |
 | Grafana | Unlimited | ~5 MB | Config only |
 
