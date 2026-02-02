@@ -1,7 +1,10 @@
 # Claude Observability Framework
 
 A framework or general suggestions for improving human-AI collaboration via OpenTelemetry metrics.
+
+
 **The goal:** Improve how you communicate, collaborate, and build together.
+
 **Philosophy:** You are the Architect. Claude and its swarm act as your implementation partners. In early adoption, we measure communication quality, not productivity. (initially in earlly adoption). Let's prevent the nonsense factories.
 
 ```
