@@ -1,38 +1,10 @@
-# Proposal: Centralized Claude Code Monitoring
+# Centralized Claude Code Monitoring
 
-## Executive Summary
+Deploy a shared observability stack for org-wide Claude Code telemetry. The idea would be to track growth and adoption, not surveillance.
 
-Deploy a shared observability stack that all developers point their Claude Code telemetry to. This enables:
-- **Org-wide visibility** into AI tool adoption and usage patterns
-- **Per-developer metrics** for self-improvement (not surveillance)
-- **Team-level aggregation** for budget allocation
-- **Cost tracking** across Bedrock/API/Subscription usage
+**Philosophy:** See [GUIDE.md](GUIDE.md) for why we measure communication quality, not productivity.
 
-## ⚠️ Philosophy: Growth, Not Surveillance
-
-Before implementing, read [GUIDE.md](GUIDE.md) for the full philosophy. Key points:
-
-**This framework measures communication quality, not productivity.**
-
-| Metric | What It Actually Tells You |
-|--------|---------------------------|
-| Cache Hit Rate | Is your CLAUDE.md communicating context effectively? |
-| Session Size | Are sessions efficient or going in circles? |
-| Accept Rate | Is the developer engaged or rubber-stamping? |
-
-**What NOT to use these metrics for:**
-- ❌ Performance reviews based on PRs/commits/lines (gameable)
-- ❌ Leaderboards that rank developers (creates wrong incentives)
-- ❌ Cost/PR targets (penalizes complex, thoughtful work)
-- ❌ Comparing developers (everyone's work is different)
-
-**What TO use these metrics for:**
-- ✅ Budget planning and cost allocation
-- ✅ Identifying developers who might need CLAUDE.md help (low cache hit rate)
-- ✅ Self-reflection dashboards for individual growth
-- ✅ Aggregate trends (is adoption growing? are sessions getting more efficient?)
-
-The leaderboard and per-developer views below exist for **visibility**, not **judgment**. Use them to offer help, not assign blame.
+---
 
 ## Architecture
 
@@ -76,241 +48,126 @@ The leaderboard and per-developer views below exist for **visibility**, not **ju
      └─────────────┘         └─────────────┘
 ```
 
+---
+
 ## Deployment Options
 
-### Option A: Cloud-Hosted (Recommended for <100 devs)
-
-| Component | Service | Est. Cost/Month |
-|-----------|---------|-----------------|
-| OTEL Collector | AWS ECS / GCP Cloud Run | $20-50 |
-| Prometheus | Grafana Cloud / Amazon Managed Prometheus | $50-200 |
-| Grafana | Grafana Cloud (free tier) | $0-50 |
-| Load Balancer | AWS ALB / GCP LB | $20 |
-| **Total** | | **$90-320/month** |
-
-### Option B: Self-Hosted Kubernetes
-
-```yaml
-# helm install example
+### Option A: Self-Hosted K8s - this stack toolset
+The following instructions are just reference.
+```bash
+# Add repos
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
 
-helm install otel open-telemetry/opentelemetry-collector
+# Install stack
+helm install otel open-telemetry/opentelemetry-collector \
+  --set mode=deployment \
+  --set config.receivers.otlp.protocols.grpc.endpoint="0.0.0.0:4317"
+
 helm install prometheus prometheus-community/kube-prometheus-stack
-helm install grafana grafana/grafana
+
+helm install loki grafana/loki-stack
 ```
 
-### Option C: Managed Observability Platform
+### Option B: Self-Hosted K8s - ClickStack / ClickHouse in k8s
 
-| Platform | Pros | Cons | Est. Cost |
-|----------|------|------|-----------|
-| **Datadog** | Full-featured, easy setup | Expensive at scale | $15/host + metrics |
-| **Grafana Cloud** | Native Prometheus, generous free tier | Limited alerting on free | $0-500 |
-| **Honeycomb** | Great for debugging | Learning curve | $100+ |
-| **New Relic** | All-in-one | Complex pricing | $0-300 |
+For high-volume deployments:
+
+```yaml
+# clickhouse-otel-config.yaml
+exporters:
+  clickhouse:
+    endpoint: tcp://clickhouse:9000
+    database: otel
+    logs_table_name: claude_logs
+    metrics_table_name: claude_metrics
+    ttl_days: 30
+```
+
+---
 
 ## Developer Onboarding
 
-### Critical: Identity Tracking
-
-Without proper identity configuration, all developers show as "unknown" in dashboards. The `OTEL_RESOURCE_ATTRIBUTES` environment variable is **required** for per-developer metrics.
-
-### One-Time Setup Script (Bedrock)
-
-Create `setup-claude-telemetry.sh` for developers using AWS Bedrock:
+### Environment Variables
 
 ```bash
-#!/bin/bash
-# Distributed to all developers using Bedrock
-
-# Get user identity from git config
-USER_EMAIL=$(git config user.email)
-if [ -z "$USER_EMAIL" ]; then
-  echo "Error: git user.email not configured. Run: git config --global user.email 'you@company.com'"
-  exit 1
-fi
-
-# Prompt for team (or detect from email domain)
-read -p "Enter your team name (e.g., platform, frontend, backend): " TEAM_NAME
-TEAM_NAME=${TEAM_NAME:-unknown}
-
-# Company OTEL endpoint
-OTEL_ENDPOINT="https://otel.company.com:4317"
-
-# Add to shell profile
-cat >> ~/.zshrc << EOF
-# Claude Code Telemetry - Bedrock
+# Required for all developers
 export CLAUDE_CODE_ENABLE_TELEMETRY=1
 export OTEL_METRICS_EXPORTER=otlp
-export OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-export OTEL_EXPORTER_OTLP_ENDPOINT="${OTEL_ENDPOINT}"
-export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer \${CLAUDE_METRICS_TOKEN}"
-
-# CRITICAL: Identity tracking for per-developer metrics
-export OTEL_RESOURCE_ATTRIBUTES="user_email=${USER_EMAIL},provider=bedrock,team=${TEAM_NAME},aws_profile=\${AWS_PROFILE:-default}"
-EOF
-
-echo ""
-echo "Setup complete!"
-echo "  User: ${USER_EMAIL}"
-echo "  Team: ${TEAM_NAME}"
-echo "  Provider: bedrock"
-echo ""
-echo "Restart your terminal and run 'claude' to start sending metrics."
-```
-
-### One-Time Setup Script (Anthropic API / Max)
-
-For developers using Anthropic API directly or Claude Max subscription:
-
-```bash
-#!/bin/bash
-# For Anthropic API / Max users
-
-USER_EMAIL=$(git config user.email)
-read -p "Enter your team name: " TEAM_NAME
-
-cat >> ~/.zshrc << EOF
-# Claude Code Telemetry - Anthropic
-export CLAUDE_CODE_ENABLE_TELEMETRY=1
-export OTEL_METRICS_EXPORTER=otlp
+export OTEL_LOGS_EXPORTER=otlp
 export OTEL_EXPORTER_OTLP_PROTOCOL=grpc
 export OTEL_EXPORTER_OTLP_ENDPOINT="https://otel.company.com:4317"
-export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer \${CLAUDE_METRICS_TOKEN}"
 
-# Identity tracking
-export OTEL_RESOURCE_ATTRIBUTES="user_email=${USER_EMAIL},provider=anthropic-max,team=${TEAM_NAME}"
-EOF
+# CRITICAL: Identity tracking
+export OTEL_RESOURCE_ATTRIBUTES="user_email=$(git config user.email),team=YOUR_TEAM"
 ```
 
-### MDM/Fleet Deployment
-
-For managed devices, use Claude Code managed settings.
-
-**Note:** `user_email` must be dynamically set per-device. Use MDM templating:
+### MDM Deployment (Managed Devices)
 
 ```json
-// /Library/Application Support/ClaudeCode/managed-settings.json (macOS)
-// /etc/claude-code/managed-settings.json (Linux)
+// macOS: /Library/Application Support/ClaudeCode/managed-settings.json
+// Linux: /etc/claude-code/managed-settings.json
 {
   "env": {
     "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
     "OTEL_METRICS_EXPORTER": "otlp",
+    "OTEL_LOGS_EXPORTER": "otlp",
     "OTEL_EXPORTER_OTLP_PROTOCOL": "grpc",
     "OTEL_EXPORTER_OTLP_ENDPOINT": "https://otel.company.com:4317",
-    "OTEL_EXPORTER_OTLP_HEADERS": "Authorization=Bearer ${CLAUDE_METRICS_TOKEN}",
-    "OTEL_RESOURCE_ATTRIBUTES": "user_email=${USER_EMAIL},provider=bedrock,team=${TEAM}"
+    "OTEL_RESOURCE_ATTRIBUTES": "user_email=${USER_EMAIL},team=${TEAM}"
   }
 }
 ```
 
-For Jamf/Intune, use variable substitution:
-- `${USER_EMAIL}` → `$EMAIL` (Jamf) or `{{userprincipalname}}` (Intune)
-- `${TEAM}` → from device group or department field
+---
 
-### Verifying Setup
-
-After setup, developers can verify their identity is tracked:
-
-```bash
-# Check environment
-echo $OTEL_RESOURCE_ATTRIBUTES
-# Should show: user_email=you@company.com,provider=bedrock,team=yourteam,...
-
-# Run a quick Claude session, then check Prometheus
-curl -s 'http://prometheus:9090/api/v1/query?query=claude_code_cost_usage_USD_total' | jq '.data.result[].metric.user_email'
-```
-
-## Dashboard Design
-
-### 1. Executive Overview
-
-| Panel | Query | Purpose |
-|-------|-------|---------|
-| Total Cost (All Users) | `sum(increase(claude_code_cost_usage_USD_total[30d]))` | Budget tracking |
-| Active Users | `count(count by (user_email) (claude_code_session_count_total))` | Adoption |
-| Avg Cost/User | `sum(cost) / count(users)` | Per-seat cost |
-| Total PRs Created | `sum(increase(claude_code_pull_request_count_total[30d]))` | Output |
-| Org Accept Rate | `sum(accepts) / sum(total)` | Quality signal |
-
-### 2. Per-Developer View
-
-| Panel | Purpose |
-|-------|---------|
-| Cost Trend | Track individual spend over time |
-| Session Count | Usage frequency |
-| Accept Rate | Are they using suggestions well? |
-| Top Models Used | Opus vs Sonnet preference |
-| Active Time | Engagement depth |
-
-### 3. Team Comparison
-
-```promql
-# Cost by team (requires team label via OTEL_RESOURCE_ATTRIBUTES)
-sum by (team) (increase(claude_code_cost_usage_USD_total[30d]))
-
-# Or by email domain pattern
-sum by (team) (
-  label_replace(
-    claude_code_cost_usage_USD_total,
-    "team", "$1", "user_email", ".*@(.+)\\.company\\.com"
-  )
-)
-```
-
-### 4. Leaderboard (Use With Caution)
-
-> ⚠️ **Warning:** Leaderboards can incentivize gaming (more commits ≠ better work).
-> Use for visibility and offering help, not ranking or performance review.
-> Consider showing only Cache Hit Rate and Session Size, which are harder to game.
-
-| Developer | PRs | Commits | Cost | Cost/PR | Accept % |
-|-----------|-----|---------|------|---------|----------|
-| alice@... | 23 | 89 | $45 | $1.96 | 94% |
-| bob@... | 18 | 52 | $78 | $4.33 | 81% |
-| carol@... | 31 | 124 | $62 | $2.00 | 88% |
-
-**Better alternative - Communication Quality view:**
-
-| Developer | Cache Hit % | Session Size | Accept % | Action |
-|-----------|-------------|--------------|----------|--------|
-| alice@... | 72% | 250k | 94% | Offer CLAUDE.md help |
-| bob@... | 96% | 80k | 81% | ✅ Healthy |
-| carol@... | 88% | 120k | 88% | ✅ Good |
-
-## Custom Labels for Team Tracking
-
-Have developers set team/department via `OTEL_RESOURCE_ATTRIBUTES`:
-
-```bash
-export OTEL_RESOURCE_ATTRIBUTES="team=platform,department=engineering,cost_center=ENG-001"
-```
-
-Or auto-detect from email domain in OTEL collector:
+## OTEL Collector Config
 
 ```yaml
-# otel-config.yaml
-processors:
-  attributes:
-    actions:
-      - key: team
-        from_attribute: user_email
-        pattern: ".*@(?P<team>[^.]+)\\.company\\.com"
-        action: extract
-```
-
-## Security & Privacy
-
-### Authentication
-
-```yaml
-# OTEL Collector with bearer token auth
+# otel-collector-config.yaml
 receivers:
   otlp:
     protocols:
       grpc:
         endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 10s
+
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+  loki:
+    endpoint: "http://loki:3100/loki/api/v1/push"
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [prometheus]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [loki]
+```
+
+---
+
+## Security
+
+### Authentication
+
+```yaml
+# OTEL Collector with bearer token
+receivers:
+  otlp:
+    protocols:
+      grpc:
         auth:
           authenticator: bearertoken
 extensions:
@@ -318,285 +175,79 @@ extensions:
     token: ${OTEL_AUTH_TOKEN}
 ```
 
+### Ingress (K8s)
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: otel-collector
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts: [otel.company.com]
+      secretName: otel-tls
+  rules:
+    - host: otel.company.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: otel-collector
+                port:
+                  number: 4317
+```
+
 ### Data Privacy
 
-| Data Point | Collected | Sensitive? | Mitigation |
-|------------|-----------|------------|------------|
-| user_email | Yes | Medium | Hash if needed |
-| session_id | Yes | Low | Auto-generated UUID |
-| organization_id | Yes | Low | Internal ID |
-| Prompt content | **No** | High | Never collected by default |
-| Code content | **No** | High | Not in metrics |
-
-### Access Control
-
-- **Developers**: See only their own metrics
-- **Team Leads**: See team aggregate + individuals
-- **Eng Managers**: See department-wide
-- **Finance**: See cost data only
-
-Implement via Grafana teams + row-level security.
-
-## Alerting
-
-### Cost Alerts
-
-```yaml
-# Alert if daily spend exceeds threshold
-- alert: HighDailyClaudeCost
-  expr: sum(increase(claude_code_cost_usage_USD_total[24h])) > 500
-  for: 1h
-  labels:
-    severity: warning
-  annotations:
-    summary: "Claude Code daily spend exceeded $500"
-
-# Alert if single user spends too much
-- alert: HighUserClaudeCost
-  expr: sum by (user_email) (increase(claude_code_cost_usage_USD_total[24h])) > 50
-  for: 1h
-  labels:
-    severity: info
-  annotations:
-    summary: "User {{ $labels.user_email }} spent over $50 today"
-```
-
-### Adoption Alerts
-
-```yaml
-# Alert if usage drops significantly
-- alert: LowClaudeAdoption
-  expr: count(count by (user_email) (increase(claude_code_session_count_total[7d]) > 0)) < 10
-  for: 1d
-  labels:
-    severity: info
-  annotations:
-    summary: "Less than 10 active Claude Code users this week"
-```
-
-## Reporting
-
-### Weekly Automated Report
-
-```bash
-#!/bin/bash
-# weekly-report.sh - Run via cron every Monday
-
-PROMETHEUS_URL="https://prometheus.company.com"
-
-# Fetch metrics
-TOTAL_COST=$(curl -s "${PROMETHEUS_URL}/api/v1/query?query=sum(increase(claude_code_cost_usage_USD_total[7d]))" | jq -r '.data.result[0].value[1]')
-ACTIVE_USERS=$(curl -s "${PROMETHEUS_URL}/api/v1/query?query=count(count by (user_email)(increase(claude_code_cost_usage_USD_total[7d]) > 0))" | jq -r '.data.result[0].value[1]')
-TOTAL_PRS=$(curl -s "${PROMETHEUS_URL}/api/v1/query?query=sum(increase(claude_code_pull_request_count_total[7d]))" | jq -r '.data.result[0].value[1]')
-
-# Generate report
-cat << EOF | mail -s "Weekly Claude Code Report" engineering-leads@company.com
-# Claude Code Weekly Report
-Week of $(date -d 'last monday' +%Y-%m-%d)
-
-## Summary
-- Total Cost: \$${TOTAL_COST}
-- Active Users: ${ACTIVE_USERS}
-- PRs Created: ${TOTAL_PRS}
-- Cost per PR: \$$(echo "scale=2; $TOTAL_COST / $TOTAL_PRS" | bc)
-- Cost per User: \$$(echo "scale=2; $TOTAL_COST / $ACTIVE_USERS" | bc)
-
-## Dashboard
-https://grafana.company.com/d/claude-code
-
-EOF
-```
-
-## Implementation Timeline
-
-| Week | Milestone |
-|------|-----------|
-| 1 | Deploy OTEL Collector + Prometheus in staging |
-| 2 | Create Grafana dashboards, test with 5 pilot devs |
-| 3 | Add authentication, alerting rules |
-| 4 | Roll out to all developers via setup script |
-| 5 | First weekly report, iterate on dashboards |
-| 6 | Add team-level views, cost allocation |
-
-## Success Metrics
-
-**Adoption metrics (reasonable to track):**
-
-| Metric | Target | Why |
-|--------|--------|-----|
-| Developer adoption | >80% within 30 days | Tool is being used |
-| Weekly active users | Stable or growing | Sustained value |
-| Avg cache hit rate | >85% | CLAUDE.md practices spreading |
-| Avg session size | <150k | Developers using efficiently |
-
-**Metrics to monitor but NOT target:**
-
-| Metric | Why Not a Target |
-|--------|------------------|
-| Accept rate | 75-85% is healthy, but varies by workflow (see GUIDE.md limitations) |
-| Cost per PR | Penalizes complex work; a $50 architecture PR is more valuable than 10 $5 typo fixes |
-| PRs/Commits | Gameable; incentivizes splitting work artificially |
-
-## Cost-Benefit Analysis
-
-### Costs
-- Infrastructure: $100-300/month
-- Setup time: 2-3 days engineering
-- Maintenance: 2-4 hours/month
-
-### Benefits
-- **Visibility**: Know exactly where AI spend goes
-- **Optimization**: Identify training opportunities
-- **Justification**: Data for budget discussions
-- **Accountability**: Per-team cost allocation
-
-### Break-even
-If monitoring helps identify just one developer misusing the tool ($50/month waste) or optimizes usage patterns to save 10% on API costs, it pays for itself.
-
-## IDE Integrations (Cursor / VS Code)
-
-### The Challenge
-
-Users accessing Claude through IDEs (not Claude Code CLI) present unique tracking challenges:
-
-| Tool | Claude Access | OTEL Support | Tracking Feasibility |
-|------|---------------|--------------|---------------------|
-| **Claude Code CLI** | Direct | Full support | Native |
-| **Cursor** | Built-in (proprietary) | None | Proxy only |
-| **VS Code + Claude Dev** | Direct API | None | Extension modification |
-| **VS Code + Continue** | Configurable | None | Custom backend |
-| **VS Code + Cline** | Direct API | None | Extension modification |
-
-### Option 1: API Proxy (All IDEs)
-
-Route all Claude API traffic through a metering proxy:
-
-```
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│   Cursor    │────▶│   Metering   │────▶│  Anthropic  │
-│   VS Code   │     │    Proxy     │     │    API      │
-│   Cline     │     │  (Your Org)  │     │             │
-└─────────────┘     └──────┬───────┘     └─────────────┘
-                           │
-                           ▼
-                    ┌─────────────┐
-                    │   OTEL      │
-                    │  Collector  │
-                    └─────────────┘
-```
-
-**Implementation:**
-
-```yaml
-# metering-proxy/config.yaml
-server:
-  port: 8080
-
-upstream:
-  anthropic: https://api.anthropic.com
-
-metering:
-  otel_endpoint: http://otel-collector:4317
-  extract_user_from: X-User-Email header
-
-auth:
-  # Inject org API key, accept user tokens
-  api_key: ${ANTHROPIC_API_KEY}
-```
-
-**Developer Setup:**
-
-```bash
-# Point IDE to proxy instead of Anthropic directly
-export ANTHROPIC_BASE_URL="https://claude-proxy.company.com"
-```
-
-**Pros:**
-- Works with any tool using Anthropic API
-- Centralized metering and cost control
-- Can add rate limiting, audit logging
-
-**Cons:**
-- Single point of failure
-- Latency overhead (minimal)
-- Requires infrastructure
-
-### Option 2: Cursor Enterprise (Coming Soon)
-
-Cursor is developing enterprise features including:
-- Usage analytics dashboard
-- SAML/OIDC SSO
-- Admin controls
-
-Contact sales@cursor.sh for early access. When available, Cursor metrics could be ingested via:
-- API integration to pull usage data
-- Webhook callbacks to OTEL collector
-
-### Option 3: VS Code Extension Wrapper
-
-For extensions that support custom API endpoints (like Continue):
-
-```json
-// .continue/config.json
-{
-  "models": [{
-    "provider": "anthropic",
-    "model": "claude-sonnet-4-20250514",
-    "apiBase": "https://claude-proxy.company.com"
-  }]
-}
-```
-
-### Option 4: Separate Tracking
-
-Accept that IDE usage won't have the same granular metrics as Claude Code:
-
-| Source | What You Can Track |
-|--------|-------------------|
-| **Claude Code** | Full OTEL metrics (cost, tokens, sessions, accept rate, tools) |
-| **Cursor/IDE** | API cost via billing, no tool/session data |
-
-Use Anthropic Admin Console or AWS Cost Explorer (for Bedrock) to see aggregate IDE spend.
-
-### Recommendation
-
-For most orgs, a hybrid approach works best:
-
-1. **Claude Code users** → Full OTEL telemetry (direct)
-2. **Cursor/IDE users** → API proxy for cost metering only
-3. **Billing reconciliation** → Monthly comparison of tracked vs billed
-
-The proxy approach catches ~95% of meaningful cost data without requiring changes to proprietary tools.
-
-### Cost Allocation for IDE Users
-
-If you can't get per-user metrics from IDEs, allocate costs by:
-
-```promql
-# Total Claude spend from billing
-claude_billing_total_USD{source="all"}
-
-# Subtract tracked CLI usage
-- sum(claude_code_cost_usage_USD_total)
-
-# Remainder = untracked IDE usage
-= claude_ide_untracked_USD
-```
-
-Then allocate untracked spend evenly across known IDE users, or by team headcount.
-
-## Next Steps
-
-1. [ ] Choose deployment option (Cloud vs K8s vs Managed)
-2. [ ] Provision infrastructure
-3. [ ] Create onboarding script/MDM config
-4. [ ] Build dashboards
-5. [ ] Pilot with one team
-6. [ ] Roll out org-wide
-7. [ ] Set up weekly reporting
-8. [ ] Evaluate API proxy for IDE users
-9. [ ] Contact Cursor for enterprise beta
+| Data | Collected | Sensitive |
+|------|-----------|-----------|
+| user_email | Yes | Medium (hash if needed) |
+| session_id | Yes | Low (auto-generated UUID) |
+| Prompt content | **No** | N/A |
+| Code content | **No** | N/A |
 
 ---
 
-**Questions?** Contact: platform-team@company.com
+## Alerting
+
+```yaml
+# prometheus-alerts.yaml
+groups:
+  - name: claude-code
+    rules:
+      - alert: HighDailySpend
+        expr: sum(increase(claude_code_cost_usage_USD_total[24h])) > 500
+        for: 1h
+        annotations:
+          summary: "Claude Code daily spend exceeded $500"
+
+      - alert: LowAdoption
+        expr: count(count by (user_email) (increase(claude_code_session_count_total[7d]) > 0)) < 10
+        for: 1d
+        annotations:
+          summary: "Less than 10 active users this week"
+```
+
+---
+
+## Dashboards
+
+Import the included Grafana dashboards:
+- `grafana/dashboards/claude-code.json` - Personal view
+- `grafana/dashboards/team-overview.json` - Team view with developer filter
+
+---
+---
+
+## References
+
+- [Claude Code Monitoring Docs](https://docs.anthropic.com/en/docs/claude-code/monitoring)
+- [Anthropic ROI Guide](https://github.com/anthropics/claude-code-monitoring-guide)
+- [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
+- [HyperDX](https://www.hyperdx.io/)
+- [SigNoz](https://signoz.io/)

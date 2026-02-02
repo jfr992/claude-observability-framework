@@ -1,6 +1,7 @@
+
 # The Architect's Guide to AI Collaboration
 
-A framework for human-AI co-intelligence. We measure **communication quality**, not productivity.
+A framework for human-AI co-intelligence. We measure **communication quality and adoption**, not productivity (for now?).
 
 ---
 
@@ -15,8 +16,9 @@ You are the **Architect**. Claude is your **implementation partner**.
 | Non-functional requirements | Exploring options for you to evaluate |
 | Technology & SDK selection | Generating tests you've designed |
 | Code review & quality gates | Refactoring with your rules |
-| DRY, SOLID, patterns - the "why" | Explaining tradeoffs so you can decide |
-
+| DRY, SOLID, 12 factor app | Explaining tradeoffs so you can decide |
+| Well architected frameworks | Setting up the code for the infra or resources |
+| SDLC design | Creating the actual scripts |
 **The metric we care about:** How well does Claude understand your intent?
 
 ---
