@@ -74,11 +74,30 @@ Three metrics that matter - all about how well you communicate with Claude:
 | **Session Size** | <100k | You're being efficient - not going in circles |
 | **Accept Rate** | 75-85% | You're engaged - reviewing thoughtfully, not rubber-stamping |
 
+### Efficiency Ratios (Diagnostic Tools)
+
+Cost/PR, Cost/Session, and Cost/Commit are included but with important framing:
+
+| Use Case | Vanity Metric? | Learning Tool? |
+|----------|----------------|----------------|
+| "John costs $10/PR, fire him" | ❌ Bad | — |
+| "John's Cost/PR is high, let's check his cache ratio and help" | — | ✅ Good |
+
+**Always interpret with context:**
+
+| Pattern | Diagnosis | Action |
+|---------|-----------|--------|
+| High Cost/PR + Low Cache Ratio | Poor CLAUDE.md | Improve project documentation |
+| High Cost/PR + Large Session Size | Going in circles | Start fresh sessions more often |
+| High Cost/PR + Normal metrics | Complex work | This is fine, expected for hard tasks |
+
+The dashboards show these metrics **alongside Cache Ratio and Session Size** so you get the full picture.
+
 ### What NOT to Measure
 
-- **Commits, PRs, Lines of Code** - Gameable vanity metrics that incentivize wrong behavior
-- **Cost per output** - Penalizes complex, thoughtful work
-- **Developer comparisons** - Creates competition instead of collaboration
+- **Commits, PRs, Lines of Code alone** - Gameable vanity metrics that incentivize wrong behavior
+- **Cost per output without context** - Penalizes complex, thoughtful work
+- **Developer comparisons for ranking** - Creates competition instead of collaboration
 
 See [GUIDE.md](GUIDE.md) for the full Architect philosophy.
 
