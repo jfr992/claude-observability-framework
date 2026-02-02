@@ -48,6 +48,13 @@ claude-metrics/
 │   ├── generate-report.sh       # Communication quality report (3 key metrics)
 │   ├── check-storage.sh         # Storage usage monitor
 │   └── health-check.sh          # Stack health + key metrics check
+├── prompts/                      # Reusable prompt templates
+│   ├── code-review.md           # Constructive code review
+│   ├── security-review.md       # Security vulnerability analysis
+│   ├── write-tests.md           # Test generation with coverage
+│   └── debug.md                 # Systematic debugging
+├── .claude/skills/
+│   └── prompt-builder.md        # /prompt skill for creating templates
 ├── TESTING.md                   # Testing guide and patterns
 ├── data/                        # Persistent storage (git-ignored)
 │   ├── prometheus/              # Metrics TSDB
