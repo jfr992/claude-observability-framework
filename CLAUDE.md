@@ -140,7 +140,7 @@ Three metrics that tell you how well you're communicating with Claude:
 
 | Symptom | Meaning | Action |
 |---------|---------|--------|
-| Low cache ratio (<10:1) | Claude rebuilds context constantly | Improve your CLAUDE.md |
+| Low cache hit rate (<70%) | Claude rebuilds context constantly | Improve your CLAUDE.md |
 | Large sessions (>300k) | Going in circles or unclear prompts | Fresh sessions, clearer goals |
 | High accept rate (>95%) | Not reviewing critically | Slow down, read the diffs |
 | Low accept rate (<60%) | Claude misunderstands you | Add examples and patterns |
