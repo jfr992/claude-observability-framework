@@ -178,4 +178,4 @@ NOTE: a 100% Critical Thinking accept edits doesn't mean you are doing wrong, so
 
 ---
 
-*"The best engineers don't just use AI - they collaborate with it. They bring judgment, context, and vision, expertise and pre-AI experience. AI brings speed, breadth, and tireless patience. Together, they create things neither could alone."*
+*"The best engineers don't just use AI - they collaborate with it. They bring judgment, context, vision, expertise and pre-AI experience. AI brings speed, breadth, and tireless patience. Together, they create things neither could alone."*
