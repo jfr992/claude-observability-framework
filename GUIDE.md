@@ -75,7 +75,19 @@ Accept Rate = Accepted Edits / Total Edits
 
 **The goal is NOT 100%.** The goal is thoughtful collaboration.
 
-**Limitation:** This metric only captures the initial accept/reject decision. If you accept → test → iterate, that shows as 100% accept rate. Interpret alongside your other metrics.
+#### ⚠️ Known Limitation
+
+This metric only captures the **initial click**, not the full loop:
+
+```
+Accept → Test → "Actually, fix this" → Accept again
+   ↑                                        ↑
+   recorded                              recorded (another accept)
+```
+
+A developer who accepts → tests → iterates shows **100% accept rate**, same as someone rubber-stamping. The metric can't tell the difference.
+
+**Interpret with context:** High accept rate + high cache ratio + good results = probably fine. High accept rate + low cache ratio + issues = probably rubber-stamping.
 
 ---
 
