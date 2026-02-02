@@ -94,7 +94,7 @@ Cost/PR, Cost/Session, and Cost/Commit are included but with important framing:
 | Pattern | Diagnosis | Action |
 |---------|-----------|--------|
 | High Cost/PR + Low Cache Hit Rate | Poor CLAUDE.md | Improve project documentation |
-| High Cost/PR + Large Session Size | Going in circles | Start fresh sessions more often | /clear |
+| High Cost/PR + Large Session Size | Going in circles | Start fresh sessions more often |
 | High Cost/PR + Normal metrics | Complex work | This is fine, expected for hard tasks |
 
 The dashboards show these metrics **alongside Cache Hit Rate and Session Size** so you get the full picture.
