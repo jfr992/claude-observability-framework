@@ -39,21 +39,21 @@ prom_query_labels() {
 
 log "Fetching metrics from Prometheus (range: $RANGE)..."
 
-# Core metrics
-TOTAL_COST=$(prom_query "sum(claude_code_cost_usage_USD_total)")
-TOTAL_TOKENS=$(prom_query "sum(claude_code_token_usage_tokens_total)")
-TOTAL_SESSIONS=$(prom_query "count(count by (session_id) (claude_code_cost_usage_USD_total))")
-ACTIVE_USERS=$(prom_query "count(count by (user_email) (claude_code_cost_usage_USD_total))")
+# Core metrics (using max_over_time for proper time range filtering)
+TOTAL_COST=$(prom_query "sum(max_over_time(claude_code_cost_usage_USD_total[${RANGE}]))")
+TOTAL_TOKENS=$(prom_query "sum(max_over_time(claude_code_token_usage_tokens_total[${RANGE}]))")
+TOTAL_SESSIONS=$(prom_query "count(count by (session_id) (max_over_time(claude_code_cost_usage_USD_total[${RANGE}])))")
+ACTIVE_USERS=$(prom_query "count(count by (user_email) (max_over_time(claude_code_cost_usage_USD_total[${RANGE}])))")
 
 # Token breakdown
-INPUT_TOKENS=$(prom_query "sum(claude_code_token_usage_tokens_total{type=\"input\"})")
-OUTPUT_TOKENS=$(prom_query "sum(claude_code_token_usage_tokens_total{type=\"output\"})")
-CACHE_READ=$(prom_query "sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"})")
-CACHE_CREATE=$(prom_query "sum(claude_code_token_usage_tokens_total{type=\"cacheCreation\"})")
+INPUT_TOKENS=$(prom_query "sum(max_over_time(claude_code_token_usage_tokens_total{type=\"input\"}[${RANGE}]))")
+OUTPUT_TOKENS=$(prom_query "sum(max_over_time(claude_code_token_usage_tokens_total{type=\"output\"}[${RANGE}]))")
+CACHE_READ=$(prom_query "sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[${RANGE}]))")
+CACHE_CREATE=$(prom_query "sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[${RANGE}]))")
 
 # Accept rate
-ACCEPTS=$(prom_query "sum(claude_code_code_edit_tool_decision_total{decision=\"accept\"})")
-TOTAL_DECISIONS=$(prom_query "sum(claude_code_code_edit_tool_decision_total)")
+ACCEPTS=$(prom_query "sum(max_over_time(claude_code_code_edit_tool_decision_total{decision=\"accept\"}[${RANGE}]))")
+TOTAL_DECISIONS=$(prom_query "sum(max_over_time(claude_code_code_edit_tool_decision_total[${RANGE}]))")
 
 # Calculate derived metrics (the three that matter)
 TOKENS_PER_SESSION=$(echo "scale=0; $TOTAL_TOKENS / ($TOTAL_SESSIONS + 1)" | bc)
@@ -65,7 +65,7 @@ COST_PER_SESSION=$(echo "scale=4; $TOTAL_COST / ($TOTAL_SESSIONS + 0.0001)" | bc
 COST_PER_USER=$(echo "scale=2; $TOTAL_COST / ($ACTIVE_USERS + 0.0001)" | bc)
 
 # Cost by model
-COST_BY_MODEL=$(prom_query_labels "sum by (model) (claude_code_cost_usage_USD_total)")
+COST_BY_MODEL=$(prom_query_labels "sum by (model) (max_over_time(claude_code_cost_usage_USD_total[${RANGE}]))")
 
 log "Generating report..."
 
