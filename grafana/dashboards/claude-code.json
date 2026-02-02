@@ -42,7 +42,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_cost_usage_USD_total)",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total[$__range]))",
           "refId": "A"
         }
       ],
@@ -94,7 +94,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_token_usage_tokens_total)",
+          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total[$__range]))",
           "refId": "A"
         }
       ],
@@ -180,7 +180,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_active_time_seconds_total)",
+          "expr": "sum(max_over_time(claude_code_active_time_seconds_total[$__range]))",
           "refId": "A"
         }
       ],
@@ -223,7 +223,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_lines_of_code_count_total{type=\"added\"}) or vector(0)",
+          "expr": "sum(max_over_time(claude_code_lines_of_code_count_total{type=\"added\"}[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -266,7 +266,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_lines_of_code_count_total{type=\"removed\"}) or vector(0)",
+          "expr": "sum(max_over_time(claude_code_lines_of_code_count_total{type=\"removed\"}[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -310,7 +310,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_token_usage_tokens_total{type=\"input\"}) or vector(0)",
+          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{type=\"input\"}[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -354,7 +354,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_token_usage_tokens_total{type=\"output\"}) or vector(0)",
+          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{type=\"output\"}[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -411,7 +411,7 @@
       },
       "targets": [
         {
-          "expr": "100 * sum(claude_code_code_edit_tool_decision_total{decision=\"accept\"}) / (sum(claude_code_code_edit_tool_decision_total) > 0 or vector(1))",
+          "expr": "100 * sum(max_over_time(claude_code_code_edit_tool_decision_total{decision=\"accept\"}[$__range])) / (sum(max_over_time(claude_code_code_edit_tool_decision_total[$__range])) > 0 or vector(1))",
           "refId": "A"
         }
       ],
@@ -473,7 +473,7 @@
       },
       "targets": [
         {
-          "expr": "100 * sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) + sum(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}))",
+          "expr": "100 * sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / (sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) + sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[$__range])))",
           "refId": "A"
         }
       ],
@@ -532,7 +532,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_token_usage_tokens_total) / (count(count by (session_id) (claude_code_cost_usage_USD_total)) > 0 or vector(1))",
+          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total[$__range])) / (count(count by (session_id) (claude_code_cost_usage_USD_total)) > 0 or vector(1))",
           "refId": "A"
         }
       ],
@@ -591,7 +591,7 @@
       },
       "targets": [
         {
-          "expr": "clamp_max(clamp_min(50 - abs(80 - (100 * sum(claude_code_code_edit_tool_decision_total{decision=\"accept\"}) / (sum(claude_code_code_edit_tool_decision_total) > 0 or vector(1)))), 0) + clamp_max((sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}) > 0 or vector(1))) * 2, 40) + clamp_max((300000 - (sum(claude_code_token_usage_tokens_total) / (count(count by (session_id) (claude_code_cost_usage_USD_total)) > 0 or vector(1)))) / 30000, 10), 100)",
+          "expr": "clamp_max(clamp_min(50 - abs(80 - (100 * sum(max_over_time(claude_code_code_edit_tool_decision_total{decision=\"accept\"}[$__range])) / (sum(max_over_time(claude_code_code_edit_tool_decision_total[$__range])) > 0 or vector(1)))), 0) + clamp_max((sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / (sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[$__range])) > 0 or vector(1))) * 2, 40) + clamp_max((300000 - (sum(max_over_time(claude_code_token_usage_tokens_total[$__range])) / (count(count by (session_id) (claude_code_cost_usage_USD_total)) > 0 or vector(1)))) / 30000, 10), 100)",
           "refId": "A"
         }
       ],
@@ -663,7 +663,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_pull_request_count_total) or vector(0)",
+          "expr": "sum(max_over_time(claude_code_pull_request_count_total[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -710,7 +710,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_commit_count_total) or vector(0)",
+          "expr": "sum(max_over_time(claude_code_commit_count_total[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -753,7 +753,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_cost_usage_USD_total) / (sum(claude_code_pull_request_count_total) > 0 or vector(1))",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total[$__range])) / (sum(max_over_time(claude_code_pull_request_count_total[$__range])) > 0 or vector(1))",
           "refId": "A"
         }
       ],
@@ -804,7 +804,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_code_edit_tool_decision_total) or vector(0)",
+          "expr": "sum(max_over_time(claude_code_code_edit_tool_decision_total[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -847,7 +847,7 @@
       },
       "targets": [
         {
-          "expr": "100 * sum(claude_code_code_edit_tool_decision_total{decision=\"accept\"}) / (sum(claude_code_code_edit_tool_decision_total) > 0 or vector(1))",
+          "expr": "100 * sum(max_over_time(claude_code_code_edit_tool_decision_total{decision=\"accept\"}[$__range])) / (sum(max_over_time(claude_code_code_edit_tool_decision_total[$__range])) > 0 or vector(1))",
           "refId": "A"
         }
       ],
@@ -899,7 +899,7 @@
       },
       "targets": [
         {
-          "expr": "100 * sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{type=\"cacheRead\"}) + sum(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}))",
+          "expr": "100 * sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / (sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) + sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[$__range])))",
           "refId": "A"
         }
       ],
@@ -1239,7 +1239,7 @@
           },
           "targets": [
             {
-              "expr": "sum by (inference_type) (claude_code_cost_usage_USD_total{provider=\"bedrock\"})",
+              "expr": "sum by (inference_type) (max_over_time(claude_code_cost_usage_USD_total{provider=\"bedrock\"}[$__range]))",
               "legendFormat": "{{inference_type}}",
               "refId": "A"
             }
@@ -1278,7 +1278,7 @@
           },
           "targets": [
             {
-              "expr": "sum by (aws_profile) (claude_code_cost_usage_USD_total{provider=\"bedrock\"})",
+              "expr": "sum by (aws_profile) (max_over_time(claude_code_cost_usage_USD_total{provider=\"bedrock\"}[$__range]))",
               "legendFormat": "{{aws_profile}}",
               "refId": "A"
             }
@@ -1310,7 +1310,7 @@
           },
           "targets": [
             {
-              "expr": "sum(claude_code_cost_usage_USD_total{provider=\"bedrock\"}) or vector(0)",
+              "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{provider=\"bedrock\"}[$__range])) or vector(0)",
               "refId": "A"
             }
           ],
@@ -1480,19 +1480,19 @@
           "instant": true
         },
         {
-          "expr": "sum by (model) (claude_code_token_usage_tokens_total{type=\"input\"})",
+          "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{type=\"input\"}[$__range]))",
           "refId": "input",
           "format": "table",
           "instant": true
         },
         {
-          "expr": "sum by (model) (claude_code_token_usage_tokens_total{type=\"output\"})",
+          "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{type=\"output\"}[$__range]))",
           "refId": "output",
           "format": "table",
           "instant": true
         },
         {
-          "expr": "sum by (model) (claude_code_token_usage_tokens_total{type=\"cacheRead\"})",
+          "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range]))",
           "refId": "cacheRead",
           "format": "table",
           "instant": true
@@ -1800,7 +1800,7 @@
       },
       "targets": [
         {
-          "expr": "100 * sum(claude_code_code_edit_tool_decision_total{decision=\"reject\"}) / (sum(claude_code_code_edit_tool_decision_total) > 0 or vector(1))",
+          "expr": "100 * sum(max_over_time(claude_code_code_edit_tool_decision_total{decision=\"reject\"}[$__range])) / (sum(max_over_time(claude_code_code_edit_tool_decision_total[$__range])) > 0 or vector(1))",
           "refId": "A"
         }
       ],

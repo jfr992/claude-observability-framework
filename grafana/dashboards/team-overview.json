@@ -41,7 +41,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_cost_usage_USD_total{user_email=~\"$developer\"})",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range]))",
           "refId": "A"
         }
       ],
@@ -92,7 +92,7 @@
       },
       "targets": [
         {
-          "expr": "count(count by (user_email) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})) or vector(0)",
+          "expr": "count(count by (user_email) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range]))) or vector(0)",
           "refId": "A"
         }
       ],
@@ -135,7 +135,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}) / (count(count by (user_email) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})) > 0 or vector(1))",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range])) / (count(count by (user_email) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range]))) > 0 or vector(1))",
           "refId": "A"
         }
       ],
@@ -190,7 +190,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_pull_request_count_total{user_email=~\"$developer\"}) or vector(0)",
+          "expr": "sum(max_over_time(claude_code_pull_request_count_total{user_email=~\"$developer\"}[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -237,7 +237,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_commit_count_total{user_email=~\"$developer\"}) or vector(0)",
+          "expr": "sum(max_over_time(claude_code_commit_count_total{user_email=~\"$developer\"}[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -281,7 +281,7 @@
       },
       "targets": [
         {
-          "expr": "100 * sum(claude_code_code_edit_tool_decision_total{user_email=~\"$developer\",decision=\"accept\"}) / (sum(claude_code_code_edit_tool_decision_total) > 0 or vector(1))",
+          "expr": "100 * sum(max_over_time(claude_code_code_edit_tool_decision_total{user_email=~\"$developer\",decision=\"accept\"}[$__range])) / (sum(max_over_time(claude_code_code_edit_tool_decision_total[$__range])) > 0 or vector(1))",
           "refId": "A"
         }
       ],
@@ -343,7 +343,7 @@
       },
       "targets": [
         {
-          "expr": "100 * sum(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}) / (sum(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}) + sum(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheCreation\"}))",
+          "expr": "100 * sum(max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}[$__range])) / (sum(max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}[$__range])) + sum(max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheCreation\"}[$__range])))",
           "refId": "A"
         }
       ],
@@ -402,7 +402,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_token_usage_tokens_total{user_email=~\"$developer\"}) / (count(count by (session_id) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})) > 0 or vector(1))",
+          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\"}[$__range])) / (count(count by (session_id) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range]))) > 0 or vector(1))",
           "refId": "A"
         }
       ],
@@ -473,7 +473,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}) / (sum(claude_code_pull_request_count_total{user_email=~\"$developer\"}) > 0 or vector(1))",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range])) / (sum(max_over_time(claude_code_pull_request_count_total{user_email=~\"$developer\"}[$__range])) > 0 or vector(1))",
           "refId": "A"
         }
       ],
@@ -530,7 +530,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}) / (count(count by (session_id) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})) > 0 or vector(1))",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range])) / (count(count by (session_id) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range]))) > 0 or vector(1))",
           "refId": "A"
         }
       ],
@@ -587,7 +587,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}) / (sum(claude_code_commit_count_total{user_email=~\"$developer\"}) > 0 or vector(1))",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range])) / (sum(max_over_time(claude_code_commit_count_total{user_email=~\"$developer\"}[$__range])) > 0 or vector(1))",
           "refId": "A"
         }
       ],
@@ -644,7 +644,7 @@
       },
       "targets": [
         {
-          "expr": "count(count by (session_id) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})) / (sum(claude_code_pull_request_count_total{user_email=~\"$developer\"}) > 0 or vector(1))",
+          "expr": "count(count by (session_id) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range]))) / (sum(max_over_time(claude_code_pull_request_count_total{user_email=~\"$developer\"}[$__range])) > 0 or vector(1))",
           "refId": "A"
         }
       ],
@@ -701,7 +701,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}) / (count(count by (user_email) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})) > 0 or vector(1)) / ($__range_s / 86400)",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range])) / (count(count by (user_email) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range]))) > 0 or vector(1)) / ($__range_s / 86400)",
           "refId": "A"
         }
       ],
@@ -758,7 +758,7 @@
       },
       "targets": [
         {
-          "expr": "(sum(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}) / (count(count by (user_email) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})) > 0 or vector(1))) / ($__range_s / 86400) * 30",
+          "expr": "(sum(max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range])) / (count(count by (user_email) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range]))) > 0 or vector(1))) / ($__range_s / 86400) * 30",
           "refId": "A"
         }
       ],
@@ -831,37 +831,37 @@
       },
       "targets": [
         {
-          "expr": "sum by (user_email) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})",
+          "expr": "sum by (user_email) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range]))",
           "refId": "cost",
           "format": "table",
           "instant": true
         },
         {
-          "expr": "sum by (user_email) (claude_code_token_usage_tokens_total{user_email=~\"$developer\"})",
+          "expr": "sum by (user_email) (max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\"}[$__range]))",
           "refId": "tokens",
           "format": "table",
           "instant": true
         },
         {
-          "expr": "count by (user_email) (count by (user_email, session_id) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"}))",
+          "expr": "count by (user_email) (count by (user_email, session_id) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range])))",
           "refId": "sessions",
           "format": "table",
           "instant": true
         },
         {
-          "expr": "sum by (user_email) (claude_code_pull_request_count_total{user_email=~\"$developer\"}) or sum by (user_email) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"}) * 0",
+          "expr": "sum by (user_email) (max_over_time(claude_code_pull_request_count_total{user_email=~\"$developer\"}[$__range])) or sum by (user_email) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range])) * 0",
           "refId": "prs",
           "format": "table",
           "instant": true
         },
         {
-          "expr": "100 * sum by (user_email) (claude_code_code_edit_tool_decision_total{user_email=~\"$developer\",decision=\"accept\"}) / on(user_email) group_left() (sum by (user_email) (claude_code_code_edit_tool_decision_total) > 0) or sum by (user_email) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"}) * 0 + 100",
+          "expr": "100 * sum by (user_email) (max_over_time(claude_code_code_edit_tool_decision_total{user_email=~\"$developer\",decision=\"accept\"}[$__range])) / on(user_email) group_left() (sum by (user_email) (claude_code_code_edit_tool_decision_total) > 0) or sum by (user_email) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range])) * 0 + 100",
           "refId": "accept",
           "format": "table",
           "instant": true
         },
         {
-          "expr": "100 * sum by (user_email) (claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}) / (sum by (user_email) (claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}) + sum by (user_email) (claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheCreation\"}))",
+          "expr": "100 * sum by (user_email) (max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}[$__range])) / (sum by (user_email) (max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheRead\"}[$__range])) + sum by (user_email) (max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\",type=\"cacheCreation\"}[$__range])))",
           "refId": "cache",
           "format": "table",
           "instant": true
@@ -1119,7 +1119,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (user_email) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})",
+          "expr": "sum by (user_email) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range]))",
           "legendFormat": "{{user_email}}",
           "refId": "A"
         }
@@ -1170,7 +1170,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (model) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})",
+          "expr": "sum by (model) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range]))",
           "legendFormat": "{{model}}",
           "refId": "A"
         }
@@ -1209,7 +1209,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (terminal_type) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})",
+          "expr": "sum by (terminal_type) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range]))",
           "legendFormat": "{{terminal_type}}",
           "refId": "A"
         }
@@ -1248,7 +1248,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (type) (claude_code_token_usage_tokens_total{user_email=~\"$developer\"})",
+          "expr": "sum by (type) (max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\"}[$__range]))",
           "legendFormat": "{{type}}",
           "refId": "A"
         }
@@ -1293,13 +1293,13 @@
       },
       "targets": [
         {
-          "expr": "sum by (user_email, model) (claude_code_cost_usage_USD_total{user_email=~\"$developer\"})",
+          "expr": "sum by (user_email, model) (max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range]))",
           "refId": "cost",
           "format": "table",
           "instant": true
         },
         {
-          "expr": "sum by (user_email, model) (claude_code_token_usage_tokens_total{user_email=~\"$developer\"})",
+          "expr": "sum by (user_email, model) (max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\"}[$__range]))",
           "refId": "tokens",
           "format": "table",
           "instant": true
@@ -1583,7 +1583,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_lines_of_code_count_total{user_email=~\"$developer\",type=\"added\"}) or vector(0)",
+          "expr": "sum(max_over_time(claude_code_lines_of_code_count_total{user_email=~\"$developer\",type=\"added\"}[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -1630,7 +1630,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_lines_of_code_count_total{user_email=~\"$developer\",type=\"removed\"}) or vector(0)",
+          "expr": "sum(max_over_time(claude_code_lines_of_code_count_total{user_email=~\"$developer\",type=\"removed\"}[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -1678,7 +1678,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_active_time_seconds_total{user_email=~\"$developer\"}) or vector(0)",
+          "expr": "sum(max_over_time(claude_code_active_time_seconds_total{user_email=~\"$developer\"}[$__range])) or vector(0)",
           "refId": "A"
         }
       ],
@@ -1726,7 +1726,7 @@
       },
       "targets": [
         {
-          "expr": "sum(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}) / (sum(claude_code_active_time_seconds_total{user_email=~\"$developer\"}) / 3600 > 0 or vector(1))",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{user_email=~\"$developer\"}[$__range])) / (sum(max_over_time(claude_code_active_time_seconds_total{user_email=~\"$developer\"}[$__range])) / 3600 > 0 or vector(1))",
           "refId": "A"
         }
       ],
@@ -1787,7 +1787,7 @@
       },
       "targets": [
         {
-          "expr": "(sum(claude_code_lines_of_code_count_total{user_email=~\"$developer\",type=\"removed\"}) or vector(0)) / (sum(claude_code_lines_of_code_count_total{user_email=~\"$developer\",type=\"added\"}) > 0 or vector(1))",
+          "expr": "(sum(max_over_time(claude_code_lines_of_code_count_total{user_email=~\"$developer\",type=\"removed\"}[$__range])) or vector(0)) / (sum(max_over_time(claude_code_lines_of_code_count_total{user_email=~\"$developer\",type=\"added\"}[$__range])) > 0 or vector(1))",
           "refId": "A"
         }
       ],
@@ -1972,7 +1972,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (user_email, model) (claude_code_token_usage_tokens_total{user_email=~\"$developer\"})",
+          "expr": "sum by (user_email, model) (max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\"}[$__range]))",
           "legendFormat": "{{model}}",
           "refId": "A",
           "instant": true
@@ -2021,7 +2021,7 @@
       },
       "targets": [
         {
-          "expr": "count(\n          (sum by (session_id) (claude_code_token_usage_tokens_total{user_email=~\"$developer\"}) > 200000)\n          unless\n          (sum by (session_id) (claude_code_commit_count_total{user_email=~\"$developer\"}) > 0)\n        ) or vector(0)",
+          "expr": "count(\n          (sum by (session_id) (max_over_time(claude_code_token_usage_tokens_total{user_email=~\"$developer\"}[$__range])) > 200000)\n          unless\n          (sum by (session_id) (max_over_time(claude_code_commit_count_total{user_email=~\"$developer\"}[$__range])) > 0)\n        ) or vector(0)",
           "refId": "A"
         }
       ],
@@ -2077,7 +2077,7 @@
       },
       "targets": [
         {
-          "expr": "100 * sum(claude_code_code_edit_tool_decision_total{user_email=~\"$developer\",decision=\"reject\"}) / (sum(claude_code_code_edit_tool_decision_total{user_email=~\"$developer\"}) > 0 or vector(1))",
+          "expr": "100 * sum(max_over_time(claude_code_code_edit_tool_decision_total{user_email=~\"$developer\",decision=\"reject\"}[$__range])) / (sum(max_over_time(claude_code_code_edit_tool_decision_total{user_email=~\"$developer\"}[$__range])) > 0 or vector(1))",
           "refId": "A"
         }
       ],
