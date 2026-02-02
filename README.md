@@ -5,7 +5,7 @@ A framework or general suggestions for improving human-AI collaboration via Open
 
 **The goal:** Improve how you communicate, collaborate, and build together.
 
-**Philosophy:** You are the Architect. Claude and its swarm act as your implementation partners. In early adoption, we measure communication quality, not productivity. (initially in earlly adoption). Let's prevent the nonsense factories.
+**Philosophy:** You are the Architect. Claude and its swarm act as your implementation partners. In early adoption, we measure communication quality, not productivity. Let's prevent the nonsense factories.
 
 ```
 You bring judgment, security, vision, patterns, best practices.
@@ -134,14 +134,6 @@ Use it to see how your context is improving, higher cache hit ratio means your m
 ./scripts/check-storage.sh   # Storage usage monitor
 ./scripts/generate-report.sh # Communication quality report
 ```
-
-## Storage & Retention
-
-| Component | Time Limit | Size Limit |
-|-----------|------------|------------|
-| Prometheus | 30 days | 1 GB | (adjut per your needs)
-| Loki | 30 days | Ingestion throttled |
-| Grafana | Unlimited | ~5 MB (config only) |
 
 ## Documentation
 

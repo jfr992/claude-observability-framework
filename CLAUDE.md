@@ -44,7 +44,7 @@ claude-metrics/
 │   │   └── team-overview.json   # Team dashboard
 │   └── provisioning/            # Auto-provisioning
 ├── scripts/
-│   ├── setup-mac.sh             # Mac onboarding (interactive)
+│   ├── setup.sh             # Mac onboarding (interactive)
 │   ├── generate-report.sh       # Communication quality report (3 key metrics)
 │   ├── check-storage.sh         # Storage usage monitor
 │   └── health-check.sh          # Stack health + key metrics check
@@ -79,10 +79,8 @@ export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 
 Or use the interactive setup:
 ```bash
-./scripts/setup-mac.sh
+./scripts/setup.sh
 ```
-
-Or use [claude-switch](https://github.com/your-org/claude-switcher) which configures telemetry automatically.
 
 ## Dashboards
 

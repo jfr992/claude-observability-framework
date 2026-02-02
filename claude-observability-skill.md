@@ -15,6 +15,8 @@ description: |
 
 Team/org productivity framework for tracking Claude Code usage, cost, and ROI.
 
+**Full docs:** See GUIDE.md for philosophy, CLAUDE.md for technical reference.
+
 ## Philosophy
 
 **Metrics are mirrors, not judges.** This framework measures growth, not compliance.
